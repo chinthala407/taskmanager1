@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./Login.css";
+import "./Register.css";
+import registerImage from "../assets/register-illustration.png";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ function Register() {
     password: "",
   });
 
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -21,6 +23,11 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (formData.password !== confirmPassword) {
+      setMessage("Passwords do not match");
+      return;
+    }
 
     try {
       const res = await axios.post(
@@ -36,6 +43,8 @@ function Register() {
         password: "",
       });
 
+      setConfirmPassword("");
+
     } catch (err) {
       setMessage(
         err.response?.data?.message || "Registration Failed"
@@ -44,56 +53,106 @@ function Register() {
   };
 
   return (
-    <div className="container">
-      <div className="login-card">
-        <h1>Task Manager</h1>
-        <h2>Register</h2>
+    <div className="register-container">
 
-        <form onSubmit={handleRegister}>
+      {/* Left Side */}
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+      <div className="left-panel">
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+        <img
+          src={registerImage}
+          alt="Register Illustration"
+          className="register-image"
+        />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+        <h2>Organize Your Work Smarter</h2>
 
-          <button type="submit">
-            Register
-          </button>
-
-        </form>
-
-        {message && (
-          <p>{message}</p>
-        )}
-
-        <p>
-          Already have an account?
-          <Link to="/"> Login</Link>
+        <p className="quote">
+          "Every great achievement begins with one completed task."
         </p>
 
+        <div className="features">
+            <div><span>✅</span> Manage Tasks Efficiently</div>
+            <div><span>✅</span> Collaborate with Your Team</div>
+            <div><span>✅</span> Stay Organized Every Day</div>
+        </div>
+
       </div>
+
+      {/* Right Side */}
+
+      <div className="right-panel">
+
+        <div className="login-card">
+
+          <h1>Create Your Account 🚀</h1>
+
+          <p className="subtitle">
+            Join thousands of professionals managing their work efficiently.
+          </p>
+
+          <form onSubmit={handleRegister}>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit" className="register-btn">
+              Create Account
+            </button>
+
+          </form>
+
+          <p className="security">
+            🔒 Your information is securely encrypted.
+          </p>
+
+          {message && (
+            <p className="message">
+              {message}
+            </p>
+          )}
+
+          <p className="login-link">
+            Already have an account?
+            <Link to="/login"> Login</Link>
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

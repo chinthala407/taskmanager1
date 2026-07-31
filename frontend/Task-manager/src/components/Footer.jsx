@@ -28,15 +28,18 @@ function Footer() {
 
         <div className="footer-section">
           <h3>Contact</h3>
-
-          <p>
-            <FaEnvelope className="footer-icon" />
-            chinthaladileep2@gmail.com
-          </p>
+            <p>
+              <FaEnvelope className="footer-icon" />
+              <a href="mailto:chinthaladileep2@gmail.com">
+                chinthaladileep2@gmail.com
+              </a>
+            </p>
 
           <p>
             <FaPhoneAlt className="footer-icon" />
-            +91 9063279439
+            <a href="tel:+919063279439">
+              +91 9063279439
+            </a>
           </p>
 
         </div>
