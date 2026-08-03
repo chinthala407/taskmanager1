@@ -71,7 +71,7 @@ function Register() {
           "Every great achievement begins with one completed task."
         </p>
 
-        <div className="features">
+        <div className="register-features">
             <div><span>✅</span> Manage Tasks Efficiently</div>
             <div><span>✅</span> Collaborate with Your Team</div>
             <div><span>✅</span> Stay Organized Every Day</div>
@@ -85,7 +85,7 @@ function Register() {
 
         <div className="login-card">
 
-          <h1>Create Your Account 🚀</h1>
+          <h1>Create Your Account </h1>
 
           <p className="subtitle">
             Join thousands of professionals managing their work efficiently.
@@ -135,7 +135,7 @@ function Register() {
           </form>
 
           <p className="security">
-            🔒 Your information is securely encrypted.
+             Your information is securely encrypted.
           </p>
 
           {message && (
@@ -148,7 +148,9 @@ function Register() {
             Already have an account?
             <Link to="/login"> Login</Link>
           </p>
-
+            <button type="submit" className="google-btn">
+              Continue With Google
+            </button>
         </div>
 
       </div>

@@ -1,0 +1,94 @@
+.admin-sidebar {
+
+  width:240px;
+
+  min-height:calc(100vh - 72px);
+
+  background:white;
+
+  padding:25px 15px;
+
+  border-right:1px solid #e5e7eb;
+
+}
+
+
+
+.admin-sidebar ul {
+
+  list-style:none;
+
+  padding:0;
+
+  margin:0;
+
+}
+
+
+
+.admin-sidebar li {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:14px 18px;
+
+  margin-bottom:12px;
+
+  border-radius:12px;
+
+  color:#475569;
+
+  cursor:pointer;
+
+  font-size:16px;
+
+  transition:0.3s;
+
+}
+
+
+
+.admin-sidebar li svg {
+
+  font-size:18px;
+
+  
+
+}
+
+
+
+/* Hover Effect */
+
+.admin-sidebar li:hover {
+
+  background:#eff6ff;
+
+  color:#2563eb;
+
+}
+
+
+
+/* Active Menu */
+
+.admin-sidebar .active {
+
+  background:#dbeafe;
+
+  color:#2563eb;
+
+  font-weight:600;
+
+}
+
+
+.admin-sidebar .active svg {
+
+  color:#2563eb;
+
+}

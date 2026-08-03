@@ -59,28 +59,21 @@
     margin-bottom:35px;
     max-width:450px;
 }
-.features {
+.register-features {
     margin-top: 20px;
     background-color: #1d4ed8;
 }
 
-.features div {
+.register-features div {
     display: flex;
     align-items: center;
     gap: 10px;
-
-    color: white !important;
-    font-size: 18px;
-    font-weight: 600;
-
-    margin: 15px 0;
 }
 
-.features div span {
+.register-features div span {
     margin-right: 10px;
     font-size: 20px;
 }
-
 /*======================== */
 /* Right Side */
 /* ========================= */
@@ -263,4 +256,27 @@
 }
 .left-panel * {
     color: #ffffff !important;
+}
+
+.google-btn{
+    width:100%;
+    padding:16px;
+
+    background :white;
+    color:aliceblue;
+
+    border:none;
+    border-radius:10px;
+
+    font-size:17px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.google-btn:hover{
+    background:#7393e8;
+    transform:translateY(-2px);
 }
