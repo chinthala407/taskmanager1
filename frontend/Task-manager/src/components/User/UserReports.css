@@ -1,0 +1,74 @@
+.user-reports-page {
+
+
+    min-height:calc(100vh - 70px);
+
+    background:#f8fafc;
+
+    padding:40px;
+
+
+}
+
+
+
+.user-reports-page h2 {
+
+
+    margin-bottom:30px;
+
+    color:#1e293b;
+
+
+}
+
+
+
+
+
+.charts-container {
+
+
+    display:flex;
+
+    gap:30px;
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+
+.chart-card {
+
+
+    width:350px;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
+
+}
+
+
+
+.chart-card h3 {
+
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    color:#334155;
+
+
+}

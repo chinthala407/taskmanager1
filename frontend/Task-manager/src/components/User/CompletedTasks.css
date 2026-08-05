@@ -1,0 +1,315 @@
+.completed-container {
+
+    padding: 30px;
+
+    width: 100%;
+
+}
+
+
+/* Header */
+
+.completed-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.completed-header h1 {
+
+    margin: 0;
+
+    font-size: 28px;
+
+    color: #111827;
+
+}
+
+
+.completed-header p {
+
+    margin-top: 8px;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+}
+
+
+
+/* Completed Count Card */
+
+.completed-count {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    background: #dcfce7;
+
+    color: #15803d;
+
+    padding: 12px 20px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+}
+
+
+
+/* Search */
+
+.completed-toolbar {
+
+    margin-bottom: 25px;
+
+}
+
+
+.completed-toolbar input {
+
+    width: 350px;
+
+    padding: 12px 15px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 14px;
+
+}
+
+
+.completed-toolbar input:focus {
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+
+}
+
+
+
+/* Table Card */
+
+.completed-container table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: white;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+}
+
+
+
+/* Table Header */
+
+.completed-table th {
+
+    text-align: left;
+
+    padding: 16px;
+
+    background: #f8fafc;
+
+    color: #475569;
+
+    font-size: 14px;
+
+}
+
+
+
+/* Table Data */
+
+.completed-table td {
+
+    padding: 16px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #374151;
+
+    font-size: 14px;
+
+}
+
+
+
+.completed-table tr:hover {
+
+    background: #f8fafc;
+
+}
+
+
+
+/* Priority Badge */
+
+.priority {
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+
+.priority.high {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+}
+
+
+.priority.medium {
+
+    background: #fef3c7;
+
+    color: #d97706;
+
+}
+
+
+.priority.low {
+
+    background: #dcfce7;
+
+    color: #16a34a;
+
+}
+
+
+
+/* Action Buttons */
+
+.view-btn,
+.delete-btn {
+
+    width: 36px;
+
+    height: 36px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    display: inline-flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin-right: 8px;
+
+}
+
+
+
+/* View */
+
+.view-btn {
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+}
+
+
+.view-btn:hover {
+
+    background: #bfdbfe;
+
+}
+
+
+
+/* Delete */
+
+.delete-btn {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+}
+
+
+.delete-btn:hover {
+
+    background: #fecaca;
+
+}
+
+
+
+/* Responsive */
+
+@media(max-width:900px) {
+
+
+    .completed-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+    }
+
+
+    .completed-toolbar input {
+
+        width: 100%;
+
+    }
+
+
+    .completed-container {
+
+        overflow-x: auto;
+
+    }
+
+
+    .completed-table {
+
+        min-width: 800px;
+
+    }
+
+}

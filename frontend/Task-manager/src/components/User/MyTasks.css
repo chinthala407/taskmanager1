@@ -1,0 +1,281 @@
+.mytasks-container{
+
+    margin-top:0;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.06);
+
+}
+
+
+.mytasks-header{
+
+    margin-top:0;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+
+.mytasks-header h2{
+
+    margin:0;
+
+    padding:0;
+
+}
+
+.create-btn{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:15px;
+
+}
+
+.task-toolbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+
+}
+
+.task-toolbar input{
+
+    width:350px;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+}
+
+.task-toolbar select{
+
+    padding:12px;
+
+    border-radius:8px;
+
+}
+
+.task-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.task-table th{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:15px;
+
+}
+
+.task-table td{
+
+    padding:15px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.high{
+
+    color:red;
+
+    font-weight:600;
+
+}
+
+.medium{
+
+    color:orange;
+
+    font-weight:600;
+
+}
+
+.low{
+
+    color:green;
+
+    font-weight:600;
+
+}
+
+.action-btn{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    margin-right:12px;
+
+}
+
+.edit{
+
+    color:#2563eb;
+
+}
+
+.delete{
+
+    color:#dc2626;
+
+}
+
+.complete{
+
+    color:#16a34a;
+
+}
+.task-calendar-wrapper {
+
+    margin-top:40px;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
+}
+
+
+.task-calendar-scroll {
+
+    overflow-x:auto;
+
+    padding-bottom:15px;
+
+}
+
+
+
+.task-calendar {
+
+    display:flex;
+
+    gap:15px;
+
+    width:max-content;
+
+}
+
+
+
+.calendar-day {
+
+    width:170px;
+
+    min-height:130px;
+
+    background:#f8fafc;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    cursor:pointer;
+
+}
+
+
+
+.calendar-day:hover {
+
+    border-color:#2563eb;
+
+}
+
+
+
+.calendar-day h3 {
+
+    text-align:center;
+
+}
+
+
+
+.has-task {
+
+    border:2px solid #2563eb;
+
+}
+
+
+
+.calendar-task {
+
+    background:#dbeafe;
+
+    padding:6px;
+
+    margin-top:8px;
+
+    border-radius:6px;
+
+    font-size:13px;
+
+}
+
+
+
+.selected-date-tasks {
+
+    margin-top:25px;
+
+    padding:15px;
+
+    background:#f8fafc;
+
+    border-radius:12px;
+
+}

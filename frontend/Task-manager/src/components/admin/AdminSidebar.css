@@ -22,7 +22,7 @@
 
     flex-direction:column;
 
-    justify-content:space-between;
+    justify-content:flex-start;
 
     padding:24px 16px;
 

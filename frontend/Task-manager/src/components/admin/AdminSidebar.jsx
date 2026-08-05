@@ -1,83 +1,40 @@
 import { NavLink } from "react-router-dom";
 import "./AdminSidebar.css";
 
+function AdminSidebar() {
+  return (
+    <aside className="admin-sidebar">
 
-function AdminSidebar(){
+      <div className="sidebar-top">
 
-    return(
+        <NavLink to="/admin" end className="menu-item">
+          Dashboard
+        </NavLink>
 
-        <aside className="admin-sidebar">
+        <NavLink to="/admin/users" className="menu-item">
+          Users
+        </NavLink>
 
+        <NavLink to="/admin/tasks" className="menu-item">
+          Tasks
+        </NavLink>
 
-            <nav className="sidebar-menu">
+        <NavLink to="/admin/reports" className="menu-item">
+          Reports
+        </NavLink>
 
+        <NavLink to="/admin/notifications" className="menu-item">
+          Notifications
+        </NavLink>
 
-                <NavLink 
-                    to="/admin"
-                    end 
-                    className="sidebar-link"
+        <NavLink to="/admin/settings" className="menu-item">
+          Settings
+        </NavLink>
 
-                >
-                    Dashboard
-                </NavLink>
+      </div>
 
-
-
-                <NavLink 
-                    to="/admin/users"
-                    className="sidebar-link"
-                >
-                    Users
-                </NavLink>
-
-
-
-                <NavLink 
-                    to="/admin/tasks"
-                    className="sidebar-link"
-                >
-                    Tasks
-                </NavLink>
-
-
-
-                <NavLink 
-                    to="/admin/reports"
-                    className="sidebar-link"
-                >
-                    Reports
-                </NavLink>
-
-
-
-                <NavLink 
-                    to="/admin/notifications"
-                    className="sidebar-link"
-                >
-                    Notifications
-                </NavLink>
-
-
-
-                <NavLink 
-                    to="/admin/settings"
-                    className="sidebar-link"
-                >
-                    Settings
-                </NavLink>
-
-
-                
-
-
-            </nav>
-
-
-        </aside>
-
-    );
-
+    </aside>
+  );
 }
-
 
 export default AdminSidebar;

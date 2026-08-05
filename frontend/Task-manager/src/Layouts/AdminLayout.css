@@ -45,11 +45,11 @@ body,
 
 .admin-main{
 
-    margin-left:260px;        /* Sidebar width */
+    margin-left:260px;
 
-    margin-top:72px;          /* Navbar height */
+    margin-top:72px;
 
-    padding:30px;
+    padding:8px 30px 30px;
 
     min-height:calc(100vh - 72px);
 
