@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import taskLogo from "../assets/task-check-icon.png";
+import taskLogo from "../../assets/task-check-icon.png";
 
 function Navbar() {
   return (

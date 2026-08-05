@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.css";
+import "./login.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import loginBackground from "../assets/login-background.png";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,14 +37,25 @@ function Login() {
       alert(error.response?.data?.message || "Login Failed");
     }
   };
+return (
+  <div className="login-page">
 
-  return (
-    <div className="container">
+    <div className="login-left">
+      <img src={loginBackground} alt="Task Manager" />
+    </div>
+
+    <div className="login-right">
+
       <div className="login-card">
+
         <h1>Task Manager</h1>
-        <h2>Login</h2>
+        <h2>Welcome Back </h2>
+        <p className="subtitle">
+          Sign in to continue managing your tasks.
+        </p>
 
         <form onSubmit={handleLogin}>
+
           <input
             type="email"
             placeholder="Enter Email"
@@ -54,6 +65,7 @@ function Login() {
           />
 
           <div className="password-field">
+
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter Password"
@@ -68,6 +80,7 @@ function Login() {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </div>
+
           </div>
 
           <button type="submit" className="login-btn">
@@ -75,17 +88,25 @@ function Login() {
           </button>
 
           <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
+            <Link to="/forgot-password">
+              Forgot Password?
+            </Link>
           </div>
+
         </form>
 
-        <p>
+        <p className="register-text">
           Don't have an account?
           <Link to="/register"> Register</Link>
         </p>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
+
 }
 
 export default Login;

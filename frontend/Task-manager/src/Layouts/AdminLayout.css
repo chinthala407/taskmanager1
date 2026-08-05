@@ -1,0 +1,151 @@
+/* ===========================
+   GLOBAL
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body,
+#root{
+
+    width:100%;
+    min-height:100vh;
+
+    background:#f5f7fb;
+
+    font-family:Inter,sans-serif;
+
+    overflow-x:hidden;
+
+}
+
+
+/* ===========================
+   LAYOUT
+=========================== */
+
+.admin-layout{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:#f5f7fb;
+
+}
+
+
+/* ===========================
+   MAIN CONTENT
+=========================== */
+
+.admin-main{
+
+    margin-left:260px;        /* Sidebar width */
+
+    margin-top:72px;          /* Navbar height */
+
+    padding:30px;
+
+    min-height:calc(100vh - 72px);
+
+    background:#f5f7fb;
+
+    overflow-y:auto;
+
+}
+
+
+/* ===========================
+   PAGE WRAPPER
+=========================== */
+
+.page-wrapper{
+
+    width:100%;
+
+}
+
+
+/* ===========================
+   COMMON CARD
+=========================== */
+
+.card{
+
+    background:white;
+
+    border-radius:18px;
+
+    border:1px solid #e5e7eb;
+
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+
+}
+
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+.admin-main::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+
+.admin-main::-webkit-scrollbar-track{
+
+    background:#f1f5f9;
+
+}
+
+
+.admin-main::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:20px;
+
+}
+
+
+/* ===========================
+   RESPONSIVE TABLET
+=========================== */
+
+@media(max-width:992px){
+
+    .admin-main{
+
+        margin-left:230px;
+
+        padding:25px;
+
+    }
+
+}
+
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+    .admin-main{
+
+        margin-left:0;
+
+        margin-top:72px;
+
+        padding:20px;
+
+    }
+
+}

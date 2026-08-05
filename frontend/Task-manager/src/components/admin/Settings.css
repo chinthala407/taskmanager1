@@ -1,0 +1,167 @@
+.settings-page{
+
+    padding:30px;
+
+    background:#f5f7fb;
+
+    min-height:100vh;
+
+}
+
+
+
+.settings-header h1{
+
+    font-size:32px;
+
+    color:#1f2937;
+
+}
+
+
+.settings-header p{
+
+    color:#6b7280;
+
+    margin-top:8px;
+
+}
+
+
+
+.settings-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:25px;
+
+    margin-top:30px;
+
+}
+
+
+
+.settings-card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:16px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+
+
+.settings-card h2{
+
+    margin-bottom:25px;
+
+    color:#2563eb;
+
+}
+
+
+
+.settings-card label{
+
+    display:block;
+
+    margin-top:15px;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+
+
+.settings-card input[type="text"],
+.settings-card input[type="email"],
+.settings-card input[type="password"]{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #ddd;
+
+}
+
+
+
+
+
+.setting-option{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin:18px 0;
+
+}
+
+
+
+.setting-option input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+
+
+.save-btn{
+
+    margin-top:30px;
+
+    padding:14px 35px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+
+
+.save-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+
+
+@media(max-width:900px){
+
+
+.settings-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+}

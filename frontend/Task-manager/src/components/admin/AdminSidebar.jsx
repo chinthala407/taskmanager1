@@ -1,57 +1,81 @@
-import {
-  FaTachometerAlt,
-  FaUsers,
-  FaTasks,
-  FaChartBar,
-  FaCog
-} from "react-icons/fa";
-
+import { NavLink } from "react-router-dom";
 import "./AdminSidebar.css";
 
 
-function AdminSidebar() {
+function AdminSidebar(){
 
-  return (
+    return(
 
-    <aside className="admin-sidebar">
-
-      <ul>
-
-          <li className="active">
-              <FaTachometerAlt color="#2563eb"/>
-              <span>Dashboard</span>
-           </li>
+        <aside className="admin-sidebar">
 
 
-          <li>
-              <FaUsers color="#16a34a"/>
-              <span>Users</span>
-          </li>
+            <nav className="sidebar-menu">
 
 
-          <li>
-              <FaTasks color="#f59e0b"/>
-              <span>Tasks</span>
-          </li>
+                <NavLink 
+                    to="/admin"
+                    end 
+                    className="sidebar-link"
+
+                >
+                    Dashboard
+                </NavLink>
 
 
-          <li>
-              <FaChartBar color="#7c3aed"/>
-              <span>Reports</span>
-          </li>
+
+                <NavLink 
+                    to="/admin/users"
+                    className="sidebar-link"
+                >
+                    Users
+                </NavLink>
 
 
-          <li>
-              <FaCog color="#64748b"/>
-              <span>Settings</span>
-          </li>
+
+                <NavLink 
+                    to="/admin/tasks"
+                    className="sidebar-link"
+                >
+                    Tasks
+                </NavLink>
 
 
-      </ul>
 
-    </aside>
+                <NavLink 
+                    to="/admin/reports"
+                    className="sidebar-link"
+                >
+                    Reports
+                </NavLink>
 
-  );
+
+
+                <NavLink 
+                    to="/admin/notifications"
+                    className="sidebar-link"
+                >
+                    Notifications
+                </NavLink>
+
+
+
+                <NavLink 
+                    to="/admin/settings"
+                    className="sidebar-link"
+                >
+                    Settings
+                </NavLink>
+
+
+                
+
+
+            </nav>
+
+
+        </aside>
+
+    );
 
 }
 

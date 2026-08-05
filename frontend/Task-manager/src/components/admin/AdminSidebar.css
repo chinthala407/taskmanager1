@@ -1,94 +1,187 @@
-.admin-sidebar {
+/* ==========================================
+   SIDEBAR
+========================================== */
 
-  width:240px;
+.admin-sidebar{
 
-  min-height:calc(100vh - 72px);
+    position:fixed;
 
-  background:white;
+    top:72px;
 
-  padding:25px 15px;
+    left:0;
 
-  border-right:1px solid #e5e7eb;
+    width:260px;
 
-}
+    height:calc(100vh - 72px);
 
+    background:#ADD8E6;
 
+    border-right:1px solid #e5e7eb;
 
-.admin-sidebar ul {
+    display:flex;
 
-  list-style:none;
+    flex-direction:column;
 
-  padding:0;
+    justify-content:space-between;
 
-  margin:0;
+    padding:24px 16px;
 
-}
-
-
-
-.admin-sidebar li {
-
-  display:flex;
-
-  align-items:center;
-
-  gap:15px;
-
-  padding:14px 18px;
-
-  margin-bottom:12px;
-
-  border-radius:12px;
-
-  color:#475569;
-
-  cursor:pointer;
-
-  font-size:16px;
-
-  transition:0.3s;
+    overflow-y:auto;
 
 }
 
+/* ==========================================
+   TITLE
+========================================== */
 
+.sidebar-title{
 
-.admin-sidebar li svg {
+    font-size:12px;
 
-  font-size:18px;
+    font-weight:600;
 
-  
+    text-transform:uppercase;
 
-}
+    color:#94a3b8;
 
+    letter-spacing:1px;
 
+    margin-bottom:20px;
 
-/* Hover Effect */
-
-.admin-sidebar li:hover {
-
-  background:#eff6ff;
-
-  color:#2563eb;
-
-}
-
-
-
-/* Active Menu */
-
-.admin-sidebar .active {
-
-  background:#dbeafe;
-
-  color:#2563eb;
-
-  font-weight:600;
+    padding-left:12px;
 
 }
 
+/* ==========================================
+   MENU
+========================================== */
 
-.admin-sidebar .active svg {
+.sidebar-top{
 
-  color:#2563eb;
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.menu-item{
+
+    display:flex;
+
+    align-items:center;
+
+    height:46px;
+
+    padding:0 16px;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    color:#475569;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    transition:all .25s;
+
+}
+
+.menu-item:hover{
+
+    background:#f1f5f9;
+
+    color:#2563eb;
+
+}
+
+.menu-item.active{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.sidebar-footer{
+
+    border-top:1px solid #e5e7eb;
+
+    padding-top:20px;
+
+}
+
+.admin-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.profile-avatar{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.admin-profile h4{
+
+    font-size:15px;
+
+    color:#111827;
+
+}
+
+.admin-profile p{
+
+    font-size:13px;
+
+    color:#64748b;
+
+    margin-top:4px;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    .admin-sidebar{
+
+        width:220px;
+
+    }
 
 }

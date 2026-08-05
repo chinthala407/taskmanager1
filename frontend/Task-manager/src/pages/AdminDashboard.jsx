@@ -1,4 +1,4 @@
-import { 
+import {
   FaUsers,
   FaTasks,
   FaCheckCircle,
@@ -7,145 +7,302 @@ import {
   FaChartBar
 } from "react-icons/fa";
 
-import AdminNavbar from "../components/admin/AdminNavbar";
-import AdminSidebar from "../components/admin/AdminSidebar";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import StatCard from "../components/admin/StatCard";
 
 import "./AdminDashboard.css";
 
 
-function AdminDashboard(){
-
-  return(
-
-    <div className="admin-layout">
-
-      <AdminNavbar/>
+function AdminDashboard() {
 
 
-      <div className="admin-body">
+  const navigate = useNavigate();
 
 
-        <AdminSidebar/>
-
-
-        <main className="admin-main">
-
-
-          <div className="welcome-card">
-
-            <h1>
-              Welcome Back, Admin 👋
-            </h1>
-
-            <p>
-              Manage users, tasks and monitor your application.
-            </p>
-
-          </div>
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalTasks: 0,
+    completed: 0,
+    pending: 0
+  });
 
 
 
-          <div className="stats-container">
+  const userGrowth = [
 
+    {
+      month:"January",
+      users:20
+    },
 
-            <StatCard
-              title="Total Users"
-              value="120"
-              icon={<FaUsers/>}
-              color="blue"
-            />
+    {
+      month:"February",
+      users:35
+    },
 
+    {
+      month:"March",
+      users:50
+    },
 
-            <StatCard
-              title="Total Tasks"
-              value="350"
-              icon={<FaTasks/>}
-              color="purple"
-            />
+    {
+      month:"April",
+      users:70
+    },
 
+    {
+      month:"May",
+      users:90
+    },
 
-            <StatCard
-              title="Completed"
-              value="240"
-              icon={<FaCheckCircle/>}
-              color="green"
-            />
+    {
+      month:"June",
+      users:120
+    }
 
-
-            <StatCard
-              title="Pending"
-              value="110"
-              icon={<FaClock/>}
-              color="orange"
-            />
-
-
-          </div>
-
-
-
-          <div className="dashboard-grid">
-
-
-            <div className="activity-card">
-
-              <h2>
-                Recent Activity
-              </h2>
-
-
-              <p>
-                ✔ New user registered
-              </p>
-
-              <p>
-                ✔ Task completed
-              </p>
-
-              <p>
-                ✔ Admin updated settings
-              </p>
-
-
-            </div>
+  ];
+  
 
 
 
-            <div className="quick-card">
+  useEffect(() => {
 
-              <h2>
-                Quick Actions
-              </h2>
+    axios
+      .get("http://localhost:5000/api/admin/stats")
+      .then((response) => {
 
+        setStats(response.data);
 
-              <button>
-                <FaUserCog/>
-                Manage Users
-              </button>
+      })
+      .catch((error) => {
 
+        console.log(error);
 
-              <button>
-                <FaChartBar/>
-                View Reports
-              </button>
+      });
 
-
-            </div>
+  }, []);
 
 
-          </div>
+
+  return (
+
+    <>
 
 
-        </main>
+      {/* Welcome Banner */}
+
+      <div className="welcome-card">
+
+        <h1>
+          Welcome Back, Admin
+        </h1>
+
+
+        <p>
+          Manage users, tasks and monitor your application.
+        </p>
 
 
       </div>
 
 
-    </div>
 
-  )
+
+      {/* Statistics */}
+
+
+      <div className="stats-container">
+
+
+        <StatCard
+          title="Total Users"
+          value={stats.totalUsers}
+          icon={<FaUsers />}
+          color="blue"
+        />
+
+
+        <StatCard
+          title="Total Tasks"
+          value={stats.totalTasks}
+          icon={<FaTasks />}
+          color="purple"
+        />
+
+
+        <StatCard
+          title="Completed"
+          value={stats.completed}
+          icon={<FaCheckCircle />}
+          color="green"
+        />
+
+
+        <StatCard
+          title="Pending"
+          value={stats.pending}
+          icon={<FaClock />}
+          color="orange"
+        />
+
+
+      </div>
+
+
+
+
+
+      {/* Monthly User Growth */}
+
+
+      <div className="growth-card">
+
+
+        <h2>
+          Monthly User Growth
+        </h2>
+
+
+
+        <div className="growth-list">
+
+
+          {
+            userGrowth.map((item)=>(
+
+
+              <div 
+                className="growth-row"
+                key={item.month}
+              >
+
+
+                <span>
+                  {item.month}
+                </span>
+
+
+
+                <div className="growth-progress">
+
+
+                  <div
+                    className="growth-fill"
+                    style={{
+                      width:`${item.users}px`
+                    }}
+                  >
+
+
+                  </div>
+
+
+                </div>
+
+
+
+                <strong>
+                  {item.users}
+                </strong>
+
+
+
+              </div>
+
+
+            ))
+          }
+
+
+
+        </div>
+
+
+      </div>
+
+
+
+
+
+      {/* Bottom Section */}
+
+
+      <div className="dashboard-grid">
+
+
+        <div className="activity-card">
+
+
+          <h2>
+            Recent Activity
+          </h2>
+
+
+          <p>
+            New user registered
+          </p>
+
+
+          <p>
+            Task completed
+          </p>
+
+
+          <p>
+            Admin updated settings
+          </p>
+
+
+        </div>
+
+
+
+
+
+        <div className="quick-card">
+
+
+          <h2>
+            Quick Actions
+          </h2>
+
+
+
+          <button onClick={() => navigate("/admin/users")}>
+
+            <FaUserCog />
+
+            Manage Users
+
+          </button>
+
+
+
+
+          <button onClick={() => navigate("/admin/reports")}>
+
+            <FaChartBar />
+
+            View Reports
+
+          </button>
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+
+    </>
+
+  );
 
 }
 
