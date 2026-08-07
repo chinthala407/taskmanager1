@@ -34,8 +34,18 @@ function Login() {
         navigate("/user");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "Login Failed");
-    }
+
+  if (error.response) {
+
+    alert(error.response.data.message);
+
+  } else {
+
+    alert("Unable to connect to the server.");
+
+  }
+
+}
   };
 return (
   <div className="login-page">

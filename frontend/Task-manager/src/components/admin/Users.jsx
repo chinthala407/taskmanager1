@@ -5,32 +5,46 @@ import "./Users.css";
 
 function Users(){
 
+
 const [users,setUsers] = useState([]);
 
 const [search,setSearch] = useState("");
 
 
 
-useEffect(()=>{
 
 
-axios
-.get("http://localhost:5000/api/admin/users")
+useEffect(() => {
 
-.then((response)=>{
+    const fetchUsers = async () => {
 
-setUsers(response.data);
+        try {
 
-})
+            // Mark all new users as seen
+            await axios.put(
+                "http://localhost:5000/api/admin/users/seen"
+            );
 
-.catch((error)=>{
+            // Get users
+            const response = await axios.get(
+                "http://localhost:5000/api/admin/users"
+            );
 
-console.log(error);
+            setUsers(response.data);
 
-});
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    fetchUsers();
+
+}, []);
 
 
-},[]);
 
 
 
@@ -40,62 +54,71 @@ console.log(error);
 
 const handleStatus = async(id,status)=>{
 
-try{
+
+    try{
 
 
-const newStatus =
-status === "active"
-?
-"blocked"
-:
-"active";
+        const newStatus =
 
+        status === "active"
 
+        ?
 
-await axios.put(
+        "blocked"
 
-`http://localhost:5000/api/admin/users/${id}/status`,
+        :
 
-{
-status:newStatus
-}
-
-);
+        "active";
 
 
 
-// Update UI without refresh
 
-setUsers(
+        await axios.put(
 
-users.map((user)=>
+            `http://localhost:5000/api/admin/users/${id}/status`,
 
-user.id === id
+            {
+                status:newStatus
+            }
 
-?
-
-{
-...user,
-status:newStatus
-}
-
-:
-
-user
-
-)
-
-);
+        );
 
 
 
-}
 
-catch(error){
+        setUsers(
 
-console.log(error);
+            users.map((user)=>
 
-}
+                user.id === id
+
+                ?
+
+                {
+                    ...user,
+                    status:newStatus
+                }
+
+                :
+
+                user
+
+            )
+
+        );
+
+
+
+    }
+
+    catch(error){
+
+
+        console.log(error);
+
+
+    }
+
 
 };
 
@@ -103,9 +126,80 @@ console.log(error);
 
 
 
+
+
+// Delete User
+
+const handleDelete = async(id)=>{
+
+
+    const confirmDelete = window.confirm(
+
+        "Are you sure you want to delete this user?"
+
+    );
+
+
+
+    if(!confirmDelete)
+        return;
+
+
+
+
+    try{
+
+
+        await axios.delete(
+
+            `http://localhost:5000/api/admin/users/${id}`
+
+        );
+
+
+
+
+        setUsers(
+
+            users.filter(
+
+                (user)=>user.id !== id
+
+            )
+
+        );
+
+
+
+        alert("User deleted successfully");
+
+
+    }
+
+    catch(error){
+
+
+        console.log(error);
+
+
+    }
+
+
+};
+
+
+
+
+
+
+
+
 return(
 
+
+
 <div className="users-page">
+
 
 
 <h1>
@@ -115,7 +209,13 @@ Users Management
 
 
 
+
+
+
 <div className="users-table">
+
+
+
 
 
 <input
@@ -136,12 +236,18 @@ className="search-box"
 
 
 
+
+
 <table>
+
 
 
 <thead>
 
+
+
 <tr>
+
 
 <th>ID</th>
 
@@ -157,7 +263,10 @@ className="search-box"
 
 <th>Actions</th>
 
+
 </tr>
+
+
 
 </thead>
 
@@ -165,7 +274,11 @@ className="search-box"
 
 
 
+
+
+
 <tbody>
+
 
 
 {
@@ -175,50 +288,67 @@ users
 .filter((user)=>
 
 user.name
-.toLowerCase()
+?.toLowerCase()
 .includes(search.toLowerCase())
 
 ||
 
 user.email
-.toLowerCase()
+?.toLowerCase()
 .includes(search.toLowerCase())
 
 )
 
-
 .map((user)=>(
+
 
 
 <tr key={user.id}>
 
 
+
 <td>
+
 {user.id}
+
 </td>
 
 
 
+
+
 <td>
+
 {user.name}
+
 </td>
 
 
 
+
+
 <td>
+
 {user.email}
+
 </td>
 
 
 
+
+
 <td>
+
 {user.role}
+
 </td>
 
 
 
 
+
 <td>
+
 
 {
 
@@ -235,7 +365,10 @@ new Date(user.created_at)
 
 }
 
+
 </td>
+
+
 
 
 
@@ -248,7 +381,7 @@ new Date(user.created_at)
 
 className={
 
-user.status === "active"
+user.status==="active"
 
 ?
 
@@ -262,6 +395,7 @@ user.status === "active"
 
 >
 
+
 {
 
 user.status || "active"
@@ -272,13 +406,18 @@ user.status || "active"
 </span>
 
 
+
 </td>
 
 
 
 
 
+
+
+
 <td>
+
 
 
 <button
@@ -292,7 +431,7 @@ onClick={()=>handleStatus(user.id,user.status)}
 
 {
 
-user.status === "active"
+user.status==="active"
 
 ?
 
@@ -308,7 +447,29 @@ user.status === "active"
 </button>
 
 
+
+
+
+<button
+
+className="delete-user-btn"
+
+onClick={()=>handleDelete(user.id)}
+
+>
+
+
+Delete
+
+
+</button>
+
+
+
+
+
 </td>
+
 
 
 
@@ -317,9 +478,14 @@ user.status === "active"
 </tr>
 
 
+
 ))
 
+
+
 }
+
+
 
 
 
@@ -327,17 +493,26 @@ user.status === "active"
 
 
 
+
+
 </table>
 
 
 
+
+
 </div>
 
 
 
+
+
 </div>
+
+
 
 )
+
 
 }
 

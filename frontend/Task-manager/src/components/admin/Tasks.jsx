@@ -24,8 +24,20 @@ function Tasks() {
 
 
     useEffect(()=>{
+
+    fetchTasks();
+
+    const interval = setInterval(()=>{
+
         fetchTasks();
-    },[]);
+
+    },5000);
+
+
+    return ()=>clearInterval(interval);
+
+
+},[]);
 
 
 

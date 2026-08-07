@@ -68,40 +68,42 @@
     color:#fff;
 }
 .charts-container{
-
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
+    grid-template-columns:repeat(auto-fit,minmax(550px,1fr));
+    gap:30px;
     margin-top:30px;
-
+    align-items:start;
 }
-
 
 .chart-box{
-
-    background:white;
-    padding:25px;
+    background:#fff;
+    padding:30px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    width:100%;
+    min-width:0;
+    
 }
-
 
 .chart-box h2{
-
     margin-bottom:20px;
     color:#1f2937;
-
+    text-align:center;
+    font-size:22px;
 }
 
-
-
-@media(max-width:900px){
-
+@media(max-width:1200px){
     .charts-container{
-
         grid-template-columns:1fr;
+    }
+}
 
+@media(max-width:600px){
+    .reports{
+        padding:15px;
     }
 
+    .chart-box{
+        padding:15px;
+    }
 }

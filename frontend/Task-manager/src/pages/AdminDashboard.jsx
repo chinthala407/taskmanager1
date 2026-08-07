@@ -15,12 +15,9 @@ import StatCard from "../components/admin/StatCard";
 
 import "./AdminDashboard.css";
 
-
 function AdminDashboard() {
 
-
   const navigate = useNavigate();
-
 
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -29,93 +26,79 @@ function AdminDashboard() {
     pending: 0
   });
 
-
-
-  const userGrowth = [
-
-    {
-      month:"January",
-      users:20
-    },
-
-    {
-      month:"February",
-      users:35
-    },
-
-    {
-      month:"March",
-      users:50
-    },
-
-    {
-      month:"April",
-      users:70
-    },
-
-    {
-      month:"May",
-      users:90
-    },
-
-    {
-      month:"June",
-      users:120
-    }
-
-  ];
-  
-
-
+  const [userGrowth, setUserGrowth] = useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
 
   useEffect(() => {
 
+  const fetchDashboard = () => {
+
     axios
-      .get("http://localhost:5000/api/admin/stats")
+      .get("http://localhost:5000/api/admin/dashboard")
+
       .then((response) => {
 
-        setStats(response.data);
+        setStats({
+
+          totalUsers: response.data.totalUsers,
+
+          totalTasks: response.data.totalTasks,
+
+          completed: response.data.completed,
+
+          pending: response.data.pending
+
+        });
+
+        setUserGrowth(response.data.monthlyGrowth);
+
+        setRecentActivities(response.data.recentActivities);
 
       })
+
       .catch((error) => {
 
         console.log(error);
 
       });
 
-  }, []);
+  };
 
+  // Load immediately
+  fetchDashboard();
 
+  // Refresh every 5 seconds
+  const interval = setInterval(fetchDashboard, 5000);
+
+  // Cleanup
+  return () => clearInterval(interval);
+
+}, []);
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString();
+  };
 
   return (
 
     <>
 
-
       {/* Welcome Banner */}
 
       <div className="welcome-card">
 
-        <h1>
-          Welcome Back, Admin
-        </h1>
-
+        <h1>Welcome Back, Admin</h1>
 
         <p>
           Manage users, tasks and monitor your application.
         </p>
 
-
       </div>
-
-
 
 
       {/* Statistics */}
 
-
       <div className="stats-container">
-
 
         <StatCard
           title="Total Users"
@@ -124,14 +107,12 @@ function AdminDashboard() {
           color="blue"
         />
 
-
         <StatCard
           title="Total Tasks"
           value={stats.totalTasks}
           icon={<FaTasks />}
           color="purple"
         />
-
 
         <StatCard
           title="Completed"
@@ -140,7 +121,6 @@ function AdminDashboard() {
           color="green"
         />
 
-
         <StatCard
           title="Pending"
           value={stats.pending}
@@ -148,130 +128,101 @@ function AdminDashboard() {
           color="orange"
         />
 
-
       </div>
-
-
-
 
 
       {/* Monthly User Growth */}
 
-
       <div className="growth-card">
 
-
-        <h2>
-          Monthly User Growth
-        </h2>
-
-
+        <h2>Monthly User Growth</h2>
 
         <div className="growth-list">
 
+          {userGrowth.map((item) => (
 
-          {
-            userGrowth.map((item)=>(
+            <div
+              className="growth-row"
+              key={item.month}
+            >
 
+              <span>{item.month}</span>
 
-              <div 
-                className="growth-row"
-                key={item.month}
-              >
+              <div className="growth-progress">
 
-
-                <span>
-                  {item.month}
-                </span>
-
-
-
-                <div className="growth-progress">
-
-
-                  <div
-                    className="growth-fill"
-                    style={{
-                      width:`${item.users}px`
-                    }}
-                  >
-
-
-                  </div>
-
-
-                </div>
-
-
-
-                <strong>
-                  {item.users}
-                </strong>
-
-
+                <div
+                  className="growth-fill"
+                  style={{
+                    width: `${item.users * 25}px`
+                  }}
+                />
 
               </div>
 
+              <strong>{item.users}</strong>
 
-            ))
-          }
+            </div>
 
-
+          ))}
 
         </div>
-
 
       </div>
 
 
-
-
-
       {/* Bottom Section */}
-
 
       <div className="dashboard-grid">
 
+        {/* Recent Activity */}
 
         <div className="activity-card">
 
+          <h2>Recent Activity</h2>
 
-          <h2>
-            Recent Activity
-          </h2>
+          {
 
+            recentActivities.length === 0 ? (
 
-          <p>
-            New user registered
-          </p>
+              <p>No Recent Activity</p>
 
+            ) : (
 
-          <p>
-            Task completed
-          </p>
+              recentActivities.map((activity, index) => (
 
+                <div
+                  key={index}
+                  className="activity-row"
+                >
 
-          <p>
-            Admin updated settings
-          </p>
+                  <p className="activity-message">
+                    {activity.message}
+                  </p>
 
+                  <small className="activity-time">
+                    {formatDate(activity.time)}
+                  </small>
+
+                </div>
+
+              ))
+
+            )
+
+          }
 
         </div>
 
 
-
-
+        {/* Quick Actions */}
 
         <div className="quick-card">
 
+          <h2>Quick Actions</h2>
 
-          <h2>
-            Quick Actions
-          </h2>
-
-
-
-          <button onClick={() => navigate("/admin/users")}>
+          <button
+            onClick={() => navigate("/admin/users")}
+          >
 
             <FaUserCog />
 
@@ -279,10 +230,9 @@ function AdminDashboard() {
 
           </button>
 
-
-
-
-          <button onClick={() => navigate("/admin/reports")}>
+          <button
+            onClick={() => navigate("/admin/reports")}
+          >
 
             <FaChartBar />
 
@@ -290,21 +240,14 @@ function AdminDashboard() {
 
           </button>
 
-
-
         </div>
 
-
-
       </div>
-
-
 
     </>
 
   );
 
 }
-
 
 export default AdminDashboard;

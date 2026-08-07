@@ -168,7 +168,7 @@ function Reports() {
                     <h2>User & Task Overview</h2>
 
 
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={350}>
 
                         <BarChart data={barData}>
 
@@ -206,47 +206,33 @@ function Reports() {
                     <h2>Task Status</h2>
 
 
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={380}>
+    <PieChart
+        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+    >
+        <Pie
+            data={pieData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius="65%"
+            labelLine={false}
+            label={({ name, percent }) =>
+                `${name} ${(percent * 100).toFixed(0)}%`
+            }
+        >
+            <Cell fill="#22c55e" />
+            <Cell fill="#ef4444" />
+        </Pie>
 
-
-                        <PieChart>
-
-
-                            <Pie
-
-                                data={pieData}
-
-                                dataKey="value"
-
-                                nameKey="name"
-
-                                outerRadius={100}
-
-                                label
-
-                            >
-
-                                {
-                                    pieData.map((entry,index)=>(
-
-                                        <Cell key={index}/>
-
-                                    ))
-                                }
-
-
-                            </Pie>
-
-
-                            <Tooltip/>
-
-                            <Legend/>
-
-
-                        </PieChart>
-
-
-                    </ResponsiveContainer>
+        <Tooltip />
+        <Legend
+            verticalAlign="bottom"
+            align="center"
+        />
+    </PieChart>
+</ResponsiveContainer>
 
 
                 </div>
