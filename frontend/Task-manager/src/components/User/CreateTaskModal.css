@@ -63,16 +63,24 @@
 }
 
 
-.close-btn{
+.close-btn {
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: #64748b;
+}
 
-    border:none;
-
-    background:none;
-
-    font-size:22px;
-
-    cursor:pointer;
-
+.close-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
 }
 
 
@@ -113,47 +121,29 @@
 
 
 .modal-buttons {
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    align-items:center;
-
-    gap:15px;
-
-    margin-top:25px;
-
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
 }
 
-
-
 .modal-buttons button {
-
-    width:140px;
-
-    height:42px;
-
-    padding:0;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    line-height:1;
-
-    border:none;
-
-    border-radius:8px;
-
-    font-size:15px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
+    width: 140px;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    font-family: inherit;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 

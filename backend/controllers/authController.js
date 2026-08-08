@@ -12,6 +12,20 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // Check system settings - is new registration allowed?
+    const settingsResult = await db.query(
+      "SELECT allow_registration FROM settings WHERE id = 1"
+    );
+
+    if (
+      settingsResult.rows.length > 0 &&
+      settingsResult.rows[0].allow_registration === false
+    ) {
+      return res.status(403).json({
+        message: "New user registration is currently disabled by the administrator.",
+      });
+    }
+
     // Check if user already exists
     const user = await db.query(
       "SELECT * FROM users WHERE email = $1",
@@ -88,6 +102,28 @@ const login = async (req, res) => {
       return res.status(403).json({
         message: "Your account has been blocked by the administrator."
       });
+
+    }
+
+    // Check system settings - is maintenance mode on?
+    // Admins are exempt so they can always log in (e.g. to turn maintenance mode back off)
+    const isAdmin =
+      user.role && user.role.toLowerCase() === "admin";
+
+    if (!isAdmin) {
+
+      const settingsResult = await db.query(
+        "SELECT maintenance_mode FROM settings WHERE id = 1"
+      );
+
+      if (
+        settingsResult.rows.length > 0 &&
+        settingsResult.rows[0].maintenance_mode === true
+      ) {
+        return res.status(503).json({
+          message: "System is currently under maintenance. Please try again later.",
+        });
+      }
 
     }
 

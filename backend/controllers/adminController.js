@@ -786,6 +786,51 @@ const getAdminProfile = async (req, res) => {
 
     }
 };
+
+// ================= Update Admin Profile =================
+
+const updateAdminProfile = async (req, res) => {
+
+    try {
+
+        const adminId = req.user.id; // From JWT middleware
+
+        const { name, email } = req.body;
+
+        const result = await db.query(
+            `
+            UPDATE users
+            SET name = $1,
+                email = $2
+            WHERE id = $3
+            RETURNING id, name, email
+            `,
+            [name, email, adminId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "Admin not found"
+            });
+        }
+
+        res.json({
+            message: "Profile updated successfully",
+            admin: result.rows[0]
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+
+    }
+
+};
+
 // ================= System Settings =================
 
 const getSystemSettings = async (req, res) => {
@@ -798,7 +843,7 @@ const getSystemSettings = async (req, res) => {
                 allow_registration,
                 maintenance_mode,
                 updated_at
-            FROM system_settings
+            FROM settings
             WHERE id=1
             `
         );
@@ -840,7 +885,7 @@ const updateSystemSettings = async (req,res)=>{
         const result = await db.query(
 
             `
-            UPDATE system_settings
+            UPDATE settings
 
             SET
             allow_registration=$1,
@@ -912,6 +957,8 @@ module.exports = {
     deleteNotification,
 
     getAdminProfile,
+
+    updateAdminProfile,
 
     markUsersSeen,
 

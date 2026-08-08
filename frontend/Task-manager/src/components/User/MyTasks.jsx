@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 
 import {
@@ -13,6 +13,14 @@ import EditTaskModal from "./EditTaskModal";
 
 import "./MyTasks.css";
 
+
+const MONTH_NAMES = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+];
+
+const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 
 function MyTasks() {
@@ -32,6 +40,12 @@ const [selectedTask,setSelectedTask]=useState(null);
 
 const [selectedDate,setSelectedDate]=useState(null);
 
+
+// Calendar month/year currently displayed - defaults to today's month/year
+const today = new Date();
+
+const [calendarMonth,setCalendarMonth]=useState(today.getMonth()); // 0-11
+const [calendarYear,setCalendarYear]=useState(today.getFullYear());
 
 
 const token = localStorage.getItem("token");
@@ -96,6 +110,21 @@ fetchTasks();
 
 
 },[fetchTasks]);
+
+
+
+
+// Keep the calendar automatically on the current month/year
+// whenever the component mounts / the real-world month changes.
+useEffect(()=>{
+
+    const now = new Date();
+
+    setCalendarMonth(now.getMonth());
+
+    setCalendarYear(now.getFullYear());
+
+},[]);
 
 
 
@@ -245,13 +274,46 @@ return searchMatch && filterMatch;
 // ================= Calendar =================
 
 
-const calendarDays = Array.from(
+// Builds a proper month grid: leading blanks so day 1 lines up
+// under the correct weekday, then every real day of the month.
+const calendarCells = useMemo(()=>{
 
-{length:31},
+    const firstWeekday = new Date(
+        calendarYear,
+        calendarMonth,
+        1
+    ).getDay(); // 0 = Sunday ... 6 = Saturday
 
-(_,i)=>i+1
 
-);
+    const daysInMonth = new Date(
+        calendarYear,
+        calendarMonth + 1,
+        0
+    ).getDate();
+
+
+    const cells = [];
+
+
+    // Leading blank cells so the 1st aligns under the right weekday
+    for(let i=0;i<firstWeekday;i++){
+
+        cells.push(null);
+
+    }
+
+
+    // Real days of the month
+    for(let day=1;day<=daysInMonth;day++){
+
+        cells.push(day);
+
+    }
+
+
+    return cells;
+
+},[calendarMonth,calendarYear]);
 
 
 
@@ -260,19 +322,65 @@ const getTasksForDay=(day)=>{
 
 return tasks.filter(task=>{
 
+if(!task.due_date) return false;
+
 
 const date=new Date(
 task.due_date
 );
 
 
-return date.getDate()===day;
+return (
+
+date.getDate()===day &&
+
+date.getMonth()===calendarMonth &&
+
+date.getFullYear()===calendarYear
+
+);
 
 
 });
 
 
 };
+
+
+
+const isToday=(day)=>{
+
+    return (
+
+        day===today.getDate() &&
+
+        calendarMonth===today.getMonth() &&
+
+        calendarYear===today.getFullYear()
+
+    );
+
+};
+
+
+
+// Year dropdown options: a few years back/forward from today
+const yearOptions = useMemo(()=>{
+
+    const currentYear = today.getFullYear();
+
+    const years = [];
+
+    for(let y=currentYear-2;y<=currentYear+2;y++){
+
+        years.push(y);
+
+    }
+
+    return years;
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[]);
 
 
     return (
@@ -607,9 +715,88 @@ return date.getDate()===day;
             <div className="task-calendar-wrapper">
 
 
-                <h2>
-                    Task Calendar
-                </h2>
+                <div className="calendar-header-row">
+
+                    <h2>
+                        Task Calendar
+                    </h2>
+
+
+                    <div className="calendar-controls">
+
+                        <select
+
+                            value={calendarMonth}
+
+                            onChange={
+                                e=>setCalendarMonth(Number(e.target.value))
+                            }
+
+                        >
+
+                            {
+
+                            MONTH_NAMES.map((name,index)=>(
+
+                                <option key={name} value={index}>
+                                    {name}
+                                </option>
+
+                            ))
+
+                            }
+
+                        </select>
+
+
+                        <select
+
+                            value={calendarYear}
+
+                            onChange={
+                                e=>setCalendarYear(Number(e.target.value))
+                            }
+
+                        >
+
+                            {
+
+                            yearOptions.map(year=>(
+
+                                <option key={year} value={year}>
+                                    {year}
+                                </option>
+
+                            ))
+
+                            }
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+
+                {/* Weekday header row */}
+
+                <div className="calendar-weekdays">
+
+                    {
+
+                    WEEKDAY_LABELS.map(label=>(
+
+                        <div key={label} className="calendar-weekday-label">
+                            {label}
+                        </div>
+
+                    ))
+
+                    }
+
+                </div>
 
 
 
@@ -620,8 +807,30 @@ return date.getDate()===day;
                 {
 
 
-                calendarDays.map(day=>(
+                calendarCells.map((day,index)=>{
 
+
+                    if(day===null){
+
+                        return (
+
+                            <div
+
+                            key={`blank-${index}`}
+
+                            className="calendar-day empty"
+
+                            />
+
+                        );
+
+                    }
+
+
+                    const dayTasks = getTasksForDay(day);
+
+
+                    return (
 
                     <div
 
@@ -629,15 +838,9 @@ return date.getDate()===day;
 
                     className={
 
-                    getTasksForDay(day).length
-
-                    ?
-
-                    "calendar-day has-task"
-
-                    :
-
-                    "calendar-day"
+                    `calendar-day` +
+                    (dayTasks.length ? " has-task" : "") +
+                    (isToday(day) ? " today" : "")
 
                     }
 
@@ -649,7 +852,7 @@ return date.getDate()===day;
 
 
                     <h3>
-                        {day} Aug
+                        {day}
                     </h3>
 
 
@@ -658,21 +861,117 @@ return date.getDate()===day;
 
                     {
 
-                    getTasksForDay(day)
+                    dayTasks.length > 0 &&
+
+                    <span className="calendar-task-count">
+
+                        {dayTasks.length} task{dayTasks.length>1 ? "s" : ""}
+
+                    </span>
+
+                    }
+
+
+
+                    </div>
+
+                    );
+
+
+                })
+
+
+
+                }
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            {/* Day Details Popup */}
+
+
+
+            {
+
+            selectedDate &&
+
+
+            <div
+
+            className="modal-overlay"
+
+            onClick={()=>setSelectedDate(null)}
+
+            >
+
+
+                <div
+
+                className="task-modal"
+
+                onClick={(e)=>e.stopPropagation()}
+
+                >
+
+
+                    <h2>
+
+                        Tasks on {MONTH_NAMES[calendarMonth]} {selectedDate}, {calendarYear}
+
+                    </h2>
+
+
+
+                    {
+
+                    getTasksForDay(selectedDate).length === 0 &&
+
+                    <p>No tasks due on this day.</p>
+
+                    }
+
+
+
+                    {
+
+                    getTasksForDay(selectedDate)
 
                     .map(task=>(
 
 
-                        <div
+                        <div key={task.id} className="calendar-modal-task">
 
-                        key={task.id}
+                            <p>
+                                <strong>Title:</strong>
+                                <br/>
+                                {task.title}
+                            </p>
 
-                        className="calendar-task"
 
-                        >
+                            <p>
+                                <strong>Priority:</strong>
+                                <br/>
+                                {task.priority}
+                            </p>
 
-                            {task.title}
 
+                            <p>
+                                <strong>Status:</strong>
+                                <br/>
+                                {task.status}
+                            </p>
 
                         </div>
 
@@ -684,72 +983,26 @@ return date.getDate()===day;
 
 
 
-                    </div>
+                    <button
 
+                        className="close-btn"
 
+                        onClick={()=>setSelectedDate(null)}
 
-                ))
+                    >
 
+                        Close
 
-
-                }
-
-
-                </div>
-
-
-
-
-
-
-
-
-                {
-
-                selectedDate &&
-
-
-                <div className="selected-date-tasks">
-
-
-                    <h3>
-
-                        Tasks on {selectedDate} Aug
-
-                    </h3>
-
-
-
-                    {
-
-                    getTasksForDay(selectedDate)
-
-                    .map(task=>(
-
-
-                        <p key={task.id}>
-
-                            {task.title}
-                            -
-                            {task.status}
-
-                        </p>
-
-
-                    ))
-
-
-                    }
+                    </button>
 
 
                 </div>
-
-
-                }
-
 
 
             </div>
+
+
+            }
 
 
 

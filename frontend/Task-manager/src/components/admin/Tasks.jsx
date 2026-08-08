@@ -23,9 +23,36 @@ function Tasks() {
     };
 
 
+    // ======================================================
+    // Mark Tasks As Seen (clears sidebar badge)
+    // ======================================================
+
+   const markTasksAsSeen = () => {
+
+    const token = localStorage.getItem("token");
+
+    axios
+    .put(
+        "http://localhost:5000/api/admin/tasks/seen",
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+    .catch((error)=>{
+        console.log("Mark tasks seen error:", error);
+    });
+
+};
+
     useEffect(()=>{
 
     fetchTasks();
+
+    // Tell backend these tasks have been viewed by the admin
+    markTasksAsSeen();
 
     const interval = setInterval(()=>{
 

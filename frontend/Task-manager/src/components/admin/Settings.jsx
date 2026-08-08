@@ -16,34 +16,54 @@ function Settings() {
 
     });
 
-    // Fetch logged-in admin details
+    const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState("");
+
+    // Fetch logged-in admin details + system settings
     useEffect(() => {
 
-    const fetchSettings = async () => {
+    const fetchProfileAndSettings = async () => {
 
         try {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/admin/system-settings",
-                {
-                    headers:{
-                        Authorization:`Bearer ${token}`
+            const [profileRes, settingsRes] = await Promise.all([
+
+                axios.get(
+                    "http://localhost:5000/api/admin/profile",
+                    {
+                        headers:{
+                            Authorization:`Bearer ${token}`
+                        }
                     }
-                }
-            );
+                ),
+
+                axios.get(
+                    "http://localhost:5000/api/admin/system-settings",
+                    {
+                        headers:{
+                            Authorization:`Bearer ${token}`
+                        }
+                    }
+                )
+
+            ]);
 
 
             setSettings((prev)=>({
 
                 ...prev,
 
+                name: profileRes.data.name || "",
+
+                email: profileRes.data.email || "",
+
                 allowRegistration:
-                response.data.allow_registration,
+                settingsRes.data.allow_registration,
 
                 maintenanceMode:
-                response.data.maintenance_mode
+                settingsRes.data.maintenance_mode
 
             }));
 
@@ -57,7 +77,7 @@ function Settings() {
     };
 
 
-    fetchSettings();
+    fetchProfileAndSettings();
 
 
 },[]);
@@ -78,35 +98,60 @@ function Settings() {
 
     const saveSettings = async () => {
 
+    setSaving(true);
+    setMessage("");
+
     try {
 
         const token = localStorage.getItem("token");
 
+        const headers = {
+            Authorization:`Bearer ${token}`
+        };
 
-        await axios.put(
-            "http://localhost:5000/api/admin/system-settings",
-            {
-                allow_registration:
-                settings.allowRegistration,
+        // Save profile (name/email) and system settings together
+        await Promise.all([
 
-                maintenance_mode:
-                settings.maintenanceMode
-            },
-            {
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
-            }
-        );
+            axios.put(
+                "http://localhost:5000/api/admin/profile",
+                {
+                    name: settings.name,
+                    email: settings.email
+                },
+                { headers }
+            ),
+
+            axios.put(
+                "http://localhost:5000/api/admin/system-settings",
+                {
+                    allow_registration:
+                    settings.allowRegistration,
+
+                    maintenance_mode:
+                    settings.maintenanceMode
+                },
+                { headers }
+            )
+
+        ]);
 
 
-        alert("Settings updated successfully");
+        setMessage("Settings updated successfully");
 
 
     }
     catch(error){
 
         console.log(error);
+
+        setMessage(
+            error.response?.data?.message || "Failed to update settings"
+        );
+
+    }
+    finally {
+
+        setSaving(false);
 
     }
 
@@ -229,9 +274,16 @@ function Settings() {
             <button
                 className="save-btn"
                 onClick={saveSettings}
+                disabled={saving}
             >
-                Save Changes
+                {saving ? "Saving..." : "Save Changes"}
             </button>
+
+            {message && (
+                <p className="settings-message">
+                    {message}
+                </p>
+            )}
 
         </div>
 

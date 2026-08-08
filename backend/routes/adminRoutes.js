@@ -28,6 +28,7 @@ const {
     markTasksSeen,
 
     getAdminProfile,
+    updateAdminProfile,
 
     deleteUser,
 
@@ -52,6 +53,8 @@ router.get("/dashboard", getDashboardData);
 
 router.get("/users", getAllUsers);
 
+router.put("/users/seen", markUsersSeen);
+
 router.put("/users/:id/status", updateUserStatus);
 
 router.delete("/users/:id", deleteUser);
@@ -59,9 +62,17 @@ router.delete("/users/:id", deleteUser);
 
 
 
+console.log("✅ adminRoutes.js file loaded - tasks/seen route is registered here");
+
 // ================= Tasks =================
 
 router.get("/tasks", getAllTasks);
+
+// NOTE: this must come BEFORE "/tasks/:id" routes.
+// Express matches routes top-to-bottom, and "/tasks/:id" would
+// otherwise treat "seen" as an :id value and swallow this request,
+// routing it into updateTask instead of markTasksSeen.
+router.put("/tasks/seen", markTasksSeen);
 
 router.delete("/tasks/:id", deleteTask);
 
@@ -86,12 +97,6 @@ router.get("/notification-counts", getNotificationCounts);
 // ================= Mark Read =================
 router.put("/notifications/read", markNotificationsRead);
 
-// ================= Mark Users Seen =================
-router.put("/users/seen", markUsersSeen);
-
-// ================= Mark Tasks Seen =================
-router.put("/tasks/seen", markTasksSeen);
-
 
 
 
@@ -104,6 +109,13 @@ router.get(
     verifyToken,
     isAdmin,
     getAdminProfile
+);
+
+router.put(
+    "/profile",
+    verifyToken,
+    isAdmin,
+    updateAdminProfile
 );
 router.get(
     "/system-settings",
