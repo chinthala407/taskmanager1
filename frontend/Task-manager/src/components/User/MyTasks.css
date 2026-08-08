@@ -1,21 +1,25 @@
-.mytasks-container{
+/* =========================
+   Main Container
+========================= */
 
-    margin-top:0;
+.mytasks-container {
 
-    background:white;
+    padding: 25px;
 
-    padding:30px;
+    background:#f8fafc;
 
-    border-radius:18px;
-
-    box-shadow:0 6px 18px rgba(0,0,0,.06);
+    min-height:100vh;
 
 }
 
 
-.mytasks-header{
 
-    margin-top:0;
+/* =========================
+   Header
+========================= */
+
+
+.mytasks-header {
 
     display:flex;
 
@@ -28,51 +32,84 @@
 }
 
 
-.mytasks-header h2{
+.mytasks-header h2 {
 
-    margin:0;
+    font-size:28px;
 
-    padding:0;
+    color:#1e293b;
 
 }
 
-.create-btn{
 
-    background:#2563eb;
 
-    color:white;
+/* =========================
+   Create Button
+========================= */
 
-    border:none;
 
-    padding:12px 20px;
-
-    border-radius:10px;
-
-    cursor:pointer;
+.create-btn {
 
     display:flex;
 
     align-items:center;
 
-    gap:10px;
+    gap:8px;
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    cursor:pointer;
 
     font-size:15px;
 
 }
 
-.task-toolbar{
 
-    display:flex;
 
-    justify-content:space-between;
+.create-btn:hover {
 
-    margin-bottom:20px;
+    background:#1d4ed8;
 
 }
 
-.task-toolbar input{
 
-    width:350px;
+
+/* =========================
+   Search Filter
+========================= */
+
+
+.task-toolbar {
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+
+}
+
+
+
+.task-toolbar input,
+
+.task-toolbar select {
+
 
     padding:12px;
 
@@ -80,187 +117,87 @@
 
     border-radius:8px;
 
-}
-
-.task-toolbar select{
-
-    padding:12px;
-
-    border-radius:8px;
+    font-size:14px;
 
 }
 
-.task-table{
+
+
+/* =========================
+   Table Card
+========================= */
+
+
+.task-table {
 
     width:100%;
 
-    border-collapse:collapse;
+    border-collapse:separate;
 
-}
-
-.task-table th{
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:15px;
-
-}
-
-.task-table td{
-
-    padding:15px;
-
-    border-bottom:1px solid #eee;
-
-}
-
-.high{
-
-    color:red;
-
-    font-weight:600;
-
-}
-
-.medium{
-
-    color:orange;
-
-    font-weight:600;
-
-}
-
-.low{
-
-    color:green;
-
-    font-weight:600;
-
-}
-
-.action-btn{
-
-    border:none;
-
-    background:none;
-
-    cursor:pointer;
-
-    font-size:16px;
-
-    margin-right:12px;
-
-}
-
-.edit{
-
-    color:#2563eb;
-
-}
-
-.delete{
-
-    color:#dc2626;
-
-}
-
-.complete{
-
-    color:#16a34a;
-
-}
-.task-calendar-wrapper {
-
-    margin-top:40px;
+    border-spacing:0;
 
     background:white;
 
-    padding:25px;
+    border-radius:15px;
 
-    border-radius:20px;
+    overflow:hidden;
 
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-
-}
-
-
-.task-calendar-scroll {
-
-    overflow-x:auto;
-
-    padding-bottom:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
 
 }
 
 
 
-.task-calendar {
+.task-table th {
 
-    display:flex;
 
-    gap:15px;
+    background:#f1f5f9;
 
-    width:max-content;
+    padding:16px;
+
+    text-align:left;
+
+    color:#475569;
+
+    font-size:14px;
 
 }
 
 
 
-.calendar-day {
+.task-table td {
 
-    width:170px;
 
-    min-height:130px;
+    padding:16px;
+
+    border-top:1px solid #e5e7eb;
+
+    color:#334155;
+
+}
+
+
+
+.task-table tbody tr:hover {
 
     background:#f8fafc;
 
-    border:1px solid #e5e7eb;
-
-    border-radius:15px;
-
-    padding:15px;
-
-    cursor:pointer;
-
 }
 
 
 
-.calendar-day:hover {
-
-    border-color:#2563eb;
-
-}
+/* Priority */
 
 
+.high {
 
-.calendar-day h3 {
+    background:#fee2e2;
 
-    text-align:center;
+    color:#dc2626;
 
-}
+    padding:6px 12px;
 
-
-
-.has-task {
-
-    border:2px solid #2563eb;
-
-}
-
-
-
-.calendar-task {
-
-    background:#dbeafe;
-
-    padding:6px;
-
-    margin-top:8px;
-
-    border-radius:6px;
+    border-radius:20px;
 
     font-size:13px;
 
@@ -268,14 +205,295 @@
 
 
 
+.medium {
+
+    background:#fef3c7;
+
+    color:#d97706;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+}
+
+
+
+.low {
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+}
+
+
+
+/* =========================
+ Action Buttons
+========================= */
+
+
+.action-btn {
+
+
+    width:35px;
+
+    height:35px;
+
+    border:none;
+
+    border-radius:8px;
+
+    margin-right:8px;
+
+    cursor:pointer;
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+
+.edit {
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+
+
+.delete {
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+
+
+.complete {
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+}
+
+
+
+
+
+
+/* =========================
+ Calendar Card
+========================= */
+
+
+.task-calendar-wrapper {
+
+
+    margin-top:35px;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+
+
+.task-calendar-wrapper h2 {
+
+
+    margin-bottom:20px;
+
+    color:#1e293b;
+
+}
+
+
+
+
+
+
+/* Calendar Grid */
+
+
+.task-calendar {
+
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(7,1fr);
+
+    gap:15px;
+
+
+}
+
+
+
+.calendar-day {
+
+
+    min-height:120px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    background:#ffffff;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+
+}
+
+
+
+.calendar-day:hover {
+
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.calendar-day h3 {
+
+
+    font-size:14px;
+
+    margin-bottom:10px;
+
+    color:#475569;
+
+
+}
+
+
+
+
+.has-task {
+
+
+    border:2px solid #2563eb;
+
+    background:#eff6ff;
+
+}
+
+
+
+
+.calendar-task {
+
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:5px 8px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    margin-top:5px;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+
+}
+
+
+
+/* Selected Date */
+
 .selected-date-tasks {
 
-    margin-top:25px;
+
+    margin-top:20px;
 
     padding:15px;
 
     background:#f8fafc;
 
-    border-radius:12px;
+    border-radius:10px;
+
+}
+
+
+
+/* =========================
+ Responsive
+========================= */
+
+
+@media(max-width:900px){
+
+
+.task-calendar {
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+}
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+.task-calendar {
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+}
+
+
+
+.mytasks-header {
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
 
 }

@@ -569,49 +569,7 @@ const getNotificationCounts = async (req, res) => {
 };
 // ================= Admin Profile =================
 
-const getAdminProfile = async(req,res)=>{
 
-    try{
-
-
-        const result = await db.query(`
-
-            SELECT
-                id,
-                name,
-                email,
-                role
-
-            FROM users
-
-            WHERE LOWER(role)='admin'
-
-            LIMIT 1
-
-        `);
-
-
-
-        res.json(result.rows[0]);
-
-
-    }
-    catch(error){
-
-
-        console.log(error);
-
-
-        res.status(500).json({
-
-            message:"Server Error"
-
-        });
-
-
-    }
-
-};
 // ================= Delete User =================
 
 const deleteUser = async(req,res)=>{
@@ -798,24 +756,171 @@ const markTasksSeen = async (req, res) => {
     }
 
 };
+const getAdminProfile = async (req, res) => {
+    try {
 
+        const adminId = req.user.id; // From JWT middleware
+
+        const result = await db.query(
+            `SELECT id, name, email
+             FROM users
+             WHERE id = $1`,
+            [adminId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "Admin not found"
+            });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+
+    }
+};
+// ================= System Settings =================
+
+const getSystemSettings = async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            `
+            SELECT 
+                allow_registration,
+                maintenance_mode,
+                updated_at
+            FROM system_settings
+            WHERE id=1
+            `
+        );
+
+
+        res.json(result.rows[0]);
+
+
+    } catch(error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:"Server Error"
+
+        });
+
+    }
+
+};
+
+
+
+
+// ================= Update System Settings =================
+
+const updateSystemSettings = async (req,res)=>{
+
+    try{
+
+        const {
+            allow_registration,
+            maintenance_mode
+        } = req.body;
+
+
+
+        const result = await db.query(
+
+            `
+            UPDATE system_settings
+
+            SET
+            allow_registration=$1,
+            maintenance_mode=$2,
+            updated_at=NOW()
+
+            WHERE id=1
+
+            RETURNING *
+
+            `,
+
+            [
+                allow_registration,
+                maintenance_mode
+            ]
+
+        );
+
+
+        res.json({
+
+            message:"System settings updated successfully",
+
+            settings:result.rows[0]
+
+        });
+
+
+    }
+    catch(error){
+
+        console.log(error);
+
+
+        res.status(500).json({
+
+            message:"Server Error"
+
+        });
+
+    }
+
+};
 module.exports = {
 
     getDashboardStats,
+
     getDashboardData,
+
     getReports,
+
     getAllUsers,
+
     getAllTasks,
+
     deleteTask,
+
     updateTask,
+
     updateUserStatus,
+
     getNotifications,
+
     getNotificationCounts,
+
     markNotificationsRead,
+
     deleteNotification,
+
     getAdminProfile,
+
     markUsersSeen,
+
     markTasksSeen,
-    deleteUser
+
+    deleteUser,
+
+    getSystemSettings,
+
+    updateSystemSettings
 
 };

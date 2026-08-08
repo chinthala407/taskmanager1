@@ -1,105 +1,102 @@
-import { useState } from "react";
-import { FaPlus, FaEdit, FaTrash, FaCheck } from "react-icons/fa";
+import { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+
+import {
+    FaPlus,
+    FaEdit,
+    FaTrash,
+    FaCheck
+} from "react-icons/fa";
+
 import CreateTaskModal from "./CreateTaskModal";
+import EditTaskModal from "./EditTaskModal";
+
 import "./MyTasks.css";
+
 
 
 function MyTasks() {
 
 
-    const [search, setSearch] = useState("");
+const [tasks,setTasks]=useState([]);
 
-    const [filter, setFilter] = useState("all");
+const [search,setSearch]=useState("");
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+const [filter,setFilter]=useState("all");
 
-    const [selectedDate, setSelectedDate] = useState(null);
+const [isModalOpen,setIsModalOpen]=useState(false);
 
+const [editOpen,setEditOpen]=useState(false);
 
+const [selectedTask,setSelectedTask]=useState(null);
 
-    const [tasks] = useState([
+const [selectedDate,setSelectedDate]=useState(null);
 
-        {
-            id: 1,
-            title: "Complete React UI",
-            priority: "High",
-            dueDate: "10 Aug 2026",
-            status: "Pending"
-        },
 
-        {
-            id: 2,
-            title: "Connect Backend",
-            priority: "Medium",
-            dueDate: "12 Aug 2026",
-            status: "Completed"
-        },
 
-        {
-            id: 3,
-            title: "Database Testing",
-            priority: "Low",
-            dueDate: "15 Aug 2026",
-            status: "Pending"
-        }
+const token = localStorage.getItem("token");
 
-    ]);
 
 
 
+// ================= Fetch Tasks =================
 
 
-    const days = Array.from(
-        { length: 31 },
-        (_, index) => index + 1
-    );
+const fetchTasks = useCallback(async()=>{
 
 
+try{
 
 
+const response = await axios.get(
 
-    const getTasksForDay = (day) => {
+"http://localhost:5000/api/tasks/user",
 
+{
 
-        return tasks.filter((task)=>{
+headers:{
 
+Authorization:`Bearer ${token}`
 
-            return task.dueDate.startsWith(day + " ");
+}
 
+}
 
-        });
+);
 
 
-    };
 
+setTasks(response.data);
 
 
 
+}
 
+catch(error){
 
-    const filteredTasks = tasks.filter((task) => {
+console.log(
+"Fetch task error",
+error
+);
 
+}
 
-        const matchesSearch = task.title
 
-            .toLowerCase()
 
-            .includes(search.toLowerCase());
+},[token]);
 
 
 
-        const matchesFilter =
 
-            filter === "all" ||
 
-            task.status.toLowerCase() === filter;
+useEffect(()=>{
 
 
+fetchTasks();
 
-        return matchesSearch && matchesFilter;
 
+},[fetchTasks]);
 
-    });
 
 
 
@@ -107,20 +104,175 @@ function MyTasks() {
 
 
 
-    const handleCreateTask = (taskData) => {
+// ================= Delete Task =================
 
 
-        console.log(taskData);
+const deleteTask = async(id)=>{
 
 
-        setIsModalOpen(false);
+try{
 
 
-    };
+await axios.delete(
 
+`http://localhost:5000/api/tasks/${id}`,
 
+{
 
+headers:{
 
+Authorization:`Bearer ${token}`
+
+}
+
+}
+
+);
+
+
+
+fetchTasks();
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+// ================= Complete Task =================
+
+
+const completeTask = async(id)=>{
+
+
+try{
+
+
+await axios.patch(
+
+`http://localhost:5000/api/tasks/${id}/status`,
+
+{},
+
+{
+
+headers:{
+
+Authorization:`Bearer ${token}`
+
+}
+
+}
+
+);
+
+
+
+fetchTasks();
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
+
+
+
+// ================= Search Filter =================
+
+
+const filteredTasks = tasks.filter(task=>{
+
+
+const searchMatch =
+
+task.title
+.toLowerCase()
+.includes(
+search.toLowerCase()
+);
+
+
+
+const filterMatch =
+
+filter==="all" ||
+
+task.status
+.toLowerCase()
+===filter;
+
+
+
+return searchMatch && filterMatch;
+
+
+});
+
+
+
+
+
+
+
+
+
+// ================= Calendar =================
+
+
+const calendarDays = Array.from(
+
+{length:31},
+
+(_,i)=>i+1
+
+);
+
+
+
+const getTasksForDay=(day)=>{
+
+
+return tasks.filter(task=>{
+
+
+const date=new Date(
+task.due_date
+);
+
+
+return date.getDate()===day;
+
+
+});
+
+
+};
 
 
     return (
@@ -130,6 +282,10 @@ function MyTasks() {
 
 
 
+
+
+
+            {/* Header */}
 
 
             <div className="mytasks-header">
@@ -145,13 +301,16 @@ function MyTasks() {
 
                     className="create-btn"
 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={()=>setIsModalOpen(true)}
 
                 >
 
-                    <FaPlus />
+
+                    <FaPlus/>
+
 
                     Create Task
+
 
                 </button>
 
@@ -163,6 +322,11 @@ function MyTasks() {
 
 
 
+
+
+
+
+            {/* Search Filter */}
 
 
 
@@ -178,9 +342,12 @@ function MyTasks() {
 
                     value={search}
 
-                    onChange={(e)=>setSearch(e.target.value)}
+                    onChange={
+                        e=>setSearch(e.target.value)
+                    }
 
                 />
+
 
 
 
@@ -189,9 +356,12 @@ function MyTasks() {
 
                     value={filter}
 
-                    onChange={(e)=>setFilter(e.target.value)}
+                    onChange={
+                        e=>setFilter(e.target.value)
+                    }
 
                 >
+
 
                     <option value="all">
                         All
@@ -203,12 +373,21 @@ function MyTasks() {
                     </option>
 
 
+
+                    <option value="in progress">
+                        In Progress
+                    </option>
+
+
+
                     <option value="completed">
                         Completed
                     </option>
 
 
+
                 </select>
+
 
 
             </div>
@@ -220,12 +399,19 @@ function MyTasks() {
 
 
 
+
+            {/* Task Table */}
+
+
+
             <table className="task-table">
 
 
                 <thead>
 
+
                     <tr>
+
 
                         <th>
                             Title
@@ -261,94 +447,147 @@ function MyTasks() {
 
 
 
+
+
                 <tbody>
 
 
-                    {
-                        filteredTasks.map((task)=>(
+                {
+
+                filteredTasks.map(task=>(
 
 
-                            <tr key={task.id}>
+                    <tr key={task.id}>
 
 
-                                <td>
-                                    {task.title}
-                                </td>
-
-
-
-
-                                <td>
-
-                                    <span className={task.priority.toLowerCase()}>
-
-                                        {task.priority}
-
-                                    </span>
-
-                                </td>
+                        <td>
+                            {task.title}
+                        </td>
 
 
 
-
-                                <td>
-
-                                    {task.dueDate}
-
-                                </td>
+                        <td>
 
 
+                            <span
+
+                            className={
+                                task.priority
+                                .toLowerCase()
+                            }
+
+                            >
+
+                                {task.priority}
+
+                            </span>
 
 
-                                <td>
-
-                                    {task.status}
-
-                                </td>
+                        </td>
 
 
 
 
+                        <td>
 
-                                <td>
+                            {task.due_date}
 
-
-                                    <button className="action-btn edit">
-
-                                        <FaEdit />
-
-                                    </button>
+                        </td>
 
 
 
-                                    <button className="action-btn delete">
 
-                                        <FaTrash />
+                        <td>
 
-                                    </button>
+                            {task.status}
 
-
-
-                                    <button className="action-btn complete">
-
-                                        <FaCheck />
-
-                                    </button>
+                        </td>
 
 
 
-                                </td>
+
+                        <td>
 
 
-                            </tr>
+
+                            <button
+
+                            className="action-btn edit"
+
+                            onClick={()=>{
 
 
-                        ))
+                                setSelectedTask(task);
 
-                    }
+                                setEditOpen(true);
+
+
+                            }}
+
+                            >
+
+                                <FaEdit/>
+
+
+                            </button>
+
+
+
+
+
+
+
+                            <button
+
+                            className="action-btn delete"
+
+                            onClick={()=>deleteTask(task.id)}
+
+                            >
+
+                                <FaTrash/>
+
+
+                            </button>
+
+
+
+
+
+
+
+                            <button
+
+                            className="action-btn complete"
+
+                            onClick={()=>completeTask(task.id)}
+
+                            >
+
+                                <FaCheck/>
+
+
+                            </button>
+
+
+
+
+                        </td>
+
+
+
+
+                    </tr>
+
+
+                ))
+
+
+                }
 
 
                 </tbody>
+
 
 
             </table>
@@ -361,7 +600,8 @@ function MyTasks() {
 
 
 
-            {/* Task Calendar */}
+            {/* Calendar */}
+
 
 
             <div className="task-calendar-wrapper">
@@ -374,79 +614,85 @@ function MyTasks() {
 
 
 
-                <div className="task-calendar-scroll">
+                <div className="task-calendar">
 
 
-                    <div className="task-calendar">
+                {
 
 
-                        {
-
-                            days.map((day)=>(
+                calendarDays.map(day=>(
 
 
-                                <div
+                    <div
 
-                                    key={day}
+                    key={day}
 
-                                    className={
+                    className={
 
-                                        getTasksForDay(day).length > 0
+                    getTasksForDay(day).length
 
-                                        ? "calendar-day has-task"
+                    ?
 
-                                        : "calendar-day"
+                    "calendar-day has-task"
 
-                                    }
+                    :
+
+                    "calendar-day"
+
+                    }
 
 
-                                    onClick={()=>setSelectedDate(day)}
+                    onClick={()=>setSelectedDate(day)}
 
-                                >
-
-
-                                    <h3>
-                                        {day} Aug
-                                    </h3>
+                    >
 
 
 
-                                    {
-
-
-                                        getTasksForDay(day).map((task)=>(
-
-
-                                            <div
-
-                                                key={task.id}
-
-                                                className="calendar-task"
-
-                                            >
-
-                                                {task.title}
-
-
-                                            </div>
-
-
-                                        ))
-
-                                    }
+                    <h3>
+                        {day} Aug
+                    </h3>
 
 
 
-                                </div>
 
 
-                            ))
+                    {
 
-                        }
+                    getTasksForDay(day)
+
+                    .map(task=>(
+
+
+                        <div
+
+                        key={task.id}
+
+                        className="calendar-task"
+
+                        >
+
+                            {task.title}
+
+
+                        </div>
+
+
+                    ))
+
+
+                    }
 
 
 
                     </div>
+
+
+
+                ))
+
+
+
+                }
 
 
                 </div>
@@ -460,59 +706,46 @@ function MyTasks() {
 
                 {
 
-                    selectedDate && (
+                selectedDate &&
 
 
-                        <div className="selected-date-tasks">
+                <div className="selected-date-tasks">
 
 
-                            <h3>
+                    <h3>
 
-                                Tasks on {selectedDate} Aug 2026
+                        Tasks on {selectedDate} Aug
 
-                            </h3>
-
-
-
-                            {
-
-                                getTasksForDay(selectedDate).length > 0 ?
+                    </h3>
 
 
 
-                                getTasksForDay(selectedDate).map((task)=>(
+                    {
+
+                    getTasksForDay(selectedDate)
+
+                    .map(task=>(
 
 
-                                    <p key={task.id}>
+                        <p key={task.id}>
 
-                                        {task.title} - {task.status}
+                            {task.title}
+                            -
+                            {task.status}
 
-                                    </p>
-
-
-                                ))
-
+                        </p>
 
 
-                                :
+                    ))
 
 
-                                <p>
-                                    No tasks
-                                </p>
+                    }
 
 
-                            }
+                </div>
 
-
-                        </div>
-
-
-                    )
 
                 }
-
-
 
 
 
@@ -524,15 +757,80 @@ function MyTasks() {
 
 
 
+
+
+            {/* Create Modal */}
+
+
+
+            {
+
+            isModalOpen &&
+
+
             <CreateTaskModal
 
-                isOpen={isModalOpen}
 
-                onClose={()=>setIsModalOpen(false)}
+            isOpen={isModalOpen}
 
-                onSubmit={handleCreateTask}
+
+            onClose={()=>
+                setIsModalOpen(false)
+            }
+
+
+            onSubmit={()=>{
+
+
+                fetchTasks();
+
+                setIsModalOpen(false);
+
+
+            }}
+
 
             />
+
+            }
+
+
+
+
+
+
+
+
+
+            {/* Edit Modal */}
+
+
+
+            {
+
+            editOpen &&
+
+
+            <EditTaskModal
+
+
+            task={selectedTask}
+
+
+            isOpen={editOpen}
+
+
+            onClose={()=>
+                setEditOpen(false)
+            }
+
+
+            refresh={fetchTasks}
+
+
+            />
+
+            }
 
 
 
@@ -540,6 +838,7 @@ function MyTasks() {
 
 
     );
+
 
 }
 

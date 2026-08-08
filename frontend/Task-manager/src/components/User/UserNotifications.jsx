@@ -1,37 +1,272 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import "./UserNotifications.css";
 
 
 function UserNotifications() {
 
+    const [notifications, setNotifications] = useState([]);
 
-    const notifications = [
-
-        {
-            id:1,
-            message:"Your task 'Complete React UI' is pending",
-            time:"10 minutes ago"
-        },
+    const [loading, setLoading] = useState(true);
 
 
-        {
-            id:2,
-            message:"API Integration task completed",
-            time:"1 hour ago"
-        },
+    const token = localStorage.getItem("token");
 
 
-        {
-            id:3,
-            message:"New task assigned to you",
-            time:"Yesterday"
+
+    // ======================================================
+    // Fetch Notifications
+    // ======================================================
+
+    const fetchNotifications = async () => {
+
+        try {
+
+            const response = await axios.get(
+                "http://localhost:5000/api/user/notifications",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+
+            setNotifications(response.data);
+
+        }
+        catch (error) {
+
+            console.log(
+                "Notification fetch error:",
+                error
+            );
+
+        }
+        finally {
+
+            setLoading(false);
+
         }
 
-    ];
+    };
 
 
+
+    // ======================================================
+    // Mark All Notifications As Read
+    // ======================================================
+
+    const markAllAsRead = async () => {
+
+        try {
+
+            await axios.patch(
+                "http://localhost:5000/api/user/notifications/read-all",
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+
+            // Update UI immediately
+
+            setNotifications(prev =>
+
+                prev.map(notification => ({
+
+                    ...notification,
+
+                    is_read: true
+
+                }))
+
+            );
+
+        }
+        catch (error) {
+
+            console.log(
+                "Mark all notifications error:",
+                error
+            );
+
+        }
+
+    };
+
+
+
+    // ======================================================
+    // Initial Fetch
+    // ======================================================
+
+    useEffect(() => {
+
+        const loadNotifications = async () => {
+
+            // First get notifications
+
+            await fetchNotifications();
+
+
+            // Then mark them as read
+
+            await markAllAsRead();
+
+        };
+
+
+        loadNotifications();
+
+    }, []);
+
+
+
+    // ======================================================
+    // Automatic Refresh
+    // ======================================================
+
+    useEffect(() => {
+
+        const interval = setInterval(() => {
+
+            fetchNotifications();
+
+        }, 5000);
+
+
+        return () => {
+
+            clearInterval(interval);
+
+        };
+
+    }, []);
+
+
+
+    // ======================================================
+    // Format Notification Time
+    // ======================================================
+
+    const formatTime = (createdAt) => {
+
+        if (!createdAt) {
+
+            return "";
+
+        }
+
+
+        const notificationDate =
+            new Date(createdAt);
+
+
+        if (
+            isNaN(
+                notificationDate.getTime()
+            )
+        ) {
+
+            return "";
+
+        }
+
+
+        const now = new Date();
+
+
+        const difference =
+            Math.floor(
+                (now - notificationDate) / 1000
+            );
+
+
+
+        if (difference < 60) {
+
+            return "Just now";
+
+        }
+
+
+
+        if (difference < 3600) {
+
+            return `${Math.floor(
+                difference / 60
+            )} minutes ago`;
+
+        }
+
+
+
+        if (difference < 86400) {
+
+            return `${Math.floor(
+                difference / 3600
+            )} hours ago`;
+
+        }
+
+
+
+        if (difference < 172800) {
+
+            return "Yesterday";
+
+        }
+
+
+
+        return notificationDate.toLocaleDateString(
+            "en-IN"
+        );
+
+    };
+
+
+
+    // ======================================================
+    // Loading
+    // ======================================================
+
+    if (loading) {
+
+        return (
+
+            <div className="notifications-page">
+
+                <div className="notifications-card">
+
+                    <h2>
+                        Notifications
+                    </h2>
+
+                    <p>
+                        Loading notifications...
+                    </p>
+
+                </div>
+
+            </div>
+
+        );
+
+    }
+
+
+
+    // ======================================================
+    // UI
+    // ======================================================
 
     return (
-
 
         <div className="notifications-page">
 
@@ -46,43 +281,72 @@ function UserNotifications() {
 
 
                 {
-                    notifications.map((notification)=>(
+                    notifications.length === 0
+
+                    ?
+
+                    (
+
+                        <p className="no-notifications">
+
+                            No notifications
+
+                        </p>
+
+                    )
+
+                    :
+
+                    (
+
+                        notifications.map(
+                            (notification) => (
+
+                                <div
+
+                                    key={notification.id}
+
+                                    className={
+                                        `notification-item ${
+                                            notification.is_read
+                                                ? ""
+                                                : "unread"
+                                        }`
+                                    }
+
+                                >
+
+                                    <p>
+                                        {
+                                            notification.message
+                                        }
+                                    </p>
 
 
-                        <div
+                                    <span>
 
-                            className="notification-item"
+                                        {
+                                            formatTime(
+                                                notification.created_at
+                                            )
+                                        }
 
-                            key={notification.id}
-
-                        >
-
-
-                            <p>
-                                {notification.message}
-                            </p>
+                                    </span>
 
 
-                            <span>
-                                {notification.time}
-                            </span>
+                                </div>
 
+                            )
+                        )
 
-
-                        </div>
-
-
-                    ))
-
+                    )
                 }
-
 
 
             </div>
 
 
         </div>
-
 
     );
 

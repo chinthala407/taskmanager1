@@ -1,12 +1,91 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+
 import "../admin/AdminSidebar.css";
 
 
 function UserSidebar() {
 
+    const [unreadCount, setUnreadCount] = useState(0);
+
+
+    const token = localStorage.getItem("token");
+
+
+
+    // ======================================================
+    // Fetch Unread Notifications
+    // ======================================================
+
+    const fetchUnreadNotifications = async () => {
+
+        try {
+
+            const response = await axios.get(
+                "http://localhost:5000/api/user/notifications",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+
+            const unreadCount =
+                response.data.filter(
+                    notification =>
+                        !notification.is_read
+                ).length;
+
+
+            setUnreadCount(unreadCount);
+
+        }
+        catch (error) {
+
+            console.log(
+                "Unread notification error:",
+                error
+            );
+
+        }
+
+    };
+
+
+
+    // ======================================================
+    // Initial Fetch + Refresh
+    // ======================================================
+
+    useEffect(() => {
+
+        fetchUnreadNotifications();
+
+
+        const interval = setInterval(() => {
+
+            fetchUnreadNotifications();
+
+        }, 5000);
+
+
+        return () => {
+
+            clearInterval(interval);
+
+        };
+
+    }, []);
+
+
+
+    // ======================================================
+    // Sidebar
+    // ======================================================
 
     return (
-
 
         <aside className="admin-sidebar">
 
@@ -14,6 +93,7 @@ function UserSidebar() {
             <nav className="sidebar-menu">
 
 
+                {/* ================= Dashboard ================= */}
 
                 <NavLink
                     to="/user"
@@ -25,6 +105,7 @@ function UserSidebar() {
 
 
 
+                {/* ================= My Tasks ================= */}
 
                 <NavLink
                     to="/user/tasks"
@@ -35,7 +116,7 @@ function UserSidebar() {
 
 
 
-
+                {/* ================= Completed ================= */}
 
                 <NavLink
                     to="/user/completed"
@@ -46,7 +127,7 @@ function UserSidebar() {
 
 
 
-
+                {/* ================= Reports ================= */}
 
                 <NavLink
                     to="/user/reports"
@@ -55,14 +136,41 @@ function UserSidebar() {
                     Reports
                 </NavLink>
 
+
+
+                {/* ================= Notifications ================= */}
+
                 <NavLink
                     to="/user/notifications"
                     className="sidebar-link"
                 >
-                Notifications
+
+                    <span>
+                        Notifications
+                    </span>
+
+
+                    {
+                        unreadCount > 0 && (
+
+                            <span className="notification-badge">
+
+                                {
+                                    unreadCount > 99
+                                        ? "99+"
+                                        : unreadCount
+                                }
+
+                            </span>
+
+                        )
+                    }
+
                 </NavLink>
 
 
+
+                {/* ================= Profile ================= */}
 
                 <NavLink
                     to="/user/profile"
@@ -73,7 +181,7 @@ function UserSidebar() {
 
 
 
-
+                {/* ================= Settings ================= */}
 
                 <NavLink
                     to="/user/settings"
@@ -83,16 +191,12 @@ function UserSidebar() {
                 </NavLink>
 
 
-
-
             </nav>
 
 
         </aside>
 
-
     );
-
 
 }
 

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import taskIcon from "../../assets/task-check-icon.png";
 import "../admin/AdminNavbar.css";
 
-function UserNavbar() {
+function UserNavbar({ search, setSearch }) {
 
     const navigate = useNavigate();
 
@@ -31,7 +31,6 @@ function UserNavbar() {
                     />
 
                     <h2>
-
                         <span className="task-text">
                             Task
                         </span>
@@ -39,14 +38,11 @@ function UserNavbar() {
                         <span className="manager-text">
                             Manager
                         </span>
-
                     </h2>
 
                 </div>
 
             </div>
-
-
 
             <div className="navbar-center">
 
@@ -54,11 +50,11 @@ function UserNavbar() {
                     type="text"
                     placeholder="Search your tasks..."
                     className="search-box"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
 
             </div>
-
-
 
             <div className="navbar-right">
 

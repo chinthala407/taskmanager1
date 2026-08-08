@@ -1,180 +1,436 @@
-import { useState } from "react";
-import { FaEye, FaTrash, FaCheckCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import {
+    FaEye,
+    FaTrash
+} from "react-icons/fa";
+
 import "./CompletedTasks.css";
 
 
-function CompletedTasks() {
-
-    const [search, setSearch] = useState("");
+function CompletedTasks(){
 
 
-    const completedTasks = [
-        {
-            id:1,
-            title:"Build User Dashboard",
-            description:"Complete dashboard UI design",
-            priority:"High",
-            completedDate:"05 Aug 2026"
-        },
-        {
-            id:2,
-            title:"Backend API Integration",
-            description:"Connect frontend with backend",
-            priority:"Medium",
-            completedDate:"03 Aug 2026"
-        },
-        {
-            id:3,
-            title:"Database Testing",
-            description:"Test PostgreSQL database",
-            priority:"Low",
-            completedDate:"01 Aug 2026"
+    const [tasks,setCompletedTasks] = useState([]);
+
+    const [search,setSearch] = useState("");
+
+    const [selectedTask,setSelectedTask] = useState(null);
+
+
+
+    const token = localStorage.getItem("token");
+
+
+
+    // ================= Fetch Completed Tasks =================
+
+
+    const fetchCompletedTasks = async()=>{
+
+        try{
+
+            const response = await axios.get(
+                "http://localhost:5000/api/tasks/completed",
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+
+
+            setCompletedTasks(response.data);
+
+
         }
-    ];
+        catch(error){
+
+            console.log(error);
+
+        }
+
+    };
 
 
-    const filteredTasks = completedTasks.filter((task)=>
-        task.title.toLowerCase()
-        .includes(search.toLowerCase())
+
+
+    useEffect(()=>{
+
+        fetchCompletedTasks();
+
+    },[]);
+
+
+
+
+    // ================= Search =================
+
+
+    const filteredTasks = tasks.filter(task=>
+
+        task.title
+        .toLowerCase()
+        .includes(
+            search.toLowerCase()
+        )
+
     );
 
 
-    return (
+
+
+
+    // ================= Delete =================
+
+
+    const deleteTask = async(id)=>{
+
+
+        try{
+
+
+            await axios.delete(
+
+                `http://localhost:5000/api/tasks/${id}`,
+
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+
+            );
+
+
+            fetchCompletedTasks();
+
+
+        }
+        catch(error){
+
+            console.log(error);
+
+        }
+
+
+    };
+
+
+
+
+
+    // ================= View Task =================
+
+
+    const viewTask = (task)=>{
+
+        setSelectedTask(task);
+
+    };
+
+
+
+
+
+    return(
 
         <div className="completed-container">
 
 
-            <div className="completed-header">
+            <h2>
 
-                <div>
+                {tasks.length} Completed Tasks
 
-                    <h1>
-                        Completed Tasks
-                    </h1>
+            </h2>
+
+
+
+
+
+            <input
+
+                type="text"
+
+                placeholder="Search completed tasks..."
+
+                value={search}
+
+                onChange={
+                    e=>setSearch(e.target.value)
+                }
+
+                className="search-input"
+
+            />
+
+
+
+
+
+
+            {
+
+                filteredTasks.length === 0
+
+                ?
+
+                (
 
                     <p>
-                        View your completed tasks
+                        No completed tasks
                     </p>
 
+                )
+
+
+                :
+
+
+                (
+
+                filteredTasks.map(task=>(
+
+
+                    <div
+                    className="completed-card"
+                    key={task.id}
+                    >
+
+
+
+                        <div className="task-info">
+
+
+                            <h3>
+                                {task.title}
+                            </h3>
+
+
+
+                            <p>
+                                {task.description}
+                            </p>
+
+
+
+                            <span
+                            className={
+                                `priority ${task.priority.toLowerCase()}`
+                            }
+                            >
+
+                                {task.priority}
+
+                            </span>
+
+
+
+
+                            <p>
+
+                                Completed on:
+
+                                {" "}
+
+                                {
+                                new Date(
+                                    task.updated_at
+                                )
+                                .toLocaleDateString("en-IN")
+                                }
+
+                            </p>
+
+
+
+                        </div>
+
+
+
+
+
+                        <div className="task-actions">
+
+
+                            <button
+
+                            className="view-btn"
+
+                            onClick={
+                                ()=>viewTask(task)
+                            }
+
+                            >
+
+                                <FaEye/>
+
+                            </button>
+
+
+
+
+
+                            <button
+
+                            className="delete-btn"
+
+                            onClick={
+                                ()=>deleteTask(task.id)
+                            }
+
+                            >
+
+                                <FaTrash/>
+
+                            </button>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+                ))
+
+                )
+
+            }
+
+
+
+
+
+
+
+            {/* ================= Task Details Modal ================= */}
+
+
+
+            {
+
+            selectedTask &&
+
+
+            (
+
+                <div className="task-modal-overlay">
+
+
+
+                    <div className="task-modal">
+
+
+
+                        <h2>
+                            Task Details
+                        </h2>
+
+
+
+
+                        <h3>
+                            {selectedTask.title}
+                        </h3>
+
+
+
+
+                        <p>
+
+                            <b>Description:</b>
+
+                            <br/>
+
+                            {selectedTask.description}
+
+                        </p>
+
+
+
+
+
+                        <p>
+
+                            <b>Priority:</b>
+
+                            {" "}
+
+                            {selectedTask.priority}
+
+                        </p>
+
+
+
+
+
+                        <p>
+
+                            <b>Status:</b>
+
+                            {" "}
+
+                            {selectedTask.status}
+
+                        </p>
+
+
+
+
+
+                        <p>
+
+                            <b>Completed Date:</b>
+
+                            {" "}
+
+                            {
+
+                            new Date(
+                                selectedTask.updated_at
+                            )
+                            .toLocaleDateString("en-IN")
+
+                            }
+
+                        </p>
+
+
+
+
+
+                        <button
+
+                        className="close-btn"
+
+                        onClick={
+                            ()=>setSelectedTask(null)
+                        }
+
+                        >
+
+                            Close
+
+                        </button>
+
+
+
+
+                    </div>
+
+
+
                 </div>
 
 
-                <div className="completed-count">
+            )
 
-                    <FaCheckCircle/>
+            }
 
-                    <span>
-                        {completedTasks.length} Completed
-                    </span>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div className="completed-toolbar">
-
-                <input
-
-                    type="text"
-
-                    placeholder="Search completed tasks..."
-
-                    value={search}
-
-                    onChange={(e)=>setSearch(e.target.value)}
-
-                />
-
-            </div>
-
-
-
-
-            <table className="completed-table">
-
-
-                <thead>
-
-                    <tr>
-
-                        <th>Task</th>
-
-                        <th>Description</th>
-
-                        <th>Priority</th>
-
-                        <th>Completed Date</th>
-
-                        <th>Actions</th>
-
-                    </tr>
-
-                </thead>
-
-
-
-                <tbody>
-
-                    {
-                        filteredTasks.map((task)=>(
-
-                            <tr key={task.id}>
-
-                                <td>
-                                    {task.title}
-                                </td>
-
-
-                                <td>
-                                    {task.description}
-                                </td>
-
-
-                                <td>
-
-                                    <span className={
-                                        `priority ${task.priority.toLowerCase()}`
-                                    }>
-
-                                        {task.priority}
-
-                                    </span>
-
-                                </td>
-
-
-                                <td>
-                                    {task.completedDate}
-                                </td>
-
-
-                                <td>
-
-                                    <button className="view-btn">
-                                        <FaEye/>
-                                    </button>
-
-
-                                    <button className="delete-btn">
-                                        <FaTrash/>
-                                    </button>
-
-                                </td>
-
-
-                            </tr>
-
-                        ))
-                    }
-
-
-                </tbody>
-
-
-            </table>
 
 
         </div>

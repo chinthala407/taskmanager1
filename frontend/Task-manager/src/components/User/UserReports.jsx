@@ -1,20 +1,45 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import {
-    Chart as ChartJS,
-    ArcElement,
-    Tooltip,
-    Legend
+Chart as ChartJS,
+ArcElement,
+Tooltip,
+Legend,
+CategoryScale,
+LinearScale,
+BarElement
 } from "chart.js";
 
-import { Doughnut } from "react-chartjs-2";
+
+import {
+Doughnut,
+Bar,
+Pie
+} from "react-chartjs-2";
+
 
 import "./UserReports.css";
 
 
+
 ChartJS.register(
-    ArcElement,
-    Tooltip,
-    Legend
+
+ArcElement,
+
+Tooltip,
+
+Legend,
+
+CategoryScale,
+
+LinearScale,
+
+BarElement
+
 );
+
+
 
 
 
@@ -22,190 +47,577 @@ function UserReports(){
 
 
 
-    // Temporary data (later connect PostgreSQL)
+const [tasks,setTasks]=useState([]);
 
-    const statusData = {
 
 
-        labels:[
-            "Pending",
-            "Ongoing",
-            "Completed"
-        ],
 
+const token = localStorage.getItem("token");
 
-        datasets:[
 
-            {
 
-                data:[
-                    5,
-                    3,
-                    8
-                ],
 
-                backgroundColor:[
 
-                    "#f59e0b",
 
-                    "#3b82f6",
+// ================= Fetch Tasks =================
 
-                    "#22c55e"
 
-                ]
+const fetchTasks = async()=>{
 
-            }
 
-        ]
+try{
 
-    };
 
+const response = await axios.get(
 
+"http://localhost:5000/api/tasks/reports",
 
+{
 
+headers:{
 
-    const priorityData = {
-
-
-        labels:[
-
-            "Low",
-
-            "Medium",
-
-            "High"
-
-        ],
-
-
-
-        datasets:[
-
-
-            {
-
-
-                data:[
-
-                    4,
-
-                    7,
-
-                    5
-
-                ],
-
-
-
-                backgroundColor:[
-
-                    "#22c55e",
-
-                    "#f59e0b",
-
-                    "#ef4444"
-
-                ]
-
-            }
-
-
-        ]
-
-    };
-
-
-
-
-
-
-
-    return(
-
-
-        <div className="user-reports-page">
-
-
-
-            <h2>
-
-                Task Reports
-
-            </h2>
-
-
-
-
-
-
-            <div className="charts-container">
-
-
-
-
-
-                <div className="chart-card">
-
-
-                    <h3>
-
-                        Task Status
-
-                    </h3>
-
-
-
-                    <Doughnut
-
-                        data={statusData}
-
-                    />
-
-
-                </div>
-
-
-
-
-
-
-
-                <div className="chart-card">
-
-
-                    <h3>
-
-                        Task Priority
-
-                    </h3>
-
-
-
-
-                    <Doughnut
-
-                        data={priorityData}
-
-                    />
-
-
-
-                </div>
-
-
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-    );
+Authorization:`Bearer ${token}`
 
 }
+
+}
+
+);
+
+
+
+setTasks(response.data);
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
+
+
+
+useEffect(()=>{
+
+
+fetchTasks();
+
+
+},[]);
+
+
+
+
+
+
+
+
+
+// ================= Statistics =================
+
+
+
+const totalTasks = tasks.length;
+
+
+
+const completed = tasks.filter(
+
+task=>
+
+task.status?.toLowerCase()==="completed"
+
+).length;
+
+
+
+const pending = tasks.filter(
+
+task=>
+
+task.status?.toLowerCase()==="pending"
+
+).length;
+
+
+
+const progress = tasks.filter(
+
+task=>
+
+task.status?.toLowerCase()==="in progress"
+
+).length;
+
+
+
+
+
+
+
+const high = tasks.filter(
+
+task=>
+
+task.priority?.toLowerCase()==="high"
+
+).length;
+
+
+
+const medium = tasks.filter(
+
+task=>
+
+task.priority?.toLowerCase()==="medium"
+
+).length;
+
+
+
+const low = tasks.filter(
+
+task=>
+
+task.priority?.toLowerCase()==="low"
+
+).length;
+
+
+
+
+
+
+
+
+
+// ================= Status Chart =================
+
+
+const statusData={
+
+labels:[
+"Pending",
+"In Progress",
+"Completed"
+],
+
+datasets:[{
+
+data:[
+pending,
+progress,
+completed
+],
+
+backgroundColor:[
+
+"#f59e0b",
+"#3b82f6",
+"#22c55e"
+
+],
+
+borderWidth:1
+
+}]
+
+};
+
+
+
+
+
+
+
+
+
+// ================= Priority Chart =================
+
+
+const priorityData={
+
+labels:[
+"Low",
+"Medium",
+"High"
+],
+
+datasets:[{
+
+data:[
+low,
+medium,
+high
+],
+
+backgroundColor:[
+
+"#22c55e",
+"#f59e0b",
+"#ef4444"
+
+],
+
+borderWidth:1
+
+}]
+
+};
+
+
+
+
+
+
+
+
+
+// ================= Completion Rate =================
+
+
+
+const completionData={
+
+labels:[
+"Completed",
+"Remaining"
+],
+
+datasets:[{
+
+data:[
+completed,
+totalTasks-completed
+],
+
+backgroundColor:[
+
+"#22c55e",
+"#94a3b8"
+
+],
+
+borderWidth:1
+
+}]
+
+};
+
+
+
+
+
+
+
+
+// ================= Monthly Tasks =================
+
+
+const monthCount={};
+
+
+
+tasks.forEach(task=>{
+
+
+const month = new Date(
+
+task.created_at
+
+)
+
+.toLocaleString(
+
+"en-US",
+
+{
+month:"short"
+}
+
+);
+
+
+
+monthCount[month] =
+
+(monthCount[month] || 0)+1;
+
+
+});
+
+
+
+
+
+const monthlyData={
+
+labels:Object.keys(monthCount),
+
+datasets:[{
+
+label:"Tasks Created",
+
+data:Object.values(monthCount),
+
+backgroundColor:"#3b82f6",
+
+borderWidth:1
+
+}]
+
+};
+
+
+
+
+
+
+
+
+
+
+return(
+
+
+
+<div className="user-reports-page">
+
+
+
+
+
+
+<h2>
+
+Task Reports
+
+</h2>
+
+
+
+
+
+
+
+{/* Statistics */}
+
+
+
+<div className="report-stats">
+
+
+<div className="report-card">
+
+<h3>
+Total Tasks
+</h3>
+
+<h1>
+{totalTasks}
+</h1>
+
+</div>
+
+
+
+<div className="report-card">
+
+<h3>
+Completed
+</h3>
+
+<h1>
+{completed}
+</h1>
+
+</div>
+
+
+
+
+<div className="report-card">
+
+<h3>
+Pending
+</h3>
+
+<h1>
+{pending}
+</h1>
+
+</div>
+
+
+
+<div className="report-card">
+
+<h3>
+Progress
+</h3>
+
+<h1>
+{progress}
+</h1>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div className="charts-container">
+
+
+
+
+
+
+
+<div className="chart-card">
+
+
+<h3>
+
+Task Status
+
+</h3>
+
+
+<Doughnut
+
+data={statusData}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div className="chart-card">
+
+
+<h3>
+
+Task Priority
+
+</h3>
+
+
+<Doughnut
+
+data={priorityData}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div className="chart-card">
+
+
+<h3>
+
+Completion Rate
+
+</h3>
+
+
+
+<Pie
+
+data={completionData}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div className="chart-card large-chart">
+
+
+<h3>
+
+Monthly Task Creation
+
+</h3>
+
+
+<Bar
+
+data={monthlyData}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+);
+
+
+}
+
 
 
 export default UserReports;

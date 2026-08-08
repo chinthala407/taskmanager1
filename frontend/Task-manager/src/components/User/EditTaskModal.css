@@ -1,0 +1,242 @@
+/* ================= Overlay ================= */
+
+.modal-overlay {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 2000;
+
+}
+
+
+/* ================= Modal ================= */
+
+.edit-modal {
+
+    width: 450px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    padding: 30px;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+
+/* ================= Heading ================= */
+
+.edit-modal h2 {
+
+    text-align: center;
+
+    margin: 0 0 10px;
+
+    font-size: 28px;
+
+    color: #1f2937;
+
+}
+
+
+/* ================= Inputs ================= */
+
+.edit-modal input,
+
+.edit-modal textarea,
+
+.edit-modal select {
+
+    width: 100%;
+
+    padding: 12px 14px;
+
+    font-size: 15px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition: 0.3s;
+
+    font-family: inherit;
+
+}
+
+
+/* ================= Textarea ================= */
+
+.edit-modal textarea {
+
+    min-height: 110px;
+
+    resize: vertical;
+
+}
+
+
+/* ================= Focus ================= */
+
+.edit-modal input:focus,
+
+.edit-modal textarea:focus,
+
+.edit-modal select:focus {
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+
+}
+
+
+/* ================= Dropdown ================= */
+
+.edit-modal select {
+
+    cursor: pointer;
+
+    background: #ffffff;
+
+}
+
+
+/* ================= Date Input ================= */
+
+.edit-modal input[type="date"] {
+
+    cursor: pointer;
+
+}
+
+
+/* ================= Buttons ================= */
+
+.modal-buttons {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 15px;
+
+    margin-top: 10px;
+
+}
+
+
+/* ================= Update Button ================= */
+
+.update-btn {
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    border: none;
+
+    padding: 12px 25px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+.update-btn:hover {
+
+    background: #1d4ed8;
+
+}
+
+
+/* ================= Cancel Button ================= */
+
+.cancel-btn {
+
+    background: #e5e7eb;
+
+    color: #374151;
+
+    border: none;
+
+    padding: 12px 25px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+.cancel-btn:hover {
+
+    background: #d1d5db;
+
+}
+
+
+/* ================= Mobile ================= */
+
+@media (max-width: 500px) {
+
+    .edit-modal {
+
+        width: 90%;
+
+        padding: 20px;
+
+    }
+
+    .modal-buttons {
+
+        flex-direction: column;
+
+    }
+
+    .update-btn,
+
+    .cancel-btn {
+
+        width: 100%;
+
+    }
+
+}

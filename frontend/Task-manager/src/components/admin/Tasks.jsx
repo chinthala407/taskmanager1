@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Tasks.css";
-
+import { FaEye, FaTrash } from "react-icons/fa";
 function Tasks() {
 
     const [tasks,setTasks] = useState([]);
@@ -212,24 +212,31 @@ function Tasks() {
 
                                 <td>
 
+                                   
+
                                     <div className="action-btns">
 
                                         <button
-                                        className="view-btn"
-                                            onClick={()=>handleView(task)}
+                                            className="view-btn"
+                                            onClick={() => handleView(task)}
+                                            title="View Task"
                                         >
-                                            View
+                                            <FaEye />
                                         </button>
-
 
                                         <button
                                             className="delete-btn"
-                                            onClick={()=>handleDelete(task.id)}
+                                            onClick={() => handleDelete(task.id)}
+                                            title="Delete Task"
                                         >
-                                            Delete
+                                            <FaTrash />
                                         </button>
 
                                     </div>
+
+
+
+
 
                                 </td>
 

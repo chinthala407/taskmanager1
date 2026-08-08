@@ -1,41 +1,81 @@
 import { useState } from "react";
+import axios from "axios";
 import "./CreateTaskModal.css";
 
-function CreateTaskModal({ isOpen, onClose, onSubmit }) {
+function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [priority, setPriority] = useState("Medium");
-    const [dueDate, setDueDate] = useState("");
-
-
-    if (!isOpen) return null;
+    const [title,setTitle] = useState("");
+    const [description,setDescription] = useState("");
+    const [priority,setPriority] = useState("Medium");
+    const [dueDate,setDueDate] = useState("");
 
 
-    const handleSubmit = (e) => {
+    if(!isOpen) return null;
+
+
+    const handleSubmit = async(e)=>{
 
         e.preventDefault();
 
 
-        const taskData = {
-            title,
-            description,
-            priority,
-            dueDate
-        };
+        try{
+
+            const token = localStorage.getItem("token");
 
 
-        onSubmit(taskData);
+            const response = await axios.post(
+
+                "http://localhost:5000/api/tasks",
+
+                {
+                    title,
+                    description,
+                    priority,
+                    dueDate
+                },
+
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+
+            );
 
 
-        setTitle("");
-        setDescription("");
-        setPriority("Medium");
-        setDueDate("");
+            console.log(response.data);
 
-        onClose();
+
+            alert("Task created successfully");
+
+
+            if(onTaskCreated){
+                onTaskCreated(response.data.task);
+            }
+
+
+            setTitle("");
+            setDescription("");
+            setPriority("Medium");
+            setDueDate("");
+
+
+            onClose();
+
+
+        }
+        catch(error){
+
+            console.log(
+                error.response?.data || error.message
+            );
+
+            alert("Task creation failed");
+
+        }
 
     };
+
 
 
     return (
@@ -54,7 +94,6 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
                 <div className="modal-header">
 
-
                     <h2>
                         Create New Task
                     </h2>
@@ -68,9 +107,7 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
                         ✕
                     </button>
 
-
                 </div>
-
 
 
 
@@ -85,15 +122,20 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
 
                         <input
+
                             type="text"
+
                             placeholder="Enter task title"
+
                             value={title}
+
                             onChange={(e)=>setTitle(e.target.value)}
+
                             required
+
                         />
 
                     </div>
-
 
 
 
@@ -120,7 +162,6 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
 
 
-
                     <div className="form-group">
 
                         <label>
@@ -136,15 +177,15 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
                         >
 
-                            <option value="High">
+                            <option>
                                 High
                             </option>
 
-                            <option value="Medium">
+                            <option>
                                 Medium
                             </option>
 
-                            <option value="Low">
+                            <option>
                                 Low
                             </option>
 
@@ -153,8 +194,6 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
 
                     </div>
-
-
 
 
 
@@ -175,49 +214,29 @@ function CreateTaskModal({ isOpen, onClose, onSubmit }) {
 
                         />
 
-
                     </div>
-
-
 
 
 
                     <div className="modal-buttons">
 
-
-                        <button
-
-                            type="button"
-
-                            className="cancel-btn"
-
-                            onClick={onClose}
-
-                        >
-
-                            Cancel
-
-                        </button>
+    <button
+        type="button"
+        className="cancel-btn"
+        onClick={onClose}
+    >
+        Cancel
+    </button>
 
 
+    <button
+        type="submit"
+        className="save-btn"
+    >
+        Create Task
+    </button>
 
-
-
-                        <button
-
-                            type="submit"
-
-                            className="save-btn"
-
-                        >
-
-                            Create Task
-
-                        </button>
-
-
-
-                    </div>
+</div>
 
 
                 </form>

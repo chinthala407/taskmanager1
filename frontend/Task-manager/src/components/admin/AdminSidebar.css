@@ -2,224 +2,137 @@
    SIDEBAR
 ========================================== */
 
-.admin-sidebar{
+.admin-sidebar {
 
-    position:fixed;
+    position: fixed;
 
-    top:72px;
+    top: 72px;
 
-    left:0;
+    left: 0;
 
-    width:260px;
+    width: 260px;
 
-    height:calc(100vh - 72px);
+    height: calc(100vh - 72px);
 
-    background:#ADD8E6;
+    background: #ADD8E6;
 
-    border-right:1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    justify-content:flex-start;
+    justify-content: flex-start;
 
-    padding:24px 16px;
+    padding: 24px 16px;
 
-    overflow-y:auto;
+    overflow-y: auto;
+
+    box-sizing: border-box;
 
 }
+
 
 /* ==========================================
    TITLE
 ========================================== */
 
-.sidebar-title{
+.sidebar-title {
 
-    font-size:12px;
+    font-size: 12px;
 
-    font-weight:600;
+    font-weight: 600;
 
-    text-transform:uppercase;
+    text-transform: uppercase;
 
-    color:#94a3b8;
+    color: #94a3b8;
 
-    letter-spacing:1px;
+    letter-spacing: 1px;
 
-    margin-bottom:20px;
+    margin-bottom: 20px;
 
-    padding-left:12px;
+    padding-left: 12px;
 
 }
+
 
 /* ==========================================
    MENU
 ========================================== */
 
-.sidebar-top{
+.sidebar-top {
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    gap:8px;
-
-}
-
-.menu-item{
-
-    display:flex;
-
-    align-items:center;
-
-    height:46px;
-
-    padding:0 16px;
-
-    border-radius:12px;
-
-    text-decoration:none;
-
-    color:#475569;
-
-    font-size:15px;
-
-    font-weight:500;
-
-    transition:all .25s;
+    gap: 8px;
 
 }
 
-.menu-item:hover{
-
-    background:#f1f5f9;
-
-    color:#2563eb;
-
-}
-
-.menu-item.active{
-
-    background:#eff6ff;
-
-    color:#2563eb;
-
-    font-weight:600;
-
-}
 
 /* ==========================================
-   FOOTER
+   SIDEBAR LINK
 ========================================== */
 
-.sidebar-footer{
-
-    border-top:1px solid #e5e7eb;
-
-    padding-top:20px;
-
-}
-
-.admin-profile{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-.profile-avatar{
-
-    width:46px;
-
-    height:46px;
-
-    border-radius:50%;
-
-    background:#2563eb;
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:18px;
-
-    font-weight:700;
-
-}
-
-.admin-profile h4{
-
-    font-size:15px;
-
-    color:#111827;
-
-}
-
-.admin-profile p{
-
-    font-size:13px;
-
-    color:#64748b;
-
-    margin-top:4px;
-
-}
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media(max-width:768px){
-
-    .admin-sidebar{
-
-        width:220px;
-
-    }
-
-}
-/* Sidebar Badge */
-
-.sidebar-badge {
-
-    background: #ef4444;
-
-    color: white;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    min-width: 18px;
-
-    height: 18px;
-
-    padding: 0 5px;
-
-    border-radius: 50%;
+.sidebar-link {
 
     display: flex;
 
     align-items: center;
 
-    justify-content: center;
+    gap: 12px;
 
-    margin-left: auto;
+    width: 100%;
 
-    border: 2px solid white;
+    min-height: 46px;
+
+    padding: 0 16px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    transition: all 0.25s;
+
+    box-sizing: border-box;
 
 }
 
 
+/* Hover */
 
-/* Sidebar menu item alignment */
+.sidebar-link:hover {
+
+    background: #f1f5f9;
+
+    color: #2563eb;
+
+}
+
+
+/* Active */
+
+.sidebar-link.active {
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-weight: 600;
+
+}
+
+
+/* ==========================================
+   SIDEBAR MENU ITEM
+========================================== */
 
 .sidebar-menu-item {
 
@@ -232,25 +145,139 @@
 }
 
 
-
-/* Icon spacing */
+/* ==========================================
+   ICON SPACING
+========================================== */
 
 .sidebar-menu-item svg {
 
     font-size: 18px;
 
 }
-.sidebar-badge{
-    margin-left:auto;
-    min-width:20px;
-    height:20px;
-    border-radius:50%;
-    background:#ef4444;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:11px;
-    font-weight:600;
-    padding:0 6px;
+
+
+/* ==========================================
+   NOTIFICATION BADGE
+========================================== */
+
+.sidebar-badge {
+
+    margin-left: auto;
+
+    min-width: 20px;
+
+    height: 20px;
+
+    padding: 0 6px;
+
+    background: #ef4444;
+
+    color: #ffffff;
+
+    border-radius: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    box-sizing: border-box;
+
+    border: 2px solid white;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.sidebar-footer {
+
+    border-top: 1px solid #e5e7eb;
+
+    padding-top: 20px;
+
+}
+
+
+/* ==========================================
+   ADMIN PROFILE
+========================================== */
+
+.admin-profile {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.profile-avatar {
+
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+}
+
+
+.admin-profile h4 {
+
+    font-size: 15px;
+
+    color: #111827;
+
+}
+
+
+.admin-profile p {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    margin-top: 4px;
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .admin-sidebar {
+
+        width: 220px;
+
+    }
+
 }

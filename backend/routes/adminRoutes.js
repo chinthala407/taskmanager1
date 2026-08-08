@@ -4,27 +4,23 @@ const router = express.Router();
 const {
     deleteNotification
 } = require("../controllers/adminController");
-
+const verifyToken = require("../middleware/authMiddleware");
+const isAdmin = require("../middleware/isAdmin");
 const {
 
     getDashboardStats,
-
     getDashboardData,
-
     getReports,
 
     getAllUsers,
-
     getAllTasks,
 
     deleteTask,
-
     updateTask,
 
     updateUserStatus,
 
     getNotifications,
-
     getNotificationCounts,
 
     markNotificationsRead,
@@ -33,8 +29,10 @@ const {
 
     getAdminProfile,
 
-    deleteUser
+    deleteUser,
 
+    getSystemSettings,
+    updateSystemSettings
 
 } = require("../controllers/adminController");
 
@@ -99,9 +97,27 @@ router.put("/tasks/seen", markTasksSeen);
 
 // ================= Admin Profile =================
 
-router.get("/profile", getAdminProfile);
 
 
+router.get(
+    "/profile",
+    verifyToken,
+    isAdmin,
+    getAdminProfile
+);
+router.get(
+    "/system-settings",
+    verifyToken,
+    isAdmin,
+    getSystemSettings
+);
 
+
+router.put(
+    "/system-settings",
+    verifyToken,
+    isAdmin,
+    updateSystemSettings
+);
 
 module.exports = router;

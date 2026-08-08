@@ -7,8 +7,8 @@ const db = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes"); // Added
-
-
+const taskRoutes=require("./routes/taskRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 const app = express();
 
 
@@ -16,7 +16,10 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-
+app.use(
+    "/api/tasks",
+    taskRoutes
+);
 
 
 // Check database connection when server starts
@@ -92,8 +95,14 @@ app.use("/api/auth", authRoutes);
 // Admin Routes  (Added)
 app.use("/api/admin", adminRoutes);
 
+app.use("/api/notifications", notificationRoutes);
+const userRoutes=require("./routes/userRoutes");
 
 
+app.use(
+    "/api/user",
+    userRoutes
+);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

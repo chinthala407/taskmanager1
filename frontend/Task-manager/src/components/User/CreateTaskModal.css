@@ -2,345 +2,13 @@
 
     position: fixed;
 
-    top: 0;
-    left: 0;
+    top:0;
+    left:0;
 
-    width: 100vw;
-    height: 100vh;
+    width:100vw;
+    height:100vh;
 
-    background: rgba(15,23,42,0.55);
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    z-index: 99999999 !important;
-
-}
-
-
-
-/* Popup Box */
-.modal {
-
-    width: 520px;
-
-    max-width: 90%;
-
-    background: white;
-
-    border-radius: 18px;
-
-    padding: 30px;
-
-    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-
-    position: relative;
-
-    z-index: 100000000 !important;
-
-}
-
-
-
-/* Popup Animation */
-
-@keyframes modalOpen {
-
-    from {
-
-        opacity: 0;
-
-        transform: translateY(-30px) scale(0.95);
-
-    }
-
-
-    to {
-
-        opacity: 1;
-
-        transform: translateY(0) scale(1);
-
-    }
-
-}
-
-
-
-/* Header */
-
-.modal-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 25px;
-
-}
-
-
-.modal-header h2 {
-
-    margin: 0;
-
-    font-size: 24px;
-
-    font-weight: 700;
-
-    color: #111827;
-
-}
-
-
-
-/* Close Button */
-
-/* Close Button */
-
-.close-btn {
-
-    width: 36px;
-
-    height: 36px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #f1f5f9;
-
-    color: #475569;
-
-    font-size: 18px;
-
-    font-weight: 600;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-
-}
-
-
-.close-btn:hover {
-
-    background: #fee2e2;
-
-    color: #dc2626;
-
-}
-
-
-
-/* Buttons Container */
-
-.modal-buttons {
-
-    display: flex;
-
-    justify-content: flex-end;
-
-    gap: 12px;
-
-    margin-top: 25px;
-
-}
-
-
-
-/* Common Button Style */
-
-.cancel-btn,
-.save-btn {
-
-    height: 42px;
-
-    min-width: 130px;
-
-    padding: 0 22px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    transition: 0.2s;
-
-}
-
-
-
-/* Cancel Button */
-
-.cancel-btn {
-
-    background: #f1f5f9;
-
-    color: #334155;
-
-}
-
-
-.cancel-btn:hover {
-
-    background: #e2e8f0;
-
-}
-
-
-
-/* Create Task Button */
-
-.save-btn {
-
-    height: 42px;
-
-    min-width: 150px;
-
-    padding: 0 25px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-
-    color: white;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 8px;
-
-    box-shadow: 0 6px 15px rgba(37,99,235,0.3);
-
-    transition: all 0.25s ease;
-
-}
-
-
-.save-btn:hover {
-
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
-
-    transform: translateY(-2px);
-
-    box-shadow: 0 8px 20px rgba(37,99,235,0.4);
-
-}
-
-
-.save-btn:active {
-
-    transform: translateY(0);
-
-}
-/* Form */
-
-.form-group {
-
-    display: flex;
-
-    flex-direction: column;
-
-    margin-bottom: 18px;
-
-}
-
-
-.form-group label {
-
-    margin-bottom: 8px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    color: #374151;
-
-}
-
-
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-
-    width: 100%;
-
-    padding: 12px 14px;
-
-    border: 1px solid #d1d5db;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    outline: none;
-
-    box-sizing: border-box;
-
-    transition: 0.2s;
-
-}
-
-
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-
-    border-color: #2563eb;
-
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-
-}
-
-
-
-.form-group textarea {
-
-    resize: none;
-
-}
-
-
-
-/* Buttons */
-
-.modal-buttons{
+    background:rgba(0,0,0,0.5);
 
     display:flex;
 
@@ -348,7 +16,111 @@
 
     align-items:center;
 
-    gap:20px;
+    z-index:999999 !important;
+
+}
+
+
+
+.modal {
+
+    position: relative;
+
+    z-index:1000000;
+
+    width:450px;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+}
+
+
+.modal-header {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+
+.modal-header h2{
+
+    margin:0;
+
+    color:#1e293b;
+
+}
+
+
+.close-btn{
+
+    border:none;
+
+    background:none;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+}
+
+
+
+.form-group{
+
+    margin-bottom:15px;
+
+}
+
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-weight:600;
+
+}
+
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:8px;
+
+    box-sizing:border-box;
+
+}
+
+
+.modal-buttons {
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    gap:15px;
 
     margin-top:25px;
 
@@ -356,22 +128,13 @@
 
 
 
-.cancel-btn,
-.save-btn{
+.modal-buttons button {
 
-    width:160px;
+    width:140px;
 
-    height:46px;
+    height:42px;
 
-    border:none;
-
-    border-radius:10px;
-
-    font-size:15px;
-
-    font-weight:600;
-
-    cursor:pointer;
+    padding:0;
 
     display:flex;
 
@@ -379,80 +142,39 @@
 
     align-items:center;
 
-    white-space:nowrap;
+    line-height:1;
 
-    overflow:hidden;
+    border:none;
 
-    text-overflow:ellipsis;
+    border-radius:8px;
 
-    padding:0;
+    font-size:15px;
 
-    margin:0;
+    font-weight:600;
 
-    line-height:46px;
-
-    box-sizing:border-box;
+    cursor:pointer;
 
 }
 
 
 
-.cancel-btn{
-
-    background:#e5e7eb;
-
-    color:#374151;
-
-}
-
-
-
-.cancel-btn:hover{
-
-    background:#d1d5db;
-
-}
-
-
-
-.save-btn{
-
-    background:#2563eb;
-
-    color:#fff;
-
-}
-
-
-
-.save-btn:hover{
-
-    background:#1d4ed8;
-
-}
-
-
-/* Cancel */
 
 .cancel-btn {
 
-    background:#e5e7eb;
+    background:#e2e8f0;
 
-    color:#374151;
+    color:#334155;
 
 }
-
 
 
 .cancel-btn:hover {
 
-    background:#d1d5db;
+    background:#cbd5e1;
 
 }
 
 
-
-/* Create */
 
 .save-btn {
 
@@ -467,36 +189,5 @@
 .save-btn:hover {
 
     background:#1d4ed8;
-
-}
-
-
-
-/* Mobile */
-
-@media(max-width:600px){
-
-    .modal {
-
-        width: 90%;
-
-        padding: 20px;
-
-    }
-
-
-    .modal-buttons {
-
-        flex-direction: column;
-
-    }
-
-
-    .cancel-btn,
-    .save-btn {
-
-        width:100%;
-
-    }
 
 }
