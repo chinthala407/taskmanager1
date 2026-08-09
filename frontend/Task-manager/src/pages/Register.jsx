@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
 import "./Register.css";
 import registerImage from "../assets/register-illustration.png";
 
@@ -13,6 +14,7 @@ function Register() {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,6 +53,36 @@ function Register() {
       );
     }
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setGoogleLoading(true);
+      try {
+        // tokenResponse.access_token is sent to the backend, which
+        // verifies it with Google and creates/logs in the user.
+        const res = await axios.post(
+          "http://localhost:5000/api/auth/google",
+          { access_token: tokenResponse.access_token }
+        );
+
+        setMessage(res.data.message || "Registered with Google successfully");
+
+        // e.g. store token and redirect
+        // localStorage.setItem("token", res.data.token);
+        // navigate("/dashboard");
+
+      } catch (err) {
+        setMessage(
+          err.response?.data?.message || "Google registration failed"
+        );
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: () => {
+      setMessage("Google sign-in was cancelled or failed");
+    },
+  });
 
   return (
     <div className="register-container">
@@ -148,9 +180,16 @@ function Register() {
             Already have an account?
             <Link to="/login"> Login</Link>
           </p>
-            <button type="submit" className="google-btn">
-              Continue With Google
-            </button>
+
+          <button
+            type="button"
+            className="google-btn"
+            onClick={() => googleLogin()}
+            disabled={googleLoading}
+          >
+            {googleLoading ? "Signing in..." : "Continue With Google"}
+          </button>
+
         </div>
 
       </div>

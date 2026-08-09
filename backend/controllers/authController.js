@@ -3,6 +3,7 @@ const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
 const sendEmail = require("../utils/sendEmail");
+const axios = require("axios");
 
 // ================= Register =================
 
@@ -72,6 +73,150 @@ const register = async (req, res) => {
     });
   }
 };
+
+// ================= Google Auth =================
+
+// ================= Google Auth =================
+
+const googleAuth = async (req, res) => {
+  try {
+    const { access_token } = req.body;
+
+    if (!access_token) {
+      return res.status(400).json({
+        message: "Missing Google access token",
+      });
+    }
+
+    // Verify token with Google and get profile info
+    let googleProfile;
+
+    try {
+      const googleRes = await axios.get(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        { headers: { Authorization: `Bearer ${access_token}` } }
+      );
+      googleProfile = googleRes.data;
+    } catch (err) {
+      return res.status(400).json({
+        message: "Invalid Google token",
+      });
+    }
+
+    const { email, name, sub: googleId, email_verified } = googleProfile;
+
+    if (!email_verified) {
+      return res.status(400).json({
+        message: "Google email is not verified",
+      });
+    }
+
+    // Check if user already exists
+    const existing = await db.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+
+    let user;
+
+    if (existing.rows.length === 0) {
+
+      // Check system settings - is new registration allowed?
+      const settingsResult = await db.query(
+        "SELECT allow_registration FROM settings WHERE id = 1"
+      );
+
+      if (
+        settingsResult.rows.length > 0 &&
+        settingsResult.rows[0].allow_registration === false
+      ) {
+        return res.status(403).json({
+          message: "New user registration is currently disabled by the administrator.",
+        });
+      }
+
+      // Create a new user (no password needed for Google sign-in)
+      const newUser = await db.query(
+        `INSERT INTO users(name, email, google_id)
+         VALUES($1, $2, $3)
+         RETURNING id, name, email, role`,
+        [name, email, googleId]
+      );
+
+      user = newUser.rows[0];
+
+      // Create notification for Admin
+      await db.query(
+        `INSERT INTO notifications(type, title, message)
+         VALUES($1, $2, $3)`,
+        [
+          "user",
+          "New User Registered",
+          `${user.name} has registered successfully via Google.`
+        ]
+      );
+
+    } else {
+
+      user = existing.rows[0];
+
+      // Blocked user cannot login
+      if (user.status && user.status.toLowerCase() === "blocked") {
+        return res.status(403).json({
+          message: "Your account has been blocked by the administrator.",
+        });
+      }
+
+      // Link Google account to existing email/password user, if not linked yet
+      if (!user.google_id) {
+        await db.query(
+          "UPDATE users SET google_id = $1 WHERE email = $2",
+          [googleId, email]
+        );
+      }
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    res.status(200).json({
+
+      message: "Signed in with Google successfully",
+
+      token,
+
+      user: {
+
+        id: user.id,
+
+        name: user.name,
+
+        email: user.email,
+
+        role: user.role,
+
+      },
+
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
 // ================= Login =================
 // ================= Login =================
 
@@ -125,6 +270,12 @@ const login = async (req, res) => {
         });
       }
 
+    }
+
+    if (!user.password) {
+      return res.status(400).json({
+        message: "This account was created with Google. Please use 'Continue with Google' to sign in.",
+      });
     }
 
     const isMatch = await bcrypt.compare(
@@ -330,4 +481,5 @@ module.exports = {
   forgotPassword,
   verifyOTP,
   resetPassword,
+  googleAuth,
 };

@@ -3,11 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useGoogleLogin } from "@react-oauth/google";
 import loginBackground from "../assets/login-background.png";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,6 +50,41 @@ function Login() {
 
 }
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setGoogleLoading(true);
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/google",
+          { access_token: tokenResponse.access_token }
+        );
+
+        const user = response.data.user;
+
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        if (user.role?.toLowerCase() === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/user");
+        }
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else {
+          alert("Unable to connect to the server.");
+        }
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: () => {
+      alert("Google sign-in was cancelled or failed.");
+    },
+  });
+
 return (
   <div className="login-page">
 
@@ -104,6 +142,15 @@ return (
           </div>
 
         </form>
+
+        <button
+          type="button"
+          className="google-btn"
+          onClick={() => googleLogin()}
+          disabled={googleLoading}
+        >
+          {googleLoading ? "Signing in..." : "Continue With Google"}
+        </button>
 
         <p className="register-text">
           Don't have an account?
