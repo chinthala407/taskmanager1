@@ -4,7 +4,8 @@ import {
   FaCheckCircle,
   FaClock,
   FaUserCog,
-  FaChartBar
+  FaChartBar,
+  FaTrash
 } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
@@ -14,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import StatCard from "../components/admin/StatCard";
 
 import "./AdminDashboard.css";
+
+const ONE_HOUR_MS = 60 * 60 * 1000;
 
 function AdminDashboard() {
 
@@ -28,56 +31,106 @@ function AdminDashboard() {
 
   const [userGrowth, setUserGrowth] = useState([]);
   const [recentActivities, setRecentActivities] = useState([]);
+  const [deletedIds, setDeletedIds] = useState(() => new Set());
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
 
-  const fetchDashboard = () => {
+    const fetchDashboard = () => {
+      axios
+        .get("http://localhost:5000/api/admin/dashboard")
+        .then((response) => {
+          setStats({
+            totalUsers: response.data.totalUsers,
+            totalTasks: response.data.totalTasks,
+            completed: response.data.completed,
+            pending: response.data.pending
+          });
 
-    axios
-      .get("http://localhost:5000/api/admin/dashboard")
+          setUserGrowth(response.data.monthlyGrowth);
 
-      .then((response) => {
+          // Stable key: entityType + real db id
+          const withIds = response.data.recentActivities.map((activity) => ({
+            ...activity,
+            _id: `${activity.entityType}-${activity.id}`
+          }));
 
-        setStats({
-
-          totalUsers: response.data.totalUsers,
-
-          totalTasks: response.data.totalTasks,
-
-          completed: response.data.completed,
-
-          pending: response.data.pending
-
+          setRecentActivities(withIds);
+        })
+        .catch((error) => {
+          console.log(error);
         });
+    };
 
-        setUserGrowth(response.data.monthlyGrowth);
+    // Load immediately
+    fetchDashboard();
 
-        setRecentActivities(response.data.recentActivities);
+    // Refresh every 5 seconds
+    const interval = setInterval(fetchDashboard, 3000);
 
-      })
+    // Cleanup
+    return () => clearInterval(interval);
 
-      .catch((error) => {
+  }, []);
 
-        console.log(error);
+  // Keep "now" ticking so the 1-hour filter re-evaluates without
+  // calling Date.now() directly during render (impure)
+  useEffect(() => {
+    const tick = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
 
-      });
-
-  };
-
-  // Load immediately
-  fetchDashboard();
-
-  // Refresh every 5 seconds
-  const interval = setInterval(fetchDashboard, 5000);
-
-  // Cleanup
-  return () => clearInterval(interval);
-
-}, []);
+    return () => clearInterval(tick);
+  }, []);
 
   const formatDate = (date) => {
     return new Date(date).toLocaleString();
   };
+
+  const handleActivityClick = (id) => {
+    setSelectedActivity((prev) => (prev === id ? null : id));
+  };
+
+  const handleDeleteActivity = (activity) => {
+
+    const confirmed = window.confirm(
+      activity.entityType === "user"
+        ? "This will permanently delete this user account. Continue?"
+        : "This will permanently delete this task. Continue?"
+    );
+
+    if (!confirmed) return;
+
+    const key = activity._id;
+
+    // Optimistically remove from UI
+    setDeletedIds((prev) => new Set(prev).add(key));
+    setSelectedActivity(null);
+
+    const url =
+      activity.entityType === "user"
+        ? `http://localhost:5000/api/admin/users/${activity.id}`
+        : `http://localhost:5000/api/admin/tasks/${activity.id}`;
+
+    axios.delete(url).catch((error) => {
+      console.log(error);
+      // Roll back if the request failed
+      setDeletedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(key);
+        return next;
+      });
+    });
+  };
+
+  // Only keep activities from the last hour AND not deleted
+  const visibleActivities = recentActivities.filter((activity) => {
+    const activityTime = new Date(activity.time).getTime();
+    const withinLastHour = now - activityTime < ONE_HOUR_MS;
+    const notDeleted = !deletedIds.has(activity._id);
+    return withinLastHour && notDeleted;
+  });
 
   return (
 
@@ -182,26 +235,45 @@ function AdminDashboard() {
 
           {
 
-            recentActivities.length === 0 ? (
+            visibleActivities.length === 0 ? (
 
               <p>No Recent Activity</p>
 
             ) : (
 
-              recentActivities.map((activity, index) => (
+              visibleActivities.map((activity) => (
 
                 <div
-                  key={index}
+                  key={activity._id}
                   className="activity-row"
+                  onClick={() => handleActivityClick(activity._id)}
                 >
 
-                  <p className="activity-message">
-                    {activity.message}
-                  </p>
+                  <div className="activity-main">
 
-                  <small className="activity-time">
-                    {formatDate(activity.time)}
-                  </small>
+                    <p className="activity-message">
+                      {activity.message}
+                    </p>
+
+                    <small className="activity-time">
+                      {formatDate(activity.time)}
+                    </small>
+
+                  </div>
+
+                  {selectedActivity === activity._id && (
+
+                    <button
+                      className="activity-delete-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteActivity(activity);
+                      }}
+                    >
+                      <FaTrash /> Delete
+                    </button>
+
+                  )}
 
                 </div>
 

@@ -1,48 +1,76 @@
 .features {
-    padding: 60px 8%;
-    background: #ffffff;
-    text-align: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
 }
 
 .features h2 {
-    font-size: 36px;
-    color: #1f2937;
-    margin-bottom: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 .features-subtitle {
-    color: #2b84dd;
-    font-size: 16px;
-    margin-bottom: 40px;
+  margin-bottom: 2.5rem;
+  color: #666;
 }
 
+/* Default (mobile/tablet): horizontally scrollable, infinite duplicate set */
 .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-    gap: 25px;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: auto; /* we control smoothness manually via JS scrollBy options */
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 1rem 1.5rem;
+  scrollbar-width: none; /* Firefox */
+}
+
+.features-grid::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .feature-card {
-    background: #f8fafc;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    text-align: center;
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  text-align: left;
 }
 
 .feature-card h3 {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 22px;
-    color: #2563eb;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .feature-card p {
-    display: block;
-    width: 100%;
-    margin: 0;
-    font-size: 15px;
-    color: #555;
-    line-height: 1.6;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Tablet: show a bit more per card */
+@media (min-width: 640px) {
+  .feature-card {
+    flex: 0 0 45%;
+  }
+}
+
+/* Desktop: fixed grid, no scrolling, no duplicates (they're not even in the DOM here) */
+@media (min-width: 1025px) {
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding: 0;
+  }
+
+  .feature-card {
+    flex: unset;
+    scroll-snap-align: unset;
+  }
 }

@@ -1,180 +1,146 @@
-/* ==========================================
-   NAVBAR
-========================================== */
-
+/* Navbar container */
 .admin-navbar{
-
     position:fixed;
-
     top:0;
     left:0;
     right:0;
-
     height:72px;
 
-    background:#ffffff;
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
 
-    padding:0 32px;
+    padding:0 35px;
 
-    border-bottom:1px solid #e5e7eb;
+    background:white;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
 
-    box-shadow:0 4px 18px rgba(15,23,42,.05);
-
-    z-index:1200;
-
+    z-index:1100;
 }
-
-/* ==========================================
-   LEFT
-========================================== */
 
 .navbar-left{
-
     display:flex;
-
     align-items:center;
-
+    gap:14px;
 }
 
+/* Opens the sidebar drawer, hidden on desktop */
+.sidebar-toggle-btn{
+    display:none;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding:8px;
+    color:#2563eb;
+    font-size:22px;
+    line-height:1;
+}
+
+/* Brand / logo */
 .brand{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
 }
 
 .brand img{
-
-    width:40px;
-
-    height:40px;
-
+    width:42px;
+    height:42px;
+    object-fit:contain;
 }
 
 .brand h2{
-
-    font-size:28px;
-
+    margin:0;
+    font-size:24px;
     font-weight:700;
-
 }
 
-.task-text{
+.task-text{ color:#111827; }
+.manager-text{ color:#2563eb; }
 
-    color:#111827;
-
-}
-
-.manager-text{
-
-    color:#2563eb;
-
-}
-
-/* ==========================================
-   CENTER
-========================================== */
-
-
-/* ==========================================
-   RIGHT
-========================================== */
-
+/* Right side: admin details + logout, side by side */
 .navbar-right{
-
     display:flex;
-
     align-items:center;
-
     gap:20px;
-
 }
 
 .profile{
-
     text-align:right;
-
 }
 
 .profile h4{
-
-    color:#111827;
-
+    margin:0;
     font-size:15px;
-
-    font-weight:600;
-
+    color:#111827;
 }
 
 .profile p{
-
-    color:#64748b;
-
+    margin:2px 0 0;
     font-size:13px;
-
-    margin-top:4px;
-
+    color:#64748b;
 }
 
 .logout-btn{
-
     background:#2563eb;
-
-    color:#ffffff;
-
+    color:#fff;
     border:none;
-
-    padding:10px 20px;
-
-    border-radius:10px;
-
+    padding:10px 22px;
+    border-radius:8px;
     cursor:pointer;
-
-    transition:.3s;
-
+    font-size:14px;
+    transition:.3s ease;
+    white-space:nowrap;
 }
 
 .logout-btn:hover{
-
     background:#1d4ed8;
-
 }
 
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media(max-width:900px){
-
-    .navbar-center{
-
-        display:none;
-
-    }
-
-}
-
-@media(max-width:650px){
-
-    .profile{
-
-        display:none;
-
-    }
+/* Mobile / small tablet, <=768px */
+@media (max-width:768px){
 
     .admin-navbar{
-
-        padding:0 16px;
-
+        padding:0 15px;
     }
 
+    .brand h2{
+        font-size:18px;
+    }
+
+    .sidebar-toggle-btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    /* Admin details stay visible in the navbar; logout moves to the sidebar */
+    .logout-btn{
+        display:none;
+    }
+}
+
+/* Small mobile, <=480px */
+@media (max-width:480px){
+
+    .admin-navbar{
+        padding:0 12px;
+    }
+
+    .brand img{
+        width:34px;
+        height:34px;
+    }
+
+    .brand h2{
+        font-size:16px;
+    }
+
+    .profile h4{
+        font-size:13px;
+    }
+
+    .profile p{
+        font-size:11px;
+    }
 }

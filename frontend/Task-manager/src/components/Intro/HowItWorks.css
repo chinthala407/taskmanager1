@@ -1,59 +1,88 @@
-.how-it-works{
-    padding:50px 8%;
-    background:#f8fafc;
-    text-align:center;
+.how-it-works {
+  text-align: center;
+  padding: 4rem 1.5rem;
 }
 
-.how-it-works h2{
-    font-size:40px;
-    color:#1f2937;
-    margin-bottom:10px;
+.how-it-works h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-.how-subtitle{
-    font-size:18px;
-    color:#666;
-    margin-bottom:50px;
+.how-subtitle {
+  margin-bottom: 2.5rem;
+  color: #666;
 }
 
-.steps-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:30px;
+/* Default (mobile/tablet): horizontally scrollable */
+.steps-container {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: auto; /* we control smoothness manually via JS scrollTo options */
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 1rem 1.5rem;
+  scrollbar-width: none; /* Firefox */
 }
 
-.step-card{
-    background:white;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-    transition:0.3s;
+.steps-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
-.step-card:hover{
-    transform:translateY(-8px);
+.step-card {
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  text-align: left;
 }
 
-.step-number{
-    width:60px;
-    height:60px;
-    margin:0 auto 20px;
-    background:#2563eb;
-    color:white;
-    font-size:22px;
-    font-weight:bold;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.step-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6c5ce7;
+  margin-bottom: 0.5rem;
 }
 
-.step-card h3{
-    color:#1f2937;
-    margin-bottom:15px;
+.step-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.step-card p{
-    color:#555;
-    line-height:1.6;
+.step-card p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Tablet: show a bit more per card */
+@media (min-width: 640px) {
+  .step-card {
+    flex: 0 0 45%;
+  }
+}
+
+/* Desktop: fixed 4-column grid, no scrolling, hide the clone */
+@media (min-width: 1024px) {
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding: 0;
+  }
+
+  .step-card {
+    flex: unset;
+    scroll-snap-align: unset;
+    text-align: center;
+  }
+
+  .step-card:last-child {
+    display: none;
+  }
 }

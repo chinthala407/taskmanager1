@@ -39,6 +39,7 @@ const getDashboardData = async (req, res) => {
         // Latest Registered Users
         const recentUsers = await db.query(`
             SELECT
+                id,
                 name,
                 created_at
             FROM users
@@ -50,6 +51,7 @@ const getDashboardData = async (req, res) => {
         // Latest Created Tasks
         const recentTasks = await db.query(`
             SELECT
+                id,
                 title,
                 status,
                 created_at
@@ -60,45 +62,46 @@ const getDashboardData = async (req, res) => {
 
         const activities = [];
 
-// Recent Users
-recentUsers.rows.forEach(user => {
+        // Recent Users
+        recentUsers.rows.forEach(user => {
 
-    activities.push({
+            activities.push({
 
-        type: "user",
+                id: user.id,
 
-        message: `${user.name} registered`,
+                entityType: "user",
 
-        time: user.created_at
+                message: `${user.name} registered`,
 
-    });
+                time: user.created_at
 
-});
+            });
 
-// Recent Tasks
-recentTasks.rows.forEach(task => {
+        });
 
-    activities.push({
+        // Recent Tasks
+        recentTasks.rows.forEach(task => {
 
-        type:
-            task.status.toLowerCase() === "completed"
-                ? "completed"
-                : "task",
+            activities.push({
 
-        message:
-            task.status.toLowerCase() === "completed"
-                ? `${task.title} completed`
-                : `${task.title} created`,
+                id: task.id,
 
-        time: task.created_at
-        
+                entityType: "task",
 
-    });
+                message:
+                    task.status.toLowerCase() === "completed"
+                        ? `${task.title} completed`
+                        : `${task.title} created`,
 
-});
+                time: task.created_at
 
-// Latest first
-activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            });
+
+        });
+
+        // Latest first
+        activities.sort((a, b) => new Date(b.time) - new Date(a.time));
 
         res.json({
 
@@ -481,8 +484,6 @@ const updateUserStatus = async (req, res) => {
 };
 // ================= Notifications =================
 
-// ================= Notifications =================
-
 const getNotifications = async (req, res) => {
 
     try {
@@ -567,8 +568,6 @@ const getNotificationCounts = async (req, res) => {
 
     }
 };
-// ================= Admin Profile =================
-
 
 // ================= Delete User =================
 

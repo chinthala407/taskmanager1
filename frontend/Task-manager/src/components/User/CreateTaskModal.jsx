@@ -1,24 +1,43 @@
+
 import { useState } from "react";
 import axios from "axios";
 import "./CreateTaskModal.css";
 
 function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
-    const [title,setTitle] = useState("");
-    const [description,setDescription] = useState("");
-    const [priority,setPriority] = useState("Medium");
-    const [dueDate,setDueDate] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [priority, setPriority] = useState("Medium");
+    const [dueDate, setDueDate] = useState("");
 
 
-    if(!isOpen) return null;
+    // ======================================================
+    // Get Today's Date
+    // ======================================================
+
+    const today = new Date().toISOString().split("T")[0];
 
 
-    const handleSubmit = async(e)=>{
+    // ======================================================
+    // Submit Task
+    // ======================================================
+
+    const handleSubmit = async (e) => {
 
         e.preventDefault();
 
 
-        try{
+        // Prevent past due dates
+
+        if (dueDate && dueDate < today) {
+
+            alert("Due date cannot be in the past.");
+
+            return;
+        }
+
+
+        try {
 
             const token = localStorage.getItem("token");
 
@@ -35,8 +54,8 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
                 },
 
                 {
-                    headers:{
-                        Authorization:`Bearer ${token}`
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 }
 
@@ -49,10 +68,14 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
             alert("Task created successfully");
 
 
-            if(onTaskCreated){
+            if (onTaskCreated) {
+
                 onTaskCreated(response.data.task);
+
             }
 
+
+            // Reset form
 
             setTitle("");
             setDescription("");
@@ -63,34 +86,49 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
             onClose();
 
 
-        }
-        catch(error){
+        } catch (error) {
 
             console.log(
                 error.response?.data || error.message
             );
 
-            alert("Task creation failed");
+            alert(
+                error.response?.data?.message ||
+                "Task creation failed"
+            );
 
         }
 
     };
 
 
+    // ======================================================
+    // Don't Render Modal
+    // ======================================================
+
+    if (!isOpen) {
+        return null;
+    }
+
+
+    // ======================================================
+    // UI
+    // ======================================================
 
     return (
 
-        <div 
+        <div
             className="modal-overlay"
             onClick={onClose}
         >
 
-
-            <div 
+            <div
                 className="modal"
-                onClick={(e)=>e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
             >
 
+
+                {/* Modal Header */}
 
                 <div className="modal-header">
 
@@ -110,9 +148,12 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
                 </div>
 
 
+                {/* Form */}
 
                 <form onSubmit={handleSubmit}>
 
+
+                    {/* Task Title */}
 
                     <div className="form-group">
 
@@ -122,22 +163,19 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
 
                         <input
-
                             type="text"
-
                             placeholder="Enter task title"
-
                             value={title}
-
-                            onChange={(e)=>setTitle(e.target.value)}
-
+                            onChange={(e) =>
+                                setTitle(e.target.value)
+                            }
                             required
-
                         />
 
                     </div>
 
 
+                    {/* Description */}
 
                     <div className="form-group">
 
@@ -147,20 +185,18 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
 
                         <textarea
-
                             rows="4"
-
                             placeholder="Enter description"
-
                             value={description}
-
-                            onChange={(e)=>setDescription(e.target.value)}
-
+                            onChange={(e) =>
+                                setDescription(e.target.value)
+                            }
                         />
 
                     </div>
 
 
+                    {/* Priority */}
 
                     <div className="form-group">
 
@@ -170,32 +206,30 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
 
                         <select
-
                             value={priority}
-
-                            onChange={(e)=>setPriority(e.target.value)}
-
+                            onChange={(e) =>
+                                setPriority(e.target.value)
+                            }
                         >
 
-                            <option>
+                            <option value="High">
                                 High
                             </option>
 
-                            <option>
+                            <option value="Medium">
                                 Medium
                             </option>
 
-                            <option>
+                            <option value="Low">
                                 Low
                             </option>
 
-
                         </select>
-
 
                     </div>
 
 
+                    {/* Due Date */}
 
                     <div className="form-group">
 
@@ -205,45 +239,43 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
 
                         <input
-
                             type="date"
-
                             value={dueDate}
-
-                            onChange={(e)=>setDueDate(e.target.value)}
-
+                            min={today}
+                            onChange={(e) =>
+                                setDueDate(e.target.value)
+                            }
                         />
 
                     </div>
 
 
+                    {/* Buttons */}
 
                     <div className="modal-buttons">
 
-    <button
-        type="button"
-        className="cancel-btn"
-        onClick={onClose}
-    >
-        Cancel
-    </button>
+                        <button
+                            type="button"
+                            className="cancel-btn"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
 
 
-    <button
-        type="submit"
-        className="save-btn"
-    >
-        Create Task
-    </button>
+                        <button
+                            type="submit"
+                            className="save-btn"
+                        >
+                            Create Task
+                        </button>
 
-</div>
+                    </div>
 
 
                 </form>
 
-
             </div>
-
 
         </div>
 

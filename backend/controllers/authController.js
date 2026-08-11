@@ -7,8 +7,6 @@ const axios = require("axios");
 
 // ================= Register =================
 
-// ================= Register =================
-
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -73,8 +71,6 @@ const register = async (req, res) => {
     });
   }
 };
-
-// ================= Google Auth =================
 
 // ================= Google Auth =================
 
@@ -218,7 +214,6 @@ const googleAuth = async (req, res) => {
 };
 
 // ================= Login =================
-// ================= Login =================
 
 const login = async (req, res) => {
 
@@ -337,9 +332,6 @@ const login = async (req, res) => {
 
 };
 
-
-  
-
 // ================= Forgot Password =================
 
 const forgotPassword = async (req, res) => {
@@ -391,8 +383,6 @@ const forgotPassword = async (req, res) => {
     });
   }
 };
-
-// ================= Verify OTP =================
 
 // ================= Verify OTP =================
 
@@ -474,6 +464,13 @@ const resetPassword = async (req, res) => {
   }
 
 };
+
+// ================= Export =================
+// This is the ONLY module.exports in this file. If your actual file on
+// disk has a second module.exports block anywhere above this one, the
+// later block silently wins and any name missing from it (e.g.
+// `register`) becomes undefined when required elsewhere - which is
+// exactly the "argument handler must be a function" error you hit.
 
 module.exports = {
   register,

@@ -62,7 +62,7 @@ router.delete("/users/:id", deleteUser);
 
 
 
-console.log("✅ adminRoutes.js file loaded - tasks/seen route is registered here");
+
 
 // ================= Tasks =================
 

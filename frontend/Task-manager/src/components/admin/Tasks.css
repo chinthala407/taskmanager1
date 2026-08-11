@@ -1,22 +1,28 @@
-
-/* ================================
-   Tasks Page
-================================ */
+/* =================================
+   TASKS PAGE
+================================= */
 
 .tasks-page {
     width: 100%;
+    max-width: 100%;
     padding: 25px;
     box-sizing: border-box;
+
+    /*
+       Prevent the whole page from becoming
+       horizontally scrollable.
+    */
+    overflow-x: hidden;
 }
 
 .tasks-page h1 {
-    margin-bottom: 25px;
+    margin: 0 0 25px;
 }
 
 
-/* ================================
-   Task Statistics
-================================ */
+/* =================================
+   TASK STATISTICS
+================================= */
 
 .task-stats {
     display: flex;
@@ -26,10 +32,17 @@
 
 .task-box {
     flex: 1;
+    min-width: 0;
+
     padding: 20px;
+
     border-radius: 10px;
+
     background: #ffffff;
+
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    box-sizing: border-box;
 }
 
 .task-box h3 {
@@ -49,20 +62,23 @@
 }
 
 
-/* ================================
-   Search
-================================ */
+/* =================================
+   SEARCH
+================================= */
 
 .task-search {
     width: 100%;
     max-width: 400px;
+
     padding: 10px 14px;
+
     margin-bottom: 15px;
 
     border: 1px solid #ddd;
     border-radius: 6px;
 
     box-sizing: border-box;
+
     outline: none;
 }
 
@@ -71,14 +87,17 @@
 }
 
 
-/* ================================
-   Filter Buttons
-================================ */
+/* =================================
+   FILTER BUTTONS
+================================= */
 
 .filter-buttons {
     display: flex;
     gap: 10px;
+
     margin-bottom: 20px;
+
+    flex-wrap: wrap;
 }
 
 .filter-buttons button {
@@ -88,7 +107,10 @@
     border-radius: 6px;
 
     background: #ffffff;
+
     cursor: pointer;
+
+    white-space: nowrap;
 }
 
 .filter-buttons button:hover {
@@ -96,52 +118,132 @@
 }
 
 
-/* ================================
-   Tasks Table Container
-================================ */
+/* Active Filter */
+
+.filter-buttons button.active-filter {
+    background: #66a6ef;
+    color: #ffffff;
+
+    border-color: #66a6ef;
+}
+
+
+/* =================================
+   TABLE SCROLL CONTAINER
+================================= */
+
+/*
+   THIS is the responsive part.
+
+   The screen can become 430px wide,
+   but this container can hold the
+   1000px table.
+
+   Therefore ONLY this container
+   scrolls horizontally.
+*/
 
 .tasks-table {
     width: 100%;
+    max-width: 100%;
+
     overflow-x: auto;
+    overflow-y: hidden;
+
+    box-sizing: border-box;
+
+    /*
+       Smooth horizontal scrolling
+       on phones.
+    */
+    -webkit-overflow-scrolling: touch;
+
+    /*
+       Makes the scrollbar easier to use.
+    */
+    scrollbar-width: thin;
 }
 
 
-/* ================================
-   Table
-================================ */
+/* =================================
+   TABLE
+================================= */
+
+/*
+   IMPORTANT:
+
+   The table DOES NOT shrink on mobile.
+
+   It stays 1000px wide.
+*/
 
 .tasks-table table {
-    width: 100%;
-    min-width: 900px;
+    width: 1000px !important;
+    min-width: 1000px !important;
+    max-width: none !important;
 
-    table-layout: fixed;
+    table-layout: fixed !important;
+
     border-collapse: collapse;
 
     background: #ffffff;
+
+    /*
+       Make sure another CSS file
+       cannot turn this into a block.
+    */
+    display: table !important;
 }
 
 
-/* ================================
-   Table Header
-================================ */
+/* =================================
+   FORCE NORMAL TABLE STRUCTURE
+================================= */
+
+.tasks-table thead {
+    display: table-header-group !important;
+}
+
+.tasks-table tbody {
+    display: table-row-group !important;
+}
+
+.tasks-table tr {
+    display: table-row !important;
+}
+
+.tasks-table th,
+.tasks-table td {
+    display: table-cell !important;
+}
+
+
+/* =================================
+   TABLE HEADER
+================================= */
 
 .tasks-table th {
     padding: 14px 12px;
 
-    background: #f5f5f5;
+    background: #66a6ef !important;
+    color: #222222 !important;
+
+    font-weight: 600;
 
     text-align: left;
     vertical-align: middle;
 
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #dcdcdc;
 
     white-space: nowrap;
+
+    box-sizing: border-box;
 }
 
 
-/* ================================
-   Table Cells
-================================ */
+/* =================================
+   TABLE CELLS
+================================= */
 
 .tasks-table td {
     padding: 14px 12px;
@@ -149,97 +251,103 @@
     border-bottom: 1px solid #eee;
 
     vertical-align: middle;
+
+    box-sizing: border-box;
 }
 
 
-/* ================================
-   Fixed Column Widths
-================================ */
+/* =================================
+   FIXED COLUMN WIDTHS
+================================= */
+
+/*
+   Total:
+
+   ID          60px
+   Title       170px
+   Description 300px
+   Status      120px
+   Created By  200px
+   Actions     150px
+
+   TOTAL = 1000px
+*/
+
 
 /* ID */
 
 .tasks-table th:nth-child(1),
 .tasks-table td:nth-child(1) {
-    width: 6%;
+    width: 60px !important;
+    min-width: 60px !important;
 }
 
 
-/* Title */
+/* TITLE */
 
 .tasks-table th:nth-child(2),
 .tasks-table td:nth-child(2) {
-    width: 17%;
-}
+    width: 170px !important;
+    min-width: 170px !important;
 
-
-/* Description */
-
-.tasks-table th:nth-child(3),
-.tasks-table td:nth-child(3) {
-    width: 29%;
-}
-
-
-/* Status */
-
-.tasks-table th:nth-child(4),
-.tasks-table td:nth-child(4) {
-    width: 12%;
-}
-
-
-/* Created By */
-
-.tasks-table th:nth-child(5),
-.tasks-table td:nth-child(5) {
-    width: 21%;
-}
-
-
-/* Actions */
-
-.tasks-table th:nth-child(6),
-.tasks-table td:nth-child(6) {
-    width: 15%;
-}
-
-
-/* ================================
-   Title
-================================ */
-
-.tasks-table td:nth-child(2) {
     word-break: break-word;
     overflow-wrap: anywhere;
 }
 
 
-/* ================================
-   Description
-================================ */
+/* DESCRIPTION */
 
 .tasks-table th:nth-child(3),
 .tasks-table td:nth-child(3) {
-    width: 30%;
-    min-width: 250px;
+    width: 300px !important;
+    min-width: 300px !important;
 
     white-space: normal;
+
     word-break: normal;
+
     overflow-wrap: break-word;
 
     line-height: 1.4;
 }
 
-/* ================================
-   Status
-================================ */
 
+/* STATUS */
+
+.tasks-table th:nth-child(4),
 .tasks-table td:nth-child(4) {
+    width: 120px !important;
+    min-width: 120px !important;
+
     white-space: nowrap;
 }
 
 
-/* Status Badge */
+/* CREATED BY */
+
+.tasks-table th:nth-child(5),
+.tasks-table td:nth-child(5) {
+    width: 200px !important;
+    min-width: 200px !important;
+
+    word-break: break-word;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ACTIONS */
+
+.tasks-table th:nth-child(6),
+.tasks-table td:nth-child(6) {
+    width: 150px !important;
+    min-width: 150px !important;
+}
+
+
+/* =================================
+   STATUS BADGE
+================================= */
 
 .status {
     display: inline-block;
@@ -255,16 +363,10 @@
     font-size: 13px;
 }
 
-
-/* Completed */
-
 .status.completed {
     background: #d4edda;
     color: #155724;
 }
-
-
-/* Pending */
 
 .status.pending {
     background: #fff3cd;
@@ -272,25 +374,15 @@
 }
 
 
-/* ================================
-   Created By
-================================ */
-
-.tasks-table td:nth-child(5) {
-    word-break: break-word;
-    overflow-wrap: anywhere;
-}
-
-
-/* Username */
+/* =================================
+   CREATED BY
+================================= */
 
 .tasks-table td:nth-child(5) strong {
     display: inline-block;
+
     margin-bottom: 3px;
 }
-
-
-/* Email */
 
 .tasks-table td:nth-child(5) small {
     display: inline-block;
@@ -298,35 +390,47 @@
     max-width: 100%;
 
     word-break: break-word;
+
     overflow-wrap: anywhere;
 }
-/* ================================
-   Action Icons
-================================ */
+
+
+/* =================================
+   ACTION BUTTONS
+================================= */
 
 .action-btns {
     display: flex;
+
     align-items: center;
+
     gap: 14px;
+
+    white-space: nowrap;
 }
 
 .view-btn,
 .delete-btn {
     background: transparent;
+
     border: none;
+
     padding: 0;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     cursor: pointer;
 
     font-size: 18px;
+
+    flex-shrink: 0;
 }
 
 
-/* View Icon */
+/* View */
 
 .view-btn {
     color: #3b82f6;
@@ -337,7 +441,7 @@
 }
 
 
-/* Delete Icon */
+/* Delete */
 
 .delete-btn {
     color: #ef4444;
@@ -346,21 +450,44 @@
 .delete-btn:hover {
     color: #b91c1c;
 }
-/* ================================
-   No Tasks
-================================ */
+
+
+/* =================================
+   NO TASKS
+================================= */
 
 .tasks-table td[colspan="6"] {
     text-align: center;
+
     padding: 30px;
 
     color: #777;
 }
 
 
-/* ================================
-   Task Modal
-================================ */
+/* =================================
+   MODAL OVERLAY
+================================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    z-index: 999;
+
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   TASK MODAL
+================================= */
 
 .task-modal {
     position: fixed;
@@ -371,6 +498,7 @@
     transform: translate(-50%, -50%);
 
     width: 90%;
+
     max-width: 500px;
 
     max-height: 80vh;
@@ -390,12 +518,11 @@
     box-sizing: border-box;
 }
 
-
 .task-modal h2 {
     margin-top: 0;
+
     margin-bottom: 20px;
 }
-
 
 .task-modal p {
     margin-bottom: 15px;
@@ -406,17 +533,19 @@
 }
 
 
-/* ================================
-   Close Button
-================================ */
+/* =================================
+   CLOSE BUTTON
+================================= */
 
 .close-btn {
     padding: 9px 18px;
 
     border: none;
+
     border-radius: 6px;
 
     background: #333;
+
     color: #ffffff;
 
     cursor: pointer;
@@ -427,47 +556,206 @@
 }
 
 
-/* ================================
-   Responsive
-================================ */
+/* =================================
+   TABLET
+================================= */
 
 @media (max-width: 768px) {
 
     .tasks-page {
+        width: 100%;
+
         padding: 15px;
+
+        box-sizing: border-box;
+
+        overflow-x: hidden;
     }
+
+
+    .tasks-page h1 {
+        font-size: 24px;
+
+        margin-bottom: 20px;
+    }
+
+
+    /* Statistics */
 
     .task-stats {
         flex-direction: column;
+
+        gap: 12px;
     }
+
+
+    .task-box {
+        width: 100%;
+    }
+
+
+    /* Search */
+
+    .task-search {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+
+    /* Filters */
+
+    .filter-buttons {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+    }
+
+
+    /*
+       TABLE REMAINS 1000PX.
+       DO NOT CHANGE THIS TO 100%.
+    */
 
     .tasks-table {
+        width: 100%;
+
+        max-width: 100%;
+
         overflow-x: auto;
+
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
     }
+
 
     .tasks-table table {
-        min-width: 900px;
+        width: 1000px !important;
+
+        min-width: 1000px !important;
+
+        max-width: none !important;
+    }
+
+
+    /* Modal */
+
+    .task-modal {
+        width: calc(100% - 30px);
+
+        max-height: 85vh;
+
+        padding: 20px;
     }
 }
 
-/* ================================
-   Table Header Fix
-================================ */
 
-.tasks-table thead {
-    background: #f1f3f5;
+/* =================================
+   SMALL MOBILE
+================================= */
+
+@media (max-width: 480px) {
+
+    .tasks-page {
+        width: 100%;
+
+        padding: 12px;
+
+        overflow-x: hidden;
+    }
+
+
+    .tasks-page h1 {
+        font-size: 21px;
+
+        margin-bottom: 18px;
+    }
+
+
+    /* Statistics */
+
+    .task-box {
+        padding: 16px;
+    }
+
+    .task-box h3 {
+        font-size: 15px;
+    }
+
+    .task-box h2 {
+        font-size: 22px;
+    }
+
+
+    /* Filter buttons */
+
+    .filter-buttons button {
+        padding: 7px 13px;
+
+        font-size: 13px;
+    }
+
+
+    /*
+       KEEP TABLE AT 1000PX.
+       MOBILE SCREEN WILL SCROLL.
+    */
+
+    .tasks-table {
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+    }
+
+
+    .tasks-table table {
+        width: 1000px !important;
+
+        min-width: 1000px !important;
+
+        max-width: none !important;
+    }
+
+
+    /* Modal */
+
+    .task-modal {
+        width: calc(100% - 24px);
+
+        padding: 18px;
+    }
+
+
+    .task-modal h2 {
+        font-size: 20px;
+    }
 }
 
-.tasks-table thead th {
-    background:#66a6ef !important;
-    color: #222222 !important;
 
-    font-weight: 600;
-    text-align: left;
+/* =================================
+   VERY SMALL MOBILE
+================================= */
 
-    padding: 14px 12px;
+@media (max-width: 360px) {
 
-    border-bottom: 1px solid #dcdcdc;
+    .tasks-page {
+        padding: 10px;
+    }
 
-    white-space: nowrap;
+    .tasks-page h1 {
+        font-size: 20px;
+    }
+
+    .filter-buttons button {
+        padding: 6px 11px;
+
+        font-size: 12px;
+    }
 }

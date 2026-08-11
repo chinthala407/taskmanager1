@@ -233,18 +233,22 @@ console.log(error);
 
 
 // ================= Search Filter =================
+// Now matches task title, creator username, and creator email
 
 
 const filteredTasks = tasks.filter(task=>{
 
 
+const query = search.toLowerCase();
+
+
 const searchMatch =
 
-task.title
-.toLowerCase()
-.includes(
-search.toLowerCase()
-);
+    task.title?.toLowerCase().includes(query) ||
+
+    task.username?.toLowerCase().includes(query) ||
+
+    task.email?.toLowerCase().includes(query);
 
 
 
@@ -253,7 +257,7 @@ const filterMatch =
 filter==="all" ||
 
 task.status
-.toLowerCase()
+?.toLowerCase()
 ===filter;
 
 
@@ -446,7 +450,7 @@ const yearOptions = useMemo(()=>{
 
                     type="text"
 
-                    placeholder="Search Task..."
+                    placeholder="Search by task name or creator..."
 
                     value={search}
 
@@ -542,6 +546,11 @@ const yearOptions = useMemo(()=>{
 
 
                         <th>
+                            Created By
+                        </th>
+
+
+                        <th>
                             Actions
                         </th>
 
@@ -568,13 +577,13 @@ const yearOptions = useMemo(()=>{
                     <tr key={task.id}>
 
 
-                        <td>
+                        <td data-label="Title">
                             {task.title}
                         </td>
 
 
 
-                        <td>
+                        <td data-label="Priority">
 
 
                             <span
@@ -596,7 +605,7 @@ const yearOptions = useMemo(()=>{
 
 
 
-                        <td>
+                        <td data-label="Due Date">
 
                             {task.due_date}
 
@@ -605,7 +614,7 @@ const yearOptions = useMemo(()=>{
 
 
 
-                        <td>
+                        <td data-label="Status">
 
                             {task.status}
 
@@ -614,7 +623,27 @@ const yearOptions = useMemo(()=>{
 
 
 
-                        <td>
+                        <td data-label="Created By">
+
+                            <strong>{task.username}</strong>
+
+                            {
+
+                            task.email &&
+
+                            <>
+                                <br/>
+                                <small>{task.email}</small>
+                            </>
+
+                            }
+
+                        </td>
+
+
+
+
+                        <td data-label="Actions">
 
 
 
@@ -971,6 +1000,13 @@ const yearOptions = useMemo(()=>{
                                 <strong>Status:</strong>
                                 <br/>
                                 {task.status}
+                            </p>
+
+
+                            <p>
+                                <strong>Created By:</strong>
+                                <br/>
+                                {task.username}
                             </p>
 
                         </div>

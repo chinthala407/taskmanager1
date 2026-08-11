@@ -49,6 +49,7 @@ function ForgotPassword() {
         </p>
       </div>
     </div>
+    
   );
 }
 

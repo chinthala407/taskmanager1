@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaBars } from "react-icons/fa";
 
 import taskIcon from "../../assets/task-check-icon.png";
 import "./AdminNavbar.css";
 
 
-function AdminNavbar(){
-
-
-    const navigate = useNavigate();
+function AdminNavbar({ onToggleSidebar, onLogout }){
 
 
     const [admin,setAdmin] = useState({
@@ -25,63 +22,39 @@ function AdminNavbar(){
 
     useEffect(()=>{
 
+    const loadAdminProfile = async()=>{
 
-        const loadAdminProfile = async()=>{
+        try{
 
+            const token = localStorage.getItem("token");
 
-            try{
+            const response = await axios.get(
 
+                "http://localhost:5000/api/admin/profile",
 
-                const response = await axios.get(
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
 
-                    "http://localhost:5000/api/admin/profile"
+            );
 
-                );
+            setAdmin(response.data);
 
+        }
 
-                setAdmin(response.data);
+        catch(error){
 
+            console.log(error);
 
-            }
-
-            catch(error){
-
-
-                console.log(error);
-
-
-            }
-
-
-        };
-
-
-
-        loadAdminProfile();
-
-
-
-    },[]);
-
-
-
-
-
-
-
-
-    const handleLogout = ()=>{
-
-
-        localStorage.removeItem("token");
-
-        localStorage.removeItem("user");
-
-
-        navigate("/");
-
+        }
 
     };
+
+    loadAdminProfile();
+
+},[]);
 
 
 
@@ -99,6 +72,17 @@ function AdminNavbar(){
 
 
             <div className="navbar-left">
+
+
+                {/* Opens/closes the sidebar drawer, mobile only */}
+
+                <button
+                    className="sidebar-toggle-btn"
+                    onClick={() => { console.log("hamburger clicked"); onToggleSidebar(); }}
+                    aria-label="Toggle navigation"
+                >
+                    <FaBars />
+                </button>
 
 
                 <div className="brand">
@@ -150,6 +134,10 @@ function AdminNavbar(){
 
 
 
+            {/* Admin details always visible. Logout sits beside it on
+                desktop, but is hidden here on mobile (moved into the
+                sidebar drawer instead) */}
+
             <div className="navbar-right">
 
 
@@ -194,7 +182,7 @@ function AdminNavbar(){
 
                     className="logout-btn"
 
-                    onClick={handleLogout}
+                    onClick={onLogout}
 
                 >
 

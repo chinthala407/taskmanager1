@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const authController = require("../controllers/authController");
+
 const {
   register,
   login,
@@ -8,7 +10,12 @@ const {
   verifyOTP,
   resetPassword,
   googleAuth,
-} = require("../controllers/authController");
+} = authController;
+
+// Uncomment this line temporarily if the crash still happens after
+// replacing authController.js - it will print exactly which of the six
+// functions above is undefined.
+// console.log("authController exports:", authController);
 
 router.post("/register", register);
 router.post("/login", login);

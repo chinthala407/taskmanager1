@@ -1,283 +1,162 @@
-/* ==========================================
-   SIDEBAR
-========================================== */
+/* Sidebar container — stays full width on all desktop/tablet sizes,
+   only becomes an off-canvas drawer on real mobile widths */
+.admin-sidebar{
+    position:fixed;
+    top:72px;
+    left:0;
 
-.admin-sidebar {
+    width:260px;
+    height:calc(100vh - 72px);
 
-    position: fixed;
+    background:#ADD8E6;
+    border-right:1px solid #e5e7eb;
 
-    top: 72px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
 
-    left: 0;
+    padding:24px 16px;
 
-    width: 260px;
+    overflow-y:auto;
+    overflow-x:hidden;
 
-    height: calc(100vh - 72px);
+    box-sizing:border-box;
+    z-index:1000;
 
-    background: #ADD8E6;
-
-    border-right: 1px solid #e5e7eb;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: flex-start;
-
-    padding: 24px 16px;
-
-    overflow-y: auto;
-
-    box-sizing: border-box;
-
+    transition:left .3s ease;
 }
 
-
-/* ==========================================
-   TITLE
-========================================== */
-
-.sidebar-title {
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    text-transform: uppercase;
-
-    color: #94a3b8;
-
-    letter-spacing: 1px;
-
-    margin-bottom: 20px;
-
-    padding-left: 12px;
-
+.sidebar-top{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
-
-/* ==========================================
-   MENU
-========================================== */
-
-.sidebar-top {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
+/* Sidebar nav link (NavLink renders this class) */
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    min-height:46px;
+    padding:0 16px;
+    border-radius:12px;
+    text-decoration:none;
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:all .25s ease;
+    box-sizing:border-box;
 }
 
-
-/* ==========================================
-   SIDEBAR LINK
-========================================== */
-
-.sidebar-link {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    width: 100%;
-
-    min-height: 46px;
-
-    padding: 0 16px;
-
-    border-radius: 12px;
-
-    text-decoration: none;
-
-    color: #475569;
-
-    font-size: 15px;
-
-    font-weight: 500;
-
-    transition: all 0.25s;
-
-    box-sizing: border-box;
-
+.menu-item:hover{
+    background:#f1f5f9;
+    color:#2563eb;
 }
 
-
-/* Hover */
-
-.sidebar-link:hover {
-
-    background: #f1f5f9;
-
-    color: #2563eb;
-
+/* react-router-dom NavLink adds this class automatically on the active route */
+.menu-item.active{
+    background:#eff6ff;
+    color:#2563eb;
+    font-weight:600;
 }
 
-
-/* Active */
-
-.sidebar-link.active {
-
-    background: #eff6ff;
-
-    color: #2563eb;
-
-    font-weight: 600;
-
+.menu-item svg{
+    font-size:18px;
+    min-width:18px;
 }
 
-
-/* ==========================================
-   SIDEBAR MENU ITEM
-========================================== */
-
-.sidebar-menu-item {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
+/* Notification badge on sidebar link */
+.sidebar-badge{
+    margin-left:auto;
+    min-width:20px;
+    height:20px;
+    padding:0 6px;
+    background:#ef4444;
+    color:#fff;
+    border-radius:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+    box-sizing:border-box;
+    border:2px solid white;
 }
 
-
-/* ==========================================
-   ICON SPACING
-========================================== */
-
-.sidebar-menu-item svg {
-
-    font-size: 18px;
-
+/* Sidebar scrollbar styling */
+.admin-sidebar::-webkit-scrollbar{
+    width:6px;
 }
 
-
-/* ==========================================
-   NOTIFICATION BADGE
-========================================== */
-
-.sidebar-badge {
-
-    margin-left: auto;
-
-    min-width: 20px;
-
-    height: 20px;
-
-    padding: 0 6px;
-
-    background: #ef4444;
-
-    color: #ffffff;
-
-    border-radius: 50px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    line-height: 1;
-
-    box-sizing: border-box;
-
-    border: 2px solid white;
-
+.admin-sidebar::-webkit-scrollbar-thumb{
+    background:#cbd5e1;
+    border-radius:10px;
 }
 
-
-/* ==========================================
-   FOOTER
-========================================== */
-
-.sidebar-footer {
-
-    border-top: 1px solid #e5e7eb;
-
-    padding-top: 20px;
-
+.admin-sidebar::-webkit-scrollbar-thumb:hover{
+    background:#94a3b8;
 }
 
-
-/* ==========================================
-   ADMIN PROFILE
-========================================== */
-
-.admin-profile {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
+/* Logout button inside the sidebar — desktop keeps logout in the navbar instead */
+.sidebar-logout-btn{
+    display:none;
 }
 
+/* Mobile, <=768px: sidebar becomes an off-canvas drawer */
+@media (max-width:768px){
 
-.profile-avatar {
-
-    width: 46px;
-
-    height: 46px;
-
-    border-radius: 50%;
-
-    background: #2563eb;
-
-    color: white;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    font-size: 18px;
-
-    font-weight: 700;
-
-}
-
-
-.admin-profile h4 {
-
-    font-size: 15px;
-
-    color: #111827;
-
-}
-
-
-.admin-profile p {
-
-    font-size: 13px;
-
-    color: #64748b;
-
-    margin-top: 4px;
-
-}
-
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media (max-width: 768px) {
-
-    .admin-sidebar {
-
-        width: 220px;
-
+    .admin-sidebar{
+        left:-260px;
     }
 
+    .admin-sidebar.mobile-open{
+        left:0;
+        box-shadow:4px 0 20px rgba(0,0,0,0.15);
+    }
+
+    .sidebar-logout-btn{
+        display:block;
+        width:100%;
+        margin-top:auto;
+        padding:12px 16px;
+        border:none;
+        border-radius:12px;
+        background:#e74c3c;
+        color:#fff;
+        font-size:15px;
+        font-weight:600;
+        cursor:pointer;
+        transition:.3s ease;
+    }
+
+    .sidebar-logout-btn:hover{
+        background:#c0392b;
+    }
+}
+
+/* Dark backdrop behind the open drawer, mobile only */
+.sidebar-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    top:72px;
+    background:rgba(0,0,0,0.35);
+    z-index:999;
+}
+
+@media (max-width:768px){
+    .sidebar-overlay.show{
+        display:block;
+    }
+}
+
+/* Small mobile, <=480px: drawer takes most of the screen width */
+@media (max-width:480px){
+
+    .admin-sidebar{
+        width:85vw;
+        left:-85vw;
+    }
 }

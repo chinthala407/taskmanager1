@@ -1,1025 +1,346 @@
 /* ===========================
-   ADMIN LAYOUT
+   DASHBOARD PAGE STYLES
+   (Layout-level styles like .admin-main, .admin-sidebar,
+   .admin-navbar live in AdminLayout.css / Navbar.css / Sidebar.css —
+   do NOT duplicate them here.)
 =========================== */
 
-.admin-layout{
-
-    min-height:100vh;
-
-    background:#f8fafc;
-
-    padding-top:0;
-
-}
-
-
-/* ===========================
-   NAVBAR
-=========================== */
-
-.admin-navbar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 72px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 35px;
-
-    background: white;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-
-    z-index: 1100;
-}
-
-.admin-navbar h2{
-
-    color:#2563eb;
-    font-size:22px;
-}
-
-.admin-navbar button{
-
-    background:#2563eb;
-    color:#fff;
-
-    border:none;
-
-    padding:10px 22px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.admin-navbar button:hover{
-
-    background:#1d4ed8;
-}
-
-
-/* ===========================
-   BODY
-=========================== */
-
-
-.admin-body{
-
-    display:block;
-}
-
-
-/* ===========================
-   SIDEBAR
-=========================== */
-
-.admin-sidebar{
-
-    position:fixed;
-
-    top:72px;
-    left:0;
-
-    width:240px;
-
-    height:calc(100vh - 72px);
-
-    background:#ffffff;
-
-    border-right:1px solid #e5e7eb;
-
-    padding:25px 15px;
-
-    overflow-y:auto;
-    overflow-x:hidden;
-
-    z-index:1000;
-
-    box-sizing:border-box;
-}
-
-.admin-sidebar ul{
-
-    list-style:none;
-
-    margin:0;
-
-    padding:0;
-}
-
-.admin-sidebar li{
-
-    margin-bottom:10px;
-}
-
-.admin-sidebar a{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    width:100%;
-
-    padding:14px 18px;
-
-    color:#475569;
-
-    text-decoration:none;
-
-    border-radius:12px;
-
-    transition:.3s;
-
-    font-size:16px;
-
-    font-weight:500;
-}
-
-.admin-sidebar a:hover{
-
-    background:#eff6ff;
-
-    color:#2563eb;
-}
-
-.admin-sidebar a.active{
-
-    background:#dbeafe;
-
-    color:#2563eb;
-
-    font-weight:600;
-}
-
-.admin-sidebar svg{
-
-    font-size:18px;
-
-    min-width:18px;
-}
-
-
-/* ===========================
-   MAIN CONTENT
-=========================== */
-.admin-main{
-
-    margin-left:240px;
-
-    margin-top:72px;
-
-    padding:10px 35px 35px;
-
-    min-height:calc(100vh - 72px);
-
-    background:#f8fafc;
-
-    overflow-y:auto;
-
-}
-
-.admin-main h1{
-
-    color:#1f2937;
-
-    margin-bottom:20px;
-}
-/* ==========================================
-   WELCOME BANNER
-========================================== */
-
+/* Welcome banner */
 .welcome-card{
-
     background:linear-gradient(135deg,#2563eb,#60a5fa);
-
     color:#ffffff;
-
     padding:30px;
-
     border-radius:18px;
-
     margin-bottom:30px;
-
     box-shadow:0 10px 25px rgba(37,99,235,0.20);
-
+    animation:fadeIn .4s ease;
 }
 
 .welcome-card h1{
-
     font-size:30px;
-
     margin:0;
-
     font-weight:700;
-
 }
 
 .welcome-card p{
-
     margin-top:12px;
-
     font-size:16px;
-
     opacity:0.95;
-
     line-height:1.6;
-
 }
 
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(15px); }
+    to{ opacity:1; transform:translateY(0); }
+}
 
-
-/* ==========================================
-   STATISTICS SECTION
-========================================== */
-
+/* Statistics grid (StatCard components) */
 .stats-container{
-
     display:grid;
-
     grid-template-columns:repeat(4,1fr);
-
     gap:25px;
-
     margin-top:30px;
-
 }
-
-
-
-/* ==========================================
-   STAT CARD
-========================================== */
 
 .stat-card{
-
     background:#ffffff;
-
     border:1px solid #e5e7eb;
-
     border-radius:16px;
-
     padding:24px;
-
     display:flex;
-
+    flex-direction:row;
     align-items:center;
-
-    gap:20px;
-
+    gap:15px;
     box-shadow:0 8px 20px rgba(0,0,0,.05);
-
     transition:all .3s ease;
-
     cursor:pointer;
-
+    min-width:0;
 }
 
 .stat-card:hover{
-
     transform:translateY(-6px);
-
     box-shadow:0 15px 30px rgba(0,0,0,.08);
-
 }
-
-
-
-/* ==========================================
-   ICON
-========================================== */
 
 .stat-icon{
-
     width:60px;
-
     height:60px;
-
     border-radius:15px;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     font-size:28px;
-
     flex-shrink:0;
-
 }
 
-
-
-/* ==========================================
-   ICON COLORS
-========================================== */
-
-.blue .stat-icon{
-
-    background:#dbeafe;
-
-    color:#2563eb;
-
-}
-
-.green .stat-icon{
-
-    background:#dcfce7;
-
-    color:#16a34a;
-
-}
-
-.orange .stat-icon{
-
-    background:#fef3c7;
-
-    color:#d97706;
-
-}
-
-.purple .stat-icon{
-
-    background:#ede9fe;
-
-    color:#7c3aed;
-
-}
-
-
-
-/* ==========================================
-   CARD TEXT
-========================================== */
+.blue .stat-icon{ background:#dbeafe; color:#2563eb; }
+.green .stat-icon{ background:#dcfce7; color:#16a34a; }
+.orange .stat-icon{ background:#fef3c7; color:#d97706; }
+.purple .stat-icon{ background:#ede9fe; color:#7c3aed; }
 
 .stat-card h3{
-
     margin:0;
-
     color:#64748b;
-
     font-size:15px;
-
     font-weight:500;
-
 }
 
 .stat-card h2{
-
     margin-top:8px;
-
     margin-bottom:0;
-
     color:#111827;
-
     font-size:32px;
-
     font-weight:700;
-
 }
 
-
-
-/* ==========================================
-   OPTIONAL TREND TEXT
-========================================== */
-
-.stat-card small{
-
-    display:block;
-
-    margin-top:8px;
-
-    color:#94a3b8;
-
-    font-size:13px;
-
+/* Monthly user growth */
+.growth-card{
+    margin-top:30px;
+    background:white;
+    padding:28px;
+    border-radius:18px;
+    border:1px solid #e5e7eb;
 }
-/* ==========================================
-   DASHBOARD GRID
-========================================== */
 
+.growth-card h2{
+    margin-bottom:25px;
+    color:#111827;
+}
+
+.growth-list{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.growth-row{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.growth-row span{
+    width:100px;
+    color:#64748b;
+}
+
+.growth-progress{
+    flex:1;
+    min-width:80px;
+    height:10px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.growth-fill{
+    height:100%;
+    background:#2563eb;
+    border-radius:20px;
+    transition:width .3s ease;
+}
+
+.growth-row strong{
+    width:40px;
+}
+
+/* Bottom section: activity + quick actions */
 .dashboard-grid{
-
     display:grid;
-
     grid-template-columns:2fr 1fr;
-
     gap:25px;
-
     margin-top:35px;
-
 }
-
-
-
-/* ==========================================
-   COMMON CARD
-========================================== */
 
 .activity-card,
 .quick-card{
-
     background:#ffffff;
-
     border:1px solid #e5e7eb;
-
     border-radius:18px;
-
     padding:25px;
-
     box-shadow:0 8px 20px rgba(0,0,0,.05);
-
 }
-
-
-
-/* ==========================================
-   CARD TITLES
-========================================== */
 
 .activity-card h2,
 .quick-card h2{
-
     margin:0 0 20px;
-
     font-size:22px;
-
     color:#111827;
-
     font-weight:600;
-
 }
 
-
-
-/* ==========================================
-   RECENT ACTIVITY
-========================================== */
-
-.activity-list{
-
+/* Recent activity row (clickable, reveals delete button) */
+.activity-row{
+    cursor:pointer;
     display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-}
-
-.activity-item{
-
-    display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     padding:15px 18px;
-
+    margin-bottom:12px;
     border:1px solid #e5e7eb;
-
     border-radius:12px;
-
-    transition:.3s;
-
+    transition:.3s ease;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-.activity-item:hover{
-
+.activity-row:hover{
     background:#f8fafc;
-
-    transform:translateX(5px);
-
 }
 
-.activity-info{
-
+.activity-main{
     display:flex;
-
     flex-direction:column;
-
     gap:5px;
-
 }
 
-.activity-title{
-
+.activity-message{
+    margin:0;
     font-size:16px;
-
     font-weight:600;
-
     color:#1f2937;
-
 }
 
 .activity-time{
-
     font-size:13px;
-
     color:#94a3b8;
-
 }
 
-
-
-/* ==========================================
-   STATUS BADGES
-========================================== */
-
-.badge{
-
-    padding:6px 12px;
-
-    border-radius:30px;
-
-    font-size:12px;
-
-    font-weight:600;
-
-}
-
-.badge.completed{
-
-    background:#dcfce7;
-
-    color:#16a34a;
-
-}
-
-.badge.pending{
-
-    background:#fef3c7;
-
-    color:#d97706;
-
-}
-
-.badge.overdue{
-
-    background:#fee2e2;
-
-    color:#dc2626;
-
-}
-
-
-
-/* ==========================================
-   QUICK ACTIONS
-========================================== */
-
-.quick-actions{
-
+.activity-delete-btn{
     display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-}
-
-.quick-card button{
-
-    display:flex;
-
     align-items:center;
-
-    gap:12px;
-
-    width:100%;
-
-    padding:15px 18px;
-
+    gap:4px;
+    background:#e74c3c;
+    color:white;
     border:none;
-
-    border-radius:12px;
-
-    background:#2563eb;
-
-    color:#ffffff;
-
-    font-size:15px;
-
-    font-weight:500;
-
+    padding:4px 10px;
+    border-radius:4px;
     cursor:pointer;
+    transition:.3s ease;
+}
 
-    transition:.3s;
+.activity-delete-btn:hover{
+    background:#c0392b;
+}
 
+/* Quick actions */
+.quick-card button{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:15px 18px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:#ffffff;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.quick-card button:last-child{
+    margin-bottom:0;
 }
 
 .quick-card button:hover{
-
     background:#1d4ed8;
-
     transform:translateY(-2px);
-
 }
 
-.quick-card button svg{
-
-    font-size:18px;
-
-}
-
-
-
-/* ==========================================
-   SECONDARY BUTTON
-========================================== */
-
-.quick-card .secondary-btn{
-
-    background:#f1f5f9;
-
-    color:#334155;
-
-}
-
-.quick-card .secondary-btn:hover{
-
-    background:#e2e8f0;
-
-}
-/* ==========================================
-   BRAND (LOGO + TITLE)
-========================================== */
-
-.brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-}
-
-.brand img{
-
-    width:42px;
-    height:42px;
-    object-fit:contain;
-}
-
-.brand h2{
-
-    margin:0;
-    font-size:24px;
-    font-weight:700;
-}
-
-.task-text{
-
-    color:#111827;
-}
-
-.manager-text{
-
-    color:#2563eb;
-}
-
-.admin-text{
-
-    color:#64748b;
-    font-size:18px;
-    font-weight:500;
-}
-
-
-
-/* ==========================================
-   SCROLLBAR
-========================================== */
-
-.admin-sidebar::-webkit-scrollbar{
-
-    width:6px;
-}
-
-.admin-sidebar::-webkit-scrollbar-thumb{
-
-    background:#cbd5e1;
-    border-radius:10px;
-}
-
-.admin-sidebar::-webkit-scrollbar-thumb:hover{
-
-    background:#94a3b8;
-}
-
-
-
-/* ==========================================
-   TABLET
-========================================== */
-
-@media (max-width:1100px){
-
+/* Large desktop, >1400px */
+@media (min-width:1401px){
     .stats-container{
-
-        grid-template-columns:repeat(2,1fr);
+        gap:30px;
     }
+}
 
+/* Tablet, <=1100px */
+@media (max-width:1100px){
+    .stats-container{
+        gap:16px;
+    }
     .dashboard-grid{
-
         grid-template-columns:1fr;
     }
-
-    .admin-main{
-
-        margin-left:240px;
-        padding:25px;
-    }
-
 }
 
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
+/* Mobile, <=768px */
 @media (max-width:768px){
 
-    .admin-layout{
-
-        padding-top:72px;
-    }
-
-    .admin-navbar{
-
-        padding:0 15px;
-    }
-
-    .brand h2{
-
-        font-size:18px;
-    }
-
-    .admin-navbar button{
-
-        padding:8px 14px;
-        font-size:13px;
-    }
-
-    .admin-sidebar{
-
-        position:fixed;
-
-        top:72px;
-        left:-240px;
-
-        width:240px;
-        height:calc(100vh - 72px);
-
-        transition:.3s;
-    }
-
-    .admin-sidebar.show{
-
-        left:0;
-    }
-
-    .admin-main{
-
-        margin-left:0;
-        padding:20px;
-    }
-
     .welcome-card{
-
         padding:20px;
     }
 
     .welcome-card h1{
-
         font-size:24px;
     }
 
     .welcome-card p{
-
         font-size:14px;
     }
 
     .stats-container{
-
-        grid-template-columns:1fr;
-        gap:15px;
-    }
-
-    .dashboard-grid{
-
-        grid-template-columns:1fr;
+        gap:10px;
     }
 
     .stat-card{
-
-        padding:18px;
+        padding:12px 8px;
+        flex-direction:column;
+        text-align:center;
+        gap:8px;
     }
 
     .activity-card,
     .quick-card{
-
         padding:18px;
     }
-
 }
 
-
-
-/* ==========================================
-   SMALL MOBILE
-========================================== */
-
+/* Small mobile / iPhone widths, <=480px */
 @media (max-width:480px){
 
-    .admin-main{
-
-        padding:15px;
-    }
-
-    .brand img{
-
-        width:34px;
-        height:34px;
-    }
-
-    .brand h2{
-
-        font-size:16px;
+    .stats-container{
+        gap:8px;
     }
 
     .stat-card{
-
+        padding:10px 6px;
         flex-direction:column;
-        align-items:flex-start;
+        align-items:center;
+        text-align:center;
+        gap:6px;
     }
 
     .stat-icon{
+        width:36px;
+        height:36px;
+        font-size:16px;
+    }
 
-        width:52px;
-        height:52px;
-        font-size:24px;
+    .stat-card h3{
+        font-size:10px;
+        line-height:1.2;
     }
 
     .stat-card h2{
-
-        font-size:28px;
+        margin-top:2px;
+        font-size:16px;
     }
 
-}
-
-
-
-/* ==========================================
-   SMOOTH ANIMATIONS
-========================================== */
-
-*{
-
-    scroll-behavior:smooth;
-}
-
-button{
-
-    transition:.3s ease;
-}
-
-a{
-
-    transition:.3s ease;
-}
-
-.stat-card,
-.activity-card,
-.quick-card {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 15px;
-
-}
-.welcome-card{
-
-    animation:fadeIn .4s ease;
-}
-
-@keyframes fadeIn{
-
-    from{
-
-        opacity:0;
-        transform:translateY(15px);
+    .welcome-card h1{
+        font-size:20px;
     }
 
-    to{
-
-        opacity:1;
-        transform:translateY(0);
+    .activity-row{
+        padding:12px;
     }
-}
-.growth-card{
 
-    margin-top:30px;
-
-    background:white;
-
-    padding:28px;
-
-    border-radius:18px;
-
-    border:1px solid #e5e7eb;
-
-}
-
-
-.growth-card h2{
-
-    margin-bottom:25px;
-
-    color:#111827;
-
-}
-
-
-
-.growth-list{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-
-}
-
-
-
-.growth-row{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-}
-
-
-
-.growth-row span{
-
-    width:100px;
-
-    color:#64748b;
-
-}
-
-
-
-.growth-progress{
-
-    flex:1;
-
-    height:10px;
-
-    background:#e5e7eb;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-}
-
-
-
-.growth-fill{
-
-    height:100%;
-
-    background:#2563eb;
-
-    border-radius:20px;
-
-}
-
-
-
-.growth-row strong{
-
-    width:40px;
-
+    .growth-row span{
+        width:70px;
+        font-size:13px;
+    }
 }

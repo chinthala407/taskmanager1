@@ -2,141 +2,167 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Tasks.css";
 import { FaEye, FaTrash } from "react-icons/fa";
-function Tasks() {
 
-    const [tasks,setTasks] = useState([]);
-    const [search,setSearch] = useState("");
-    const [filter,setFilter] = useState("all");
-    const [selectedTask,setSelectedTask] = useState(null);
+function Tasks() {
+    const [tasks, setTasks] = useState([]);
+    const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState("all");
+    const [selectedTask, setSelectedTask] = useState(null);
+
+    // ==========================================
+    // Fetch Tasks
+    // ==========================================
 
     const fetchTasks = () => {
+        const token = localStorage.getItem("token");
 
         axios
-        .get("http://localhost:5000/api/admin/tasks")
-        .then((response)=>{
-            setTasks(response.data);
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
-
+            .get("http://localhost:5000/api/admin/tasks", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                setTasks(response.data);
+            })
+            .catch((error) => {
+                console.log("Fetch tasks error:", error);
+            });
     };
 
+    // ==========================================
+    // Mark Tasks As Seen
+    // ==========================================
 
-    // ======================================================
-    // Mark Tasks As Seen (clears sidebar badge)
-    // ======================================================
+    const markTasksAsSeen = () => {
+        const token = localStorage.getItem("token");
 
-   const markTasksAsSeen = () => {
+        axios
+            .put(
+                "http://localhost:5000/api/admin/tasks/seen",
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            .catch((error) => {
+                console.log("Mark tasks seen error:", error);
+            });
+    };
 
-    const token = localStorage.getItem("token");
+    // ==========================================
+    // Load Tasks
+    // ==========================================
 
-    axios
-    .put(
-        "http://localhost:5000/api/admin/tasks/seen",
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-    )
-    .catch((error)=>{
-        console.log("Mark tasks seen error:", error);
-    });
-
-};
-
-    useEffect(()=>{
-
-    fetchTasks();
-
-    // Tell backend these tasks have been viewed by the admin
-    markTasksAsSeen();
-
-    const interval = setInterval(()=>{
-
+    useEffect(() => {
         fetchTasks();
 
-    },5000);
+        // Mark tasks as seen when admin opens page
+        markTasksAsSeen();
 
+        // Refresh tasks every 5 seconds
+        const interval = setInterval(() => {
+            fetchTasks();
+        }, 5000);
 
-    return ()=>clearInterval(interval);
+        return () => clearInterval(interval);
+    }, []);
 
+    // ==========================================
+    // Delete Task
+    // ==========================================
 
-},[]);
-
-
-
-    const handleDelete = (id)=>{
-
+    const handleDelete = (id) => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this task?"
         );
 
-        if(confirmDelete){
-
-            axios
-            .delete(`http://localhost:5000/api/admin/tasks/${id}`)
-            .then(()=>{
-
-                setTasks(
-                    tasks.filter(
-                        (task)=>task.id !== id
-                    )
-                );
-
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
-
+        if (!confirmDelete) {
+            return;
         }
 
+        const token = localStorage.getItem("token");
+
+        axios
+            .delete(`http://localhost:5000/api/admin/tasks/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(() => {
+                setTasks((prevTasks) =>
+                    prevTasks.filter((task) => task.id !== id)
+                );
+
+                // Close modal if deleted task was selected
+                if (selectedTask?.id === id) {
+                    setSelectedTask(null);
+                }
+            })
+            .catch((error) => {
+                console.log("Delete task error:", error);
+            });
     };
 
-
+    // ==========================================
+    // Statistics
+    // ==========================================
 
     const completed = tasks.filter(
-        (task)=>task.status?.toLowerCase()==="completed"
+        (task) => task.status?.toLowerCase() === "completed"
     ).length;
-
 
     const pending = tasks.filter(
-        (task)=>task.status?.toLowerCase()==="pending"
+        (task) => task.status?.toLowerCase() === "pending"
     ).length;
 
+    // ==========================================
+    // Search + Filter
+    // ==========================================
 
-
-    const filteredTasks = tasks.filter((task)=>{
+    const filteredTasks = tasks.filter((task) => {
+        const searchText = search.toLowerCase();
 
         const searchMatch =
-        task.title?.toLowerCase().includes(search.toLowerCase()) ||
-        task.description?.toLowerCase().includes(search.toLowerCase()) ||
-        task.username?.toLowerCase().includes(search.toLowerCase());
-
+            task.title?.toLowerCase().includes(searchText) ||
+            task.description?.toLowerCase().includes(searchText) ||
+            task.username?.toLowerCase().includes(searchText) ||
+            task.email?.toLowerCase().includes(searchText);
 
         const filterMatch =
-        filter==="all" ||
-        task.status?.toLowerCase()===filter;
-
+            filter === "all" ||
+            task.status?.toLowerCase() === filter;
 
         return searchMatch && filterMatch;
-
     });
-    const handleView = (task)=>{
 
-    setSelectedTask(task);
+    // ==========================================
+    // View Task
+    // ==========================================
 
-};
+    const handleView = (task) => {
+        setSelectedTask(task);
+    };
 
+    // ==========================================
+    // JSX
+    // ==========================================
 
-    return(
-
+    return (
         <div className="tasks-page">
+
+            {/* =================================
+                PAGE TITLE
+            ================================= */}
 
             <h1>Task Management</h1>
 
+
+            {/* =================================
+                TASK STATISTICS
+            ================================= */}
 
             <div className="task-stats">
 
@@ -145,12 +171,10 @@ function Tasks() {
                     <h2>{tasks.length}</h2>
                 </div>
 
-
                 <div className="task-box completed-box">
                     <h3>Completed</h3>
                     <h2>{completed}</h2>
                 </div>
-
 
                 <div className="task-box pending-box">
                     <h3>Pending</h3>
@@ -160,34 +184,52 @@ function Tasks() {
             </div>
 
 
+            {/* =================================
+                SEARCH
+            ================================= */}
 
             <input
                 type="text"
                 placeholder="Search tasks..."
                 value={search}
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 className="task-search"
             />
 
 
+            {/* =================================
+                FILTER BUTTONS
+            ================================= */}
 
             <div className="filter-buttons">
 
-                <button onClick={()=>setFilter("all")}>
+                <button
+                    className={filter === "all" ? "active-filter" : ""}
+                    onClick={() => setFilter("all")}
+                >
                     All
                 </button>
 
-                <button onClick={()=>setFilter("completed")}>
+                <button
+                    className={filter === "completed" ? "active-filter" : ""}
+                    onClick={() => setFilter("completed")}
+                >
                     Completed
                 </button>
 
-                <button onClick={()=>setFilter("pending")}>
+                <button
+                    className={filter === "pending" ? "active-filter" : ""}
+                    onClick={() => setFilter("pending")}
+                >
                     Pending
                 </button>
 
             </div>
 
 
+            {/* =================================
+                TABLE SCROLL CONTAINER
+            ================================= */}
 
             <div className="tasks-table">
 
@@ -209,152 +251,194 @@ function Tasks() {
 
                     <tbody>
 
-                    {
-                        filteredTasks.length > 0 ?
+                        {filteredTasks.length > 0 ? (
 
-                        filteredTasks.map((task)=>(
+                            filteredTasks.map((task) => (
 
-                            <tr key={task.id}>
+                                <tr key={task.id}>
 
-                                <td>{task.id}</td>
+                                    {/* ID */}
 
-                                <td>{task.title}</td>
-
-                                <td>{task.description}</td>
-
-
-                                <td>
-                                    <span className={`status ${task.status?.toLowerCase()}`}>
-                                        {task.status}
-                                    </span>
-                                </td>
+                                    <td>
+                                        {task.id}
+                                    </td>
 
 
-                                <td>
-                                    <strong>{task.username}</strong>
-                                    <br/>
-                                    <small>{task.email}</small>
-                                </td>
+                                    {/* TITLE */}
+
+                                    <td>
+                                        {task.title}
+                                    </td>
 
 
-                                <td>
+                                    {/* DESCRIPTION */}
 
-                                   
+                                    <td>
+                                        {task.description}
+                                    </td>
 
-                                    <div className="action-btns">
 
-                                        <button
-                                            className="view-btn"
-                                            onClick={() => handleView(task)}
-                                            title="View Task"
+                                    {/* STATUS */}
+
+                                    <td>
+
+                                        <span
+                                            className={`status ${task.status?.toLowerCase()}`}
                                         >
-                                            <FaEye />
-                                        </button>
+                                            {task.status}
+                                        </span>
 
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() => handleDelete(task.id)}
-                                            title="Delete Task"
-                                        >
-                                            <FaTrash />
-                                        </button>
-
-                                    </div>
+                                    </td>
 
 
+                                    {/* CREATED BY */}
+
+                                    <td>
+
+                                        <strong>
+                                            {task.username}
+                                        </strong>
+
+                                        <br />
+
+                                        <small>
+                                            {task.email}
+                                        </small>
+
+                                    </td>
 
 
+                                    {/* ACTIONS */}
 
+                                    <td>
+
+                                        <div className="action-btns">
+
+                                            <button
+                                                className="view-btn"
+                                                onClick={() =>
+                                                    handleView(task)
+                                                }
+                                                title="View Task"
+                                            >
+                                                <FaEye />
+                                            </button>
+
+
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() =>
+                                                    handleDelete(task.id)
+                                                }
+                                                title="Delete Task"
+                                            >
+                                                <FaTrash />
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        ) : (
+
+                            <tr>
+
+                                <td colSpan="6">
+                                    No tasks found
                                 </td>
 
                             </tr>
 
-                        ))
-
-                        :
-
-                        <tr>
-                            <td colSpan="6">
-                                No tasks found
-                            </td>
-                        </tr>
-
-                    }
+                        )}
 
                     </tbody>
 
                 </table>
 
             </div>
-{
-selectedTask && (
-
-<div className="modal-overlay">
 
 
-    <div className="task-modal">
+            {/* =================================
+                TASK DETAILS MODAL
+            ================================= */}
+
+            {selectedTask && (
+
+                <div
+                    className="modal-overlay"
+                    onClick={() => setSelectedTask(null)}
+                >
+
+                    <div
+                        className="task-modal"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+
+                        <h2>
+                            Task Details
+                        </h2>
 
 
-        <h2>
-            Task Details
-        </h2>
+                        <p>
+                            <strong>Title:</strong>
+                            <br />
+                            {selectedTask.title}
+                        </p>
 
 
-        <p>
-            <strong>Title:</strong>
-            <br/>
-            {selectedTask.title}
-        </p>
+                        <p>
+                            <strong>Description:</strong>
+                            <br />
+                            {selectedTask.description}
+                        </p>
 
 
-        <p>
-            <strong>Description:</strong>
-            <br/>
-            {selectedTask.description}
-        </p>
+                        <p>
+                            <strong>Created By:</strong>
+                            <br />
+                            {selectedTask.username}
+                        </p>
 
 
-        <p>
-            <strong>Created By:</strong>
-            <br/>
-            {selectedTask.username}
-        </p>
+                        <p>
+                            <strong>Email:</strong>
+                            <br />
+                            {selectedTask.email}
+                        </p>
 
 
-        <p>
-            <strong>Email:</strong>
-            <br/>
-            {selectedTask.email}
-        </p>
+                        <p>
+                            <strong>Status:</strong>
+                            <br />
+
+                            <span
+                                className={`status ${selectedTask.status?.toLowerCase()}`}
+                            >
+                                {selectedTask.status}
+                            </span>
+
+                        </p>
 
 
-        <p>
-            <strong>Status:</strong>
-            <br/>
-            {selectedTask.status}
-        </p>
+                        <button
+                            className="close-btn"
+                            onClick={() => setSelectedTask(null)}
+                        >
+                            Close
+                        </button>
 
+                    </div>
 
+                </div>
 
-        <button
-            className="close-btn"
-            onClick={()=>setSelectedTask(null)}
-        >
-            Close
-        </button>
+            )}
 
-
-    </div>
-
-
-</div>
-
-)
-}
         </div>
-
     );
-
 }
 
 export default Tasks;

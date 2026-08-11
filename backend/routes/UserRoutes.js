@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const router = express.Router();
@@ -12,7 +13,9 @@ const {
     markNotificationRead,
     markAllNotificationsRead,
     getUserProfile,
-    updateUserProfile
+    changeUserPassword,
+    deleteUserAccount,
+    exportUserData
 } = require("../controllers/userController");
 
 
@@ -72,6 +75,17 @@ router.patch(
 
 
 // ======================================================
+// Mark All Notifications As Read
+// ======================================================
+
+router.patch(
+    "/notifications/read-all",
+    verifyToken,
+    markAllNotificationsRead
+);
+
+
+// ======================================================
 // Test Route
 // ======================================================
 
@@ -85,11 +99,8 @@ router.get(
 
     }
 );
-router.patch(
-    "/notifications/read-all",
-    verifyToken,
-    markAllNotificationsRead
-);
+
+
 // ======================================================
 // User Profile
 // ======================================================
@@ -101,10 +112,44 @@ router.get(
 );
 
 
+
+
+// ======================================================
+// Change Password
+// ======================================================
 router.put(
-    "/profile",
+    "/change-password",
     verifyToken,
-    updateUserProfile
+    changeUserPassword
 );
 
+
+// ======================================================
+// Delete Account
+// ======================================================
+
+router.delete(
+    "/account",
+    verifyToken,
+    deleteUserAccount
+);
+
+
+// ======================================================
+// Export User Data
+// ======================================================
+
+router.get(
+    "/export",
+    verifyToken,
+    exportUserData
+);
+
+
 module.exports = router;
+
+router.get("/route-test", (req, res) => {
+    res.json({
+        message: "USER ROUTES ARE LOADED"
+    });
+});

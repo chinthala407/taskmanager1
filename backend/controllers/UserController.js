@@ -1,5 +1,5 @@
 const db = require("../config/db");
-
+const bcrypt = require("bcrypt");
 
 
 // ======================================================
@@ -11,7 +11,6 @@ const createUserNotification = async (userId, message) => {
     try {
 
         await db.query(
-
             `
             INSERT INTO user_notifications
             (
@@ -27,12 +26,10 @@ const createUserNotification = async (userId, message) => {
                 false
             )
             `,
-
             [
                 userId,
                 message
             ]
-
         );
 
     }
@@ -48,7 +45,6 @@ const createUserNotification = async (userId, message) => {
 };
 
 
-
 // ======================================================
 // Get User Notifications
 // ======================================================
@@ -61,7 +57,6 @@ const getUserNotifications = async (req, res) => {
 
 
         const result = await db.query(
-
             `
             SELECT
                 id,
@@ -75,13 +70,13 @@ const getUserNotifications = async (req, res) => {
 
             ORDER BY created_at DESC
             `,
-
             [userId]
-
         );
 
 
-        res.status(200).json(result.rows);
+        res.status(200).json(
+            result.rows
+        );
 
     }
     catch (error) {
@@ -94,14 +89,14 @@ const getUserNotifications = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Internal Server Error"
+            message:
+                "Internal Server Error"
 
         });
 
     }
 
 };
-
 
 
 // ======================================================
@@ -114,11 +109,11 @@ const markNotificationRead = async (req, res) => {
 
         const userId = req.user.id;
 
-        const notificationId = req.params.id;
+        const notificationId =
+            req.params.id;
 
 
         await db.query(
-
             `
             UPDATE user_notifications
 
@@ -128,18 +123,17 @@ const markNotificationRead = async (req, res) => {
 
             AND user_id = $2
             `,
-
             [
                 notificationId,
                 userId
             ]
-
         );
 
 
         res.status(200).json({
 
-            message: "Notification marked as read"
+            message:
+                "Notification marked as read"
 
         });
 
@@ -154,14 +148,14 @@ const markNotificationRead = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Internal Server Error"
+            message:
+                "Internal Server Error"
 
         });
 
     }
 
 };
-
 
 
 // ======================================================
@@ -181,11 +175,9 @@ const getUserDashboard = async (req, res) => {
         const userId = req.user.id;
 
 
-
         // ================= User Details =================
 
         const userResult = await db.query(
-
             `
             SELECT
                 name,
@@ -195,17 +187,13 @@ const getUserDashboard = async (req, res) => {
 
             WHERE id = $1
             `,
-
             [userId]
-
         );
-
 
 
         // ================= Task Statistics =================
 
         const statsResult = await db.query(
-
             `
             SELECT
 
@@ -227,20 +215,15 @@ const getUserDashboard = async (req, res) => {
 
             WHERE user_id = $1
             `,
-
             [userId]
-
         );
-
 
 
         // ================= Recent Tasks =================
 
         const tasksResult = await db.query(
-
             `
             SELECT
-
                 id,
                 title,
                 description,
@@ -257,20 +240,20 @@ const getUserDashboard = async (req, res) => {
 
             LIMIT 5
             `,
-
             [userId]
-
         );
-
 
 
         res.json({
 
-            user: userResult.rows[0],
+            user:
+                userResult.rows[0],
 
-            stats: statsResult.rows[0],
+            stats:
+                statsResult.rows[0],
 
-            recentTasks: tasksResult.rows
+            recentTasks:
+                tasksResult.rows
 
         });
 
@@ -282,14 +265,14 @@ const getUserDashboard = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Server Error"
+            message:
+                "Server Error"
 
         });
 
     }
 
 };
-
 
 
 // ======================================================
@@ -304,10 +287,8 @@ const getUserTasks = async (req, res) => {
 
 
         const result = await db.query(
-
             `
             SELECT
-
                 id,
                 title,
                 description,
@@ -322,13 +303,13 @@ const getUserTasks = async (req, res) => {
 
             ORDER BY created_at DESC
             `,
-
             [userId]
-
         );
 
 
-        res.json(result.rows);
+        res.json(
+            result.rows
+        );
 
     }
     catch (error) {
@@ -338,15 +319,14 @@ const getUserTasks = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Server Error"
+            message:
+                "Server Error"
 
         });
 
     }
 
 };
-
-
 
 // ======================================================
 // Create Task
@@ -384,11 +364,88 @@ const createTask = async (req, res) => {
         } = req.body;
 
 
+        // ==================================================
+        // Validate Task Title
+        // ==================================================
 
-        // ================= Insert Task =================
+        if (!title || title.trim() === "") {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    "Task title is required."
+
+            });
+
+        }
+
+
+        // ==================================================
+        // Validate Due Date
+        // ==================================================
+
+        if (dueDate) {
+
+            /*
+             * Get today's date.
+             *
+             * We use the local date rather than comparing
+             * the complete time values.
+             */
+
+            const today = new Date();
+
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            /*
+             * Convert the submitted due date
+             * into a Date object.
+             */
+
+            const selectedDate =
+                new Date(dueDate);
+
+            selectedDate.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            /*
+             * Reject past dates.
+             */
+
+            if (selectedDate < today) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Due date cannot be in the past."
+
+                });
+
+            }
+
+        }
+
+
+        // ==================================================
+        // Insert Task
+        // ==================================================
 
         const result = await db.query(
-
             `
             INSERT INTO tasks
             (
@@ -416,26 +473,24 @@ const createTask = async (req, res) => {
 
             RETURNING *
             `,
-
             [
                 userId,
                 title,
                 description,
                 priority,
-                dueDate
+                dueDate || null
             ]
-
         );
 
 
-        const task = result.rows[0];
+        const task =
+            result.rows[0];
 
 
         console.log(
             "INSERT RESULT:",
             task
         );
-
 
 
         // ==================================================
@@ -451,14 +506,22 @@ const createTask = async (req, res) => {
         );
 
 
+        // ==================================================
+        // Success Response
+        // ==================================================
 
-        res.status(201).json({
+        return res.status(201).json({
 
-            message: "Task created successfully",
+            success: true,
 
-            task: task
+            message:
+                "Task created successfully",
+
+            task:
+                task
 
         });
+
 
     }
     catch (error) {
@@ -469,15 +532,21 @@ const createTask = async (req, res) => {
         );
 
 
-        res.status(500).json({
+        return res.status(500).json({
 
-            message: error.message
+            success: false,
+
+            message:
+                error.message
 
         });
 
     }
 
 };
+
+
+
 
 // ======================================================
 // Mark All Notifications As Read
@@ -489,25 +558,25 @@ const markAllNotificationsRead = async (req, res) => {
 
         const userId = req.user.id;
 
-        await db.query(
 
+        await db.query(
             `
             UPDATE user_notifications
 
             SET is_read = true
 
             WHERE user_id = $1
+
             AND is_read = false
             `,
-
             [userId]
-
         );
 
 
         res.status(200).json({
 
-            message: "All notifications marked as read"
+            message:
+                "All notifications marked as read"
 
         });
 
@@ -522,13 +591,16 @@ const markAllNotificationsRead = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Internal Server Error"
+            message:
+                "Internal Server Error"
 
         });
 
     }
 
 };
+
+
 // ======================================================
 // Get User Profile
 // ======================================================
@@ -541,7 +613,6 @@ const getUserProfile = async (req, res) => {
 
 
         const result = await db.query(
-
             `
             SELECT
                 id,
@@ -555,9 +626,7 @@ const getUserProfile = async (req, res) => {
 
             WHERE id = $1
             `,
-
             [userId]
-
         );
 
 
@@ -565,7 +634,8 @@ const getUserProfile = async (req, res) => {
 
             return res.status(404).json({
 
-                message: "User not found"
+                message:
+                    "User not found"
 
             });
 
@@ -587,13 +657,16 @@ const getUserProfile = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Internal Server Error"
+            message:
+                "Internal Server Error"
 
         });
 
     }
 
 };
+
+
 // ======================================================
 // Update User Profile
 // ======================================================
@@ -613,7 +686,6 @@ const updateUserProfile = async (req, res) => {
 
 
         const result = await db.query(
-
             `
             UPDATE users
 
@@ -632,14 +704,12 @@ const updateUserProfile = async (req, res) => {
                 phone,
                 address
             `,
-
             [
                 name,
                 phone,
                 address,
                 userId
             ]
-
         );
 
 
@@ -647,7 +717,8 @@ const updateUserProfile = async (req, res) => {
 
             return res.status(404).json({
 
-                message: "User not found"
+                message:
+                    "User not found"
 
             });
 
@@ -656,9 +727,11 @@ const updateUserProfile = async (req, res) => {
 
         res.status(200).json({
 
-            message: "Profile updated successfully",
+            message:
+                "Profile updated successfully",
 
-            user: result.rows[0]
+            user:
+                result.rows[0]
 
         });
 
@@ -673,13 +746,425 @@ const updateUserProfile = async (req, res) => {
 
         res.status(500).json({
 
-            message: "Internal Server Error"
+            message:
+                "Internal Server Error"
 
         });
 
     }
 
 };
+
+
+// ======================================================
+// CHANGE PASSWORD
+// ======================================================
+
+const changeUserPassword = async (req, res) => {
+
+    try {
+
+        const userId = req.user.id;
+
+        const {
+            currentPassword,
+            newPassword
+        } = req.body;
+
+
+        if (!currentPassword || !newPassword) {
+
+            return res.status(400).json({
+                message:
+                    "Current password and new password are required."
+            });
+
+        }
+
+
+        if (newPassword.length < 6) {
+
+            return res.status(400).json({
+                message:
+                    "New password must be at least 6 characters."
+            });
+
+        }
+
+
+        // Get the current hashed password
+        const result = await db.query(
+            `
+            SELECT password
+            FROM users
+            WHERE id = $1
+            `,
+            [userId]
+        );
+
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                message: "User not found."
+            });
+
+        }
+
+
+        const storedPassword = result.rows[0].password;
+
+
+        // Compare entered current password
+        const passwordMatch = await bcrypt.compare(
+            currentPassword,
+            storedPassword
+        );
+
+
+        if (!passwordMatch) {
+
+            return res.status(401).json({
+                message:
+                    "Current password is incorrect."
+            });
+
+        }
+
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(
+            newPassword,
+            10
+        );
+
+
+        // Update database
+        const updateResult = await db.query(
+            `
+            UPDATE users
+            SET password = $1
+            WHERE id = $2
+            RETURNING id
+            `,
+            [
+                hashedPassword,
+                userId
+            ]
+        );
+
+
+        if (updateResult.rows.length === 0) {
+
+            return res.status(404).json({
+                message:
+                    "Password could not be updated."
+            });
+
+        }
+
+
+        console.log(
+            "Password updated for user:",
+            userId
+        );
+
+
+        return res.status(200).json({
+            message:
+                "Password changed successfully."
+        });
+
+    }
+    catch (error) {
+
+        console.error(
+            "CHANGE PASSWORD ERROR:",
+            error
+        );
+
+
+        return res.status(500).json({
+            message:
+                error.message
+        });
+
+    }
+
+};
+
+
+// ======================================================
+// DELETE USER ACCOUNT
+// ======================================================
+
+const deleteUserAccount = async (req, res) => {
+
+    const client =
+        await db.connect();
+
+
+    try {
+
+        const userId =
+            req.user.id;
+
+
+        // Start transaction
+        await client.query(
+            "BEGIN"
+        );
+
+
+        // ==================================================
+        // Delete user's tasks
+        // ==================================================
+
+        await client.query(
+            `
+            DELETE FROM tasks
+
+            WHERE user_id = $1
+            `,
+            [userId]
+        );
+
+
+        // ==================================================
+        // Delete user's notifications
+        // ==================================================
+
+        await client.query(
+            `
+            DELETE FROM user_notifications
+
+            WHERE user_id = $1
+            `,
+            [userId]
+        );
+
+
+        // ==================================================
+        // Delete user credentials/account
+        // ==================================================
+
+        const result =
+            await client.query(
+                `
+                DELETE FROM users
+
+                WHERE id = $1
+
+                RETURNING id
+                `,
+                [userId]
+            );
+
+
+        if (
+            result.rows.length === 0
+        ) {
+
+            await client.query(
+                "ROLLBACK"
+            );
+
+
+            return res.status(404).json({
+
+                message:
+                    "User not found."
+
+            });
+
+        }
+
+
+        // Commit all deletions
+        await client.query(
+            "COMMIT"
+        );
+
+
+        res.status(200).json({
+
+            message:
+                "Account and all associated data deleted successfully."
+
+        });
+
+    }
+    catch (error) {
+
+        await client.query(
+            "ROLLBACK"
+        );
+
+
+        console.log(
+            "Delete Account Error:",
+            error
+        );
+
+
+        res.status(500).json({
+
+            message:
+                "Internal Server Error"
+
+        });
+
+    }
+    finally {
+
+        client.release();
+
+    }
+
+};
+
+
+// ======================================================
+// Export User Data
+// ======================================================
+
+const exportUserData = async (req, res) => {
+
+    try {
+
+        const userId =
+            req.user.id;
+
+
+        const userResult =
+            await db.query(
+                `
+                SELECT
+                    id,
+                    name,
+                    email,
+                    phone,
+                    address
+
+                FROM users
+
+                WHERE id = $1
+                `,
+                [userId]
+            );
+
+
+        if (
+            userResult.rows.length === 0
+        ) {
+
+            return res.status(404).json({
+
+                message:
+                    "User not found"
+
+            });
+
+        }
+
+
+        const tasksResult =
+            await db.query(
+                `
+                SELECT
+                    id,
+                    title,
+                    description,
+                    priority,
+                    status,
+                    due_date,
+                    created_at
+
+                FROM tasks
+
+                WHERE user_id = $1
+
+                ORDER BY created_at DESC
+                `,
+                [userId]
+            );
+
+
+        const completedTasks =
+            tasksResult.rows.filter(
+                (task) =>
+                    (task.status || "")
+                        .toLowerCase() ===
+                    "completed"
+            );
+
+
+        const statsResult =
+            await db.query(
+                `
+                SELECT
+
+                    COUNT(*) AS total,
+
+                    COUNT(*) FILTER(
+                        WHERE LOWER(status) = 'completed'
+                    ) AS completed,
+
+                    COUNT(*) FILTER(
+                        WHERE LOWER(status) = 'pending'
+                    ) AS pending,
+
+                    COUNT(*) FILTER(
+                        WHERE LOWER(status) = 'in progress'
+                    ) AS progress
+
+                FROM tasks
+
+                WHERE user_id = $1
+                `,
+                [userId]
+            );
+
+
+        res.status(200).json({
+
+            account:
+                userResult.rows[0],
+
+            exportedAt:
+                new Date().toISOString(),
+
+            myTasks:
+                tasksResult.rows,
+
+            completedTasks:
+                completedTasks,
+
+            reportSummary:
+                statsResult.rows[0]
+
+        });
+
+    }
+    catch (error) {
+
+        console.log(
+            "Export Data Error:",
+            error
+        );
+
+
+        res.status(500).json({
+
+            message:
+                "Internal Server Error"
+
+        });
+
+    }
+
+};
+
 
 // ======================================================
 // Export
@@ -698,9 +1183,17 @@ module.exports = {
     createUserNotification,
 
     markNotificationRead,
+
     markAllNotificationsRead,
+
     getUserProfile,
 
-    updateUserProfile
+    updateUserProfile,
+
+    changeUserPassword,
+
+    deleteUserAccount,
+
+    exportUserData
 
 };

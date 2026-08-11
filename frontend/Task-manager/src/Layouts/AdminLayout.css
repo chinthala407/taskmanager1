@@ -47,9 +47,9 @@ body,
 
     margin-left:260px;
 
-    margin-top:72px;
-
-    padding:8px 30px 30px;
+    padding-top:72px;      /* clears the fixed navbar — single source of top offset */
+    padding-inline:30px;
+    padding-bottom:30px;
 
     min-height:calc(100vh - 72px);
 
@@ -125,7 +125,8 @@ body,
 
         margin-left:230px;
 
-        padding:25px;
+        padding-inline:25px;
+        padding-bottom:25px;
 
     }
 
@@ -142,10 +143,8 @@ body,
 
         margin-left:0;
 
-        margin-top:72px;
-
-        padding:20px;
-
+        padding-inline:20px;
+        padding-bottom:20px;
     }
 
 }

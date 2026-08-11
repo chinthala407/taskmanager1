@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./AdminSidebar.css";
 
-function AdminSidebar() {
+function AdminSidebar({ isOpen, onLinkClick, onLogout }) {
 
   const [counts, setCounts] = useState({
     users: 0,
@@ -37,7 +37,7 @@ function AdminSidebar() {
 
     fetchCounts();
 
-    const interval = setInterval(fetchCounts, 5000);
+    const interval = setInterval(fetchCounts, 3000);
 
     return () => clearInterval(interval);
 
@@ -45,15 +45,15 @@ function AdminSidebar() {
 
   return (
 
-    <aside className="admin-sidebar">
+    <aside className={`admin-sidebar ${isOpen ? "mobile-open" : ""}`}>
 
       <div className="sidebar-top">
 
-        <NavLink to="/admin" end className="menu-item">
+        <NavLink to="/admin" end className="menu-item" onClick={onLinkClick}>
           Dashboard
         </NavLink>
 
-        <NavLink to="/admin/users" className="menu-item">
+        <NavLink to="/admin/users" className="menu-item" onClick={onLinkClick}>
           <span>Users</span>
 
           {counts.users > 0 && (
@@ -63,7 +63,7 @@ function AdminSidebar() {
           )}
         </NavLink>
 
-        <NavLink to="/admin/tasks" className="menu-item">
+        <NavLink to="/admin/tasks" className="menu-item" onClick={onLinkClick}>
           <span>Tasks</span>
 
           {counts.tasks > 0 && (
@@ -73,11 +73,11 @@ function AdminSidebar() {
           )}
         </NavLink>
 
-        <NavLink to="/admin/reports" className="menu-item">
+        <NavLink to="/admin/reports" className="menu-item" onClick={onLinkClick}>
           Reports
         </NavLink>
 
-        <NavLink to="/admin/notifications" className="menu-item">
+        <NavLink to="/admin/notifications" className="menu-item" onClick={onLinkClick}>
           <span>Notifications</span>
 
           {counts.notifications > 0 && (
@@ -87,11 +87,19 @@ function AdminSidebar() {
           )}
         </NavLink>
 
-        <NavLink to="/admin/settings" className="menu-item">
+        <NavLink to="/admin/settings" className="menu-item" onClick={onLinkClick}>
           Settings
         </NavLink>
 
       </div>
+
+      {/* Only visible on mobile widths — desktop keeps logout in the navbar */}
+      <button
+        className="sidebar-logout-btn"
+        onClick={onLogout}
+      >
+        Logout
+      </button>
 
     </aside>
 
