@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { FaPlus } from "react-icons/fa";
+import { useOutletContext } from "react-router-dom";
 
-import UserNavbar from "../components/user/UserNavbar";
 import CreateTaskModal from "../components/user/CreateTaskModal";
 import "./UserDashboard.css";
 
@@ -10,18 +10,16 @@ function UserDashboard() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
-    const [search, setSearch] = useState("");
+
+    const { search } = useOutletContext();
 
     const user = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
 
-    if (!user) {
-        return <h2>Loading...</h2>;
-    }
 
     // ================= Fetch Tasks =================
 
-    const loadTasks = async () => {
+    const loadTasks = useCallback(async () => {
 
         try {
 
@@ -43,7 +41,8 @@ function UserDashboard() {
 
         }
 
-    };
+    }, [token]);
+
 
     // ================= Initial Load =================
 
@@ -51,7 +50,13 @@ function UserDashboard() {
 
         loadTasks();
 
-    }, []);
+    }, [loadTasks]);
+
+
+    if (!user) {
+        return <h2>Loading...</h2>;
+    }
+
 
     // ================= Search Filter =================
 
@@ -69,6 +74,7 @@ function UserDashboard() {
         );
 
     });
+
 
     // ================= Statistics =================
 
@@ -89,13 +95,6 @@ function UserDashboard() {
     return (
 
         <div className="user-dashboard">
-
-            {/* Navbar */}
-
-            <UserNavbar
-                search={search}
-                setSearch={setSearch}
-            />
 
             {/* Header */}
 

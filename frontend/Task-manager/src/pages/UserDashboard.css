@@ -1,14 +1,23 @@
+/* ===========================
+   USER DASHBOARD
+=========================== */
+
 .user-dashboard{
     width:100%;
 }
 
 
+/* ===========================
+   HEADER
+=========================== */
 
 .dashboard-header{
 
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
 
     margin-bottom:25px;
 
@@ -23,7 +32,6 @@
 }
 
 
-
 .dashboard-header p{
 
     color:#64748b;
@@ -31,8 +39,11 @@
 }
 
 
+.create-btn{
 
-.create-task-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
 
     background:#2563eb;
     color:white;
@@ -46,10 +57,20 @@
     cursor:pointer;
 
     font-size:15px;
+    white-space:nowrap;
+
+    transition:.25s ease;
 
 }
 
+.create-btn:hover{
+    background:#1d4ed8;
+}
 
+
+/* ===========================
+   STATS GRID
+=========================== */
 
 .stats-container{
 
@@ -62,7 +83,6 @@
 }
 
 
-
 .user-stat-card{
 
     background:white;
@@ -73,8 +93,9 @@
 
     box-shadow:0 4px 12px rgba(0,0,0,0.08);
 
-}
+    min-width:0; /* prevents grid item overflow from long numbers */
 
+}
 
 
 .user-stat-card h3{
@@ -86,7 +107,6 @@
 }
 
 
-
 .user-stat-card h2{
 
     font-size:32px;
@@ -96,7 +116,6 @@
 }
 
 
-
 .user-stat-card p{
 
     color:#94a3b8;
@@ -104,8 +123,9 @@
 }
 
 
-
-
+/* ===========================
+   RECENT TASKS
+=========================== */
 
 .recent-task-section{
 
@@ -120,17 +140,16 @@
 }
 
 
-
 .section-header{
 
     display:flex;
 
     justify-content:space-between;
+    align-items:center;
 
     margin-bottom:20px;
 
 }
-
 
 
 .section-header button{
@@ -142,9 +161,9 @@
     color:#2563eb;
 
     cursor:pointer;
+    font-size:14px;
 
 }
-
 
 
 .task-list{
@@ -158,11 +177,12 @@
 }
 
 
-
 .task-card{
+
     padding:20px;
 
     background:white;
+    border:1px solid #e5e7eb;
 
     border-radius:15px;
 
@@ -170,18 +190,24 @@
 
     flex-direction:column;
 
-    gap:15px;
+    gap:12px;
+
+    min-width:0;
 
 }
 
+
+.task-card h3{
+    word-break:break-word;
+}
 
 
 .task-card p{
 
     color:#64748b;
-    gap: between 20px;
-}
+    word-break:break-word;
 
+}
 
 
 .pending{
@@ -195,8 +221,8 @@
     border-radius:20px;
 
     width:fit-content;
-}
 
+}
 
 
 .completed{
@@ -210,4 +236,125 @@
     border-radius:20px;
 
     width:fit-content;
+
+}
+
+
+.in-progress{
+
+    background:#dbeafe;
+
+    color:#1e40af;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    width:fit-content;
+
+}
+
+
+/* ===========================
+   LARGE TABLET / SMALL DESKTOP  <=1200px
+=========================== */
+
+@media (max-width:1200px){
+
+    .stats-container{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+/* ===========================
+   TABLET  <=992px
+=========================== */
+
+@media (max-width:992px){
+
+    .task-list{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard-header h1{
+        font-size:24px;
+    }
+
+}
+
+
+/* ===========================
+   MOBILE  <=768px
+=========================== */
+
+@media (max-width:768px){
+
+    .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .create-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+    .stats-container{
+        grid-template-columns:repeat(2,1fr);
+        gap:14px;
+    }
+
+    .user-stat-card{
+        padding:18px;
+    }
+
+    .user-stat-card h2{
+        font-size:26px;
+    }
+
+    .recent-task-section{
+        padding:18px;
+        margin-top:25px;
+    }
+
+}
+
+
+/* ===========================
+   SMALL MOBILE  <=480px
+=========================== */
+
+@media (max-width:480px){
+
+    .dashboard-header h1{
+        font-size:20px;
+    }
+
+    .dashboard-header p{
+        font-size:13px;
+    }
+
+    .stats-container{
+        grid-template-columns:1fr;
+    }
+
+    .user-stat-card h2{
+        font-size:24px;
+    }
+
+    .section-header h2{
+        font-size:18px;
+    }
+
+    .task-card{
+        padding:16px;
+    }
+
+    .create-btn{
+        padding:10px 16px;
+        font-size:14px;
+    }
+
 }

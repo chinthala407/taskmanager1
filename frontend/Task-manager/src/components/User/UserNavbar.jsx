@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import taskIcon from "../../assets/task-check-icon.png";
 import "../admin/AdminNavbar.css";
 
-function UserNavbar({ search, setSearch }) {
+function UserNavbar({ search, setSearch, onMenuClick }) {
 
     const navigate = useNavigate();
+    const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -19,63 +22,99 @@ function UserNavbar({ search, setSearch }) {
 
     return (
 
-        <header className="admin-navbar">
+        <>
 
-            <div className="navbar-left">
+            <header className="admin-navbar">
 
-                <div className="brand">
+                <div className="navbar-left">
 
-                    <img
-                        src={taskIcon}
-                        alt="Task Manager"
+                    <button
+                        className="sidebar-toggle-btn"
+                        onClick={onMenuClick}
+                        aria-label="Toggle sidebar"
+                    >
+                        ☰
+                    </button>
+
+                    <div className="brand">
+
+                        <img
+                            src={taskIcon}
+                            alt="Task Manager"
+                        />
+
+                        <h2>
+                            <span className="task-text">
+                                Task
+                            </span>
+
+                            <span className="manager-text">
+                                Manager
+                            </span>
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                <div className="navbar-center">
+
+                    <input
+                        type="text"
+                        placeholder="Search your tasks..."
+                        className="search-box"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
 
-                    <h2>
-                        <span className="task-text">
-                            Task
-                        </span>
+                </div>
 
-                        <span className="manager-text">
-                            Manager
-                        </span>
-                    </h2>
+                <div className="navbar-right">
+
+                    <button
+                        className="search-toggle-btn"
+                        onClick={() => setMobileSearchOpen((prev) => !prev)}
+                        aria-label="Toggle search"
+                    >
+                        {mobileSearchOpen ? <FaTimes /> : <FaSearch />}
+                    </button>
+
+                    <div className="profile">
+
+                        <h4>{user?.name || "User"}</h4>
+
+                        <p>{user?.email || "Task Manager User"}</p>
+
+                    </div>
+
+                    <button
+                        className="logout-btn"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </button>
 
                 </div>
 
-            </div>
+            </header>
 
-            <div className="navbar-center">
+            {mobileSearchOpen && (
 
-                <input
-                    type="text"
-                    placeholder="Search your tasks..."
-                    className="search-box"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                <div className="mobile-search-bar">
 
-            </div>
-
-            <div className="navbar-right">
-
-                <div className="profile">
-
-                    <h4>{user?.name || "User"}</h4>
-
-                    <p>{user?.email || "Task Manager User"}</p>
+                    <input
+                        type="text"
+                        placeholder="Search your tasks..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        autoFocus
+                    />
 
                 </div>
 
-                <button
-                    className="logout-btn"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </button>
+            )}
 
-            </div>
-
-        </header>
+        </>
 
     );
 

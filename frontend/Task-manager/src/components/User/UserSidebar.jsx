@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import "../admin/AdminSidebar.css";
 
 
-function UserSidebar() {
+function UserSidebar({ isOpen, onClose }) {
 
     const [unreadCount, setUnreadCount] = useState(0);
 
-
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
-
 
 
     // ======================================================
@@ -54,11 +53,6 @@ function UserSidebar() {
     };
 
 
-
-    // ======================================================
-    // Initial Fetch + Refresh
-    // ======================================================
-
     useEffect(() => {
 
         fetchUnreadNotifications();
@@ -80,6 +74,18 @@ function UserSidebar() {
     }, []);
 
 
+    // close the drawer after navigating (mobile only — no-op on desktop)
+    const handleLinkClick = () => {
+        if (onClose) onClose();
+    };
+
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/");
+    };
+
 
     // ======================================================
     // Sidebar
@@ -87,10 +93,10 @@ function UserSidebar() {
 
     return (
 
-        <aside className="admin-sidebar">
+        <aside className={`admin-sidebar ${isOpen ? "mobile-open" : ""}`}>
 
 
-            <nav className="sidebar-menu">
+            <nav className="sidebar-top">
 
 
                 {/* ================= Dashboard ================= */}
@@ -98,7 +104,8 @@ function UserSidebar() {
                 <NavLink
                     to="/user"
                     end
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     Dashboard
                 </NavLink>
@@ -109,7 +116,8 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/tasks"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     My Tasks
                 </NavLink>
@@ -120,7 +128,8 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/completed"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     Completed
                 </NavLink>
@@ -131,7 +140,8 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/reports"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     Reports
                 </NavLink>
@@ -142,7 +152,8 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/notifications"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
 
                     <span>
@@ -153,7 +164,7 @@ function UserSidebar() {
                     {
                         unreadCount > 0 && (
 
-                            <span className="notification-badge">
+                            <span className="sidebar-badge">
 
                                 {
                                     unreadCount > 99
@@ -174,7 +185,8 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/profile"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     Profile
                 </NavLink>
@@ -185,13 +197,23 @@ function UserSidebar() {
 
                 <NavLink
                     to="/user/settings"
-                    className="sidebar-link"
+                    className="menu-item"
+                    onClick={handleLinkClick}
                 >
                     Settings
                 </NavLink>
 
 
             </nav>
+
+
+            {/* Only visible on mobile per AdminSidebar.css (.sidebar-logout-btn) */}
+            <button
+                className="sidebar-logout-btn"
+                onClick={handleLogout}
+            >
+                Logout
+            </button>
 
 
         </aside>

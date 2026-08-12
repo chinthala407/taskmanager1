@@ -144,3 +144,61 @@
         font-size:11px;
     }
 }
+/* Hide search bar on mobile — navbar-center still exists in DOM but not shown */
+/* Search icon toggle — hidden on desktop */
+.search-toggle-btn{
+    display:none;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding:8px;
+    color:#2563eb;
+    font-size:18px;
+    line-height:1;
+}
+
+/* Expandable mobile search row — hidden by default */
+.mobile-search-bar{
+    display:none;
+}
+
+/* Mobile, <=768px */
+@media (max-width:768px){
+
+    .navbar-center{
+        display:none;
+    }
+
+    .search-toggle-btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .mobile-search-bar{
+        display:block;
+        position:fixed;
+        top:72px;
+        left:0;
+        right:0;
+        padding:12px 15px;
+        background:white;
+        border-bottom:1px solid #e5e7eb;
+        box-shadow:0 4px 10px rgba(0,0,0,0.06);
+        z-index:1050;
+    }
+
+    .mobile-search-bar input{
+        width:100%;
+        padding:10px 14px;
+        border:1px solid #e5e7eb;
+        border-radius:8px;
+        font-size:14px;
+        outline:none;
+    }
+
+    .mobile-search-bar input:focus{
+        border-color:#2563eb;
+    }
+
+}

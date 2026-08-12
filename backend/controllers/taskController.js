@@ -223,7 +223,8 @@ const updateTask = async (req, res) => {
                 description = $2,
                 priority = $3,
                 status = $4,
-                due_date = $5
+                due_date = $5,
+                updated_at = NOW()
 
             WHERE id = $6
             AND user_id = $7
@@ -437,7 +438,9 @@ const updateTaskStatus = async (req, res) => {
             `
             UPDATE tasks
 
-            SET status = 'Completed'
+            SET
+                status = 'Completed',
+                updated_at = NOW()
 
             WHERE id = $1
             AND user_id = $2
@@ -516,7 +519,8 @@ const getCompletedTasks = async (req, res) => {
                 priority,
                 status,
                 due_date,
-                created_at
+                created_at,
+                updated_at
 
             FROM tasks
 
@@ -524,7 +528,7 @@ const getCompletedTasks = async (req, res) => {
 
             AND LOWER(status) = 'completed'
 
-            ORDER BY created_at DESC
+            ORDER BY updated_at DESC
             `,
 
             [userId]

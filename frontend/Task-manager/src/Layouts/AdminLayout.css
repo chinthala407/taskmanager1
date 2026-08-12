@@ -131,18 +131,11 @@ body,
     }
 
 }
-
-
-/* ===========================
-   MOBILE
-=========================== */
-
 @media(max-width:768px){
 
     .admin-main{
-
         margin-left:0;
-
+        padding-top:72px;       /* matches navbar height exactly */
         padding-inline:20px;
         padding-bottom:20px;
     }
