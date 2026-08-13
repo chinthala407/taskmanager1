@@ -124,6 +124,18 @@ function UserSidebar({ isOpen, onClose }) {
 
 
 
+                {/* ================= Calendar ================= */}
+
+                <NavLink
+                    to="/user/calendar"
+                    className="menu-item"
+                    onClick={handleLinkClick}
+                >
+                    Calendar
+                </NavLink>
+
+
+
                 {/* ================= Completed ================= */}
 
                 <NavLink

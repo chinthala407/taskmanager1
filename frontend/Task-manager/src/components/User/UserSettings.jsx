@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./UserSettings.css";
 
 const API_BASE = "http://localhost:5000/api/user";
+const AUTH_API_BASE = "http://localhost:5000/api/auth"; // adjust if your authRoutes.js is mounted elsewhere
 
 const getAuthToken = () => localStorage.getItem("token");
 
@@ -17,23 +18,41 @@ const authFetch = (path, options = {}) => {
     });
 };
 
+// Same as authFetch, but targets authRoutes.js (register/login/forgot-password/etc.)
+const authFetchAuth = (path, options = {}) => {
+    return fetch(`${AUTH_API_BASE}${path}`, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getAuthToken()}`,
+            ...(options.headers || {}),
+        },
+    });
+};
+
 function UserSettings() {
 
     const navigate = useNavigate();
 
     // =========================
-    // Change Password
+    // Change Password (OTP flow)
     // =========================
 
     const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-    const [currentPassword, setCurrentPassword] = useState("");
+    // "email" -> enter email + send otp
+    // "otp"   -> enter otp + new password + confirm password
+    const [passwordStep, setPasswordStep] = useState("email");
+
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const [passwordError, setPasswordError] = useState("");
     const [passwordSuccess, setPasswordSuccess] = useState("");
     const [passwordLoading, setPasswordLoading] = useState(false);
+    const [resendLoading, setResendLoading] = useState(false);
 
 
     // =========================
@@ -52,7 +71,10 @@ function UserSettings() {
 
     const openPasswordModal = () => {
 
-        setCurrentPassword("");
+        setPasswordStep("email");
+
+        setEmail("");
+        setOtp("");
         setNewPassword("");
         setConfirmPassword("");
 
@@ -69,11 +91,14 @@ function UserSettings() {
 
     const closePasswordModal = () => {
 
-        if (passwordLoading) return;
+        if (passwordLoading || resendLoading) return;
 
         setShowPasswordModal(false);
 
-        setCurrentPassword("");
+        setPasswordStep("email");
+
+        setEmail("");
+        setOtp("");
         setNewPassword("");
         setConfirmPassword("");
 
@@ -83,115 +108,152 @@ function UserSettings() {
 
 
     // =========================
-    // Change Password
+    // Step 1: Send OTP to email
     // =========================
 
-    const handleChangePassword = async () => {
+    const handleSendOtp = async () => {
 
         setPasswordError("");
         setPasswordSuccess("");
 
-        // Validation
-        if (!currentPassword || !newPassword || !confirmPassword) {
-
-            setPasswordError("Please fill all password fields.");
-
+        if (!email) {
+            setPasswordError("Please enter your email.");
             return;
         }
 
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (newPassword.length < 6) {
-
-            setPasswordError(
-                "New password must be at least 6 characters."
-            );
-
+        if (!emailPattern.test(email)) {
+            setPasswordError("Please enter a valid email address.");
             return;
         }
-
-
-        if (newPassword !== confirmPassword) {
-
-            setPasswordError(
-                "New password and confirm password do not match."
-            );
-
-            return;
-        }
-
-
-        if (currentPassword === newPassword) {
-
-            setPasswordError(
-                "New password must be different from current password."
-            );
-
-            return;
-        }
-
 
         try {
 
             setPasswordLoading(true);
 
-            const response = await authFetch(
-                "/change-password",
-                {
-                    method: "PUT",
-
-                    body: JSON.stringify({
-                        currentPassword,
-                        newPassword,
-                    }),
-                }
-            );
-
+            const response = await authFetchAuth("/send-change-password-otp", {
+                method: "POST",
+                body: JSON.stringify({ email }),
+            });
 
             const data = await response.json();
 
-
             if (!response.ok) {
-
-                setPasswordError(
-                    data.message || "Unable to change password."
-                );
-
+                setPasswordError(data.message || "Unable to send OTP.");
                 return;
             }
 
-
-            setPasswordSuccess(
-                "Password changed successfully."
-            );
-
-
-            setCurrentPassword("");
-            setNewPassword("");
-            setConfirmPassword("");
-
-
-            setTimeout(() => {
-
-                setShowPasswordModal(false);
-
-                setPasswordSuccess("");
-
-            }, 1500);
-
+            setPasswordSuccess("OTP sent to your email.");
+            setPasswordStep("otp");
 
         } catch (error) {
 
-            console.error(
-                "Change Password Error:",
-                error
-            );
-
-            setPasswordError(
-                "Something went wrong. Please try again."
-            );
+            console.error("Send OTP Error:", error);
+            setPasswordError("Something went wrong. Please try again.");
 
         } finally {
+            setPasswordLoading(false);
+        }
+    };
 
+
+    // =========================
+    // Resend OTP (step 2)
+    // =========================
+
+    const handleResendOtp = async () => {
+
+        setPasswordError("");
+        setPasswordSuccess("");
+
+        try {
+
+            setResendLoading(true);
+
+            const response = await authFetchAuth("/send-change-password-otp", {
+                method: "POST",
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setPasswordError(data.message || "Unable to resend OTP.");
+                return;
+            }
+
+            setPasswordSuccess("A new OTP has been sent to your email.");
+
+        } catch (error) {
+
+            console.error("Resend OTP Error:", error);
+            setPasswordError("Something went wrong. Please try again.");
+
+        } finally {
+            setResendLoading(false);
+        }
+    };
+
+
+    // =========================
+    // Step 2: Verify OTP + set new password
+    // =========================
+
+    const handleVerifyAndChangePassword = async () => {
+
+        setPasswordError("");
+        setPasswordSuccess("");
+
+        if (!otp || !newPassword || !confirmPassword) {
+            setPasswordError("Please fill all fields.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            setPasswordError("New password must be at least 6 characters.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("New password and confirm password do not match.");
+            return;
+        }
+
+        try {
+
+            setPasswordLoading(true);
+
+            const response = await authFetchAuth("/change-password", {
+                method: "PUT",
+                body: JSON.stringify({ email, otp, newPassword }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setPasswordError(data.message || "Unable to change password.");
+                return;
+            }
+
+            setPasswordSuccess("Password changed successfully.");
+
+            setOtp("");
+            setNewPassword("");
+            setConfirmPassword("");
+
+            setTimeout(() => {
+                setShowPasswordModal(false);
+                setPasswordStep("email");
+                setPasswordSuccess("");
+            }, 1500);
+
+        } catch (error) {
+
+            console.error("Change Password Error:", error);
+            setPasswordError("Something went wrong. Please try again.");
+
+        } finally {
             setPasswordLoading(false);
         }
     };
@@ -202,9 +264,7 @@ function UserSettings() {
     // =========================
 
     const openDeleteModal = () => {
-
         setDeleteError("");
-
         setShowDeleteModal(true);
     };
 
@@ -214,11 +274,8 @@ function UserSettings() {
     // =========================
 
     const closeDeleteModal = () => {
-
         if (deleteLoading) return;
-
         setDeleteError("");
-
         setShowDeleteModal(false);
     };
 
@@ -235,57 +292,30 @@ function UserSettings() {
 
             setDeleteLoading(true);
 
-
-            const response = await authFetch(
-                "/account",
-                {
-                    method: "DELETE",
-                }
-            );
-
+            const response = await authFetch("/account", {
+                method: "DELETE",
+            });
 
             const data = await response.json();
 
-
             if (!response.ok) {
-
-                setDeleteError(
-                    data.message ||
-                    "Unable to delete account."
-                );
-
+                setDeleteError(data.message || "Unable to delete account.");
                 return;
             }
 
-
-            // Remove authentication data
             localStorage.removeItem("token");
             localStorage.removeItem("user");
 
-
-            // Close modal
             setShowDeleteModal(false);
 
-
-            // Redirect to login
-            navigate("/login", {
-                replace: true,
-            });
-
+            navigate("/login", { replace: true });
 
         } catch (error) {
 
-            console.error(
-                "Delete Account Error:",
-                error
-            );
-
-            setDeleteError(
-                "Something went wrong while deleting your account."
-            );
+            console.error("Delete Account Error:", error);
+            setDeleteError("Something went wrong while deleting your account.");
 
         } finally {
-
             setDeleteLoading(false);
         }
     };
@@ -299,33 +329,20 @@ function UserSettings() {
 
                 <h2>User Settings</h2>
 
-
-                {/* =========================
-                    SECURITY
-                ========================= */}
-
+                {/* SECURITY */}
                 <div className="settings-section">
 
                     <h3>Security</h3>
 
-                    <p>
-                        Manage your account password.
-                    </p>
+                    <p>Manage your account password.</p>
 
-                    <button
-                        className="secondary-btn"
-                        onClick={openPasswordModal}
-                    >
+                    <button className="secondary-btn" onClick={openPasswordModal}>
                         Change Password
                     </button>
 
                 </div>
 
-
-                {/* =========================
-                    DANGER ZONE
-                ========================= */}
-
+                {/* DANGER ZONE */}
                 <div className="danger-section">
 
                     <h3>Danger Zone</h3>
@@ -335,10 +352,7 @@ function UserSettings() {
                         associated data.
                     </p>
 
-                    <button
-                        className="delete-btn"
-                        onClick={openDeleteModal}
-                    >
+                    <button className="delete-btn" onClick={openDeleteModal}>
                         <span className="btn-icon"></span>
                         Delete Account
                     </button>
@@ -349,105 +363,96 @@ function UserSettings() {
 
 
             {/* =====================================================
-                CHANGE PASSWORD MODAL
+                CHANGE PASSWORD MODAL (OTP FLOW, INLINE)
             ===================================================== */}
 
             {showPasswordModal && (
 
-                <div
-                    className="modal-overlay"
-                    onClick={closePasswordModal}
-                >
+                <div className="modal-overlay" onClick={closePasswordModal}>
 
-                    <div
-                        className="modal-card"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="modal-card" onClick={(e) => e.stopPropagation()}>
 
                         <h3>Change Password</h3>
 
-                        <p className="modal-description">
-                            Enter your current password and choose
-                            a new password.
-                        </p>
+                        {passwordStep === "email" && (
+                            <p className="modal-description">
+                                Enter your registered email. We'll send a one-time
+                                password (OTP) to verify it's you.
+                            </p>
+                        )}
 
+                        {passwordStep === "otp" && (
+                            <p className="modal-description">
+                                Enter the OTP sent to <strong>{email}</strong>, then
+                                choose a new password.
+                            </p>
+                        )}
 
                         {passwordError && (
-
-                            <p className="error-text">
-                                {passwordError}
-                            </p>
-
+                            <p className="error-text">{passwordError}</p>
                         )}
-
 
                         {passwordSuccess && (
-
-                            <p className="success-text">
-                                {passwordSuccess}
-                            </p>
-
+                            <p className="success-text">{passwordSuccess}</p>
                         )}
 
 
-                        <div className="settings-input">
-
-                            <label>
-                                Current Password
-                            </label>
-
-                            <input
-                                type="password"
-                                placeholder="Enter current password"
-                                value={currentPassword}
-                                onChange={(e) =>
-                                    setCurrentPassword(
-                                        e.target.value
-                                    )
-                                }
-                            />
-
-                        </div>
+                        {/* STEP 1: EMAIL */}
+                        {passwordStep === "email" && (
+                            <div className="settings-input">
+                                <label>Email</label>
+                                <input
+                                    type="email"
+                                    placeholder="Enter your registered email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
+                        )}
 
 
-                        <div className="settings-input">
+                        {/* STEP 2: OTP + NEW PASSWORD */}
+                        {passwordStep === "otp" && (
+                            <>
+                                <div className="settings-input">
+                                    <label>OTP</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter the 6-digit OTP"
+                                        value={otp}
+                                        onChange={(e) => setOtp(e.target.value)}
+                                    />
+                                </div>
 
-                            <label>
-                                New Password
-                            </label>
+                                <div className="settings-input">
+                                    <label>New Password</label>
+                                    <input
+                                        type="password"
+                                        placeholder="Enter new password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                    />
+                                </div>
 
-                            <input
-                                type="password"
-                                placeholder="Enter new password"
-                                value={newPassword}
-                                onChange={(e) =>
-                                    setNewPassword(
-                                        e.target.value
-                                    )
-                                }
-                            />
+                                <div className="settings-input">
+                                    <label>Confirm New Password</label>
+                                    <input
+                                        type="password"
+                                        placeholder="Confirm new password"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                    />
+                                </div>
 
-                        </div>
-
-
-                        <div className="settings-input">
-
-                            <label>
-                                Confirm New Password
-                            </label>
-
-                            <input
-                                type="password"
-                                placeholder="Confirm new password"
-                                value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(
-                                        e.target.value
-                                    )
-                                }
-                            />
-
-                        </div>
+                                <p
+                                    className="modal-description"
+                                    style={{ cursor: resendLoading ? "default" : "pointer", textDecoration: "underline" }}
+                                    onClick={!resendLoading ? handleResendOtp : undefined}
+                                >
+                                    {resendLoading ? "Resending OTP..." : "Didn't get the code? Resend OTP"}
+                                </p>
+                            </>
+                        )}
 
 
                         <div className="modal-actions">
@@ -455,23 +460,30 @@ function UserSettings() {
                             <button
                                 className="secondary-btn"
                                 onClick={closePasswordModal}
-                                disabled={passwordLoading}
+                                disabled={passwordLoading || resendLoading}
                             >
                                 Cancel
                             </button>
 
+                            {passwordStep === "email" && (
+                                <button
+                                    className="save-settings-btn"
+                                    onClick={handleSendOtp}
+                                    disabled={passwordLoading}
+                                >
+                                    {passwordLoading ? "Sending..." : "Send OTP"}
+                                </button>
+                            )}
 
-                            <button
-                                className="save-settings-btn"
-                                onClick={handleChangePassword}
-                                disabled={passwordLoading}
-                            >
-
-                                {passwordLoading
-                                    ? "Changing..."
-                                    : "Change Password"}
-
-                            </button>
+                            {passwordStep === "otp" && (
+                                <button
+                                    className="save-settings-btn"
+                                    onClick={handleVerifyAndChangePassword}
+                                    disabled={passwordLoading}
+                                >
+                                    {passwordLoading ? "Changing..." : "Confirm"}
+                                </button>
+                            )}
 
                         </div>
 
@@ -488,46 +500,25 @@ function UserSettings() {
 
             {showDeleteModal && (
 
-                <div
-                    className="modal-overlay"
-                    onClick={closeDeleteModal}
-                >
+                <div className="modal-overlay" onClick={closeDeleteModal}>
 
-                    <div
-                        className="modal-card delete-modal"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="modal-card delete-modal" onClick={(e) => e.stopPropagation()}>
 
-                        <h3>
-                            Delete Account?
-                        </h3>
-
+                        <h3>Delete Account?</h3>
 
                         <p className="delete-warning">
-
-                            This action is permanent and cannot
-                            be undone.
-
+                            This action is permanent and cannot be undone.
                         </p>
 
-
                         <p>
-
                             Your account credentials, profile
                             information and tasks will be
                             permanently deleted.
-
                         </p>
 
-
                         {deleteError && (
-
-                            <p className="error-text">
-                                {deleteError}
-                            </p>
-
+                            <p className="error-text">{deleteError}</p>
                         )}
-
 
                         <div className="modal-actions">
 
@@ -539,17 +530,12 @@ function UserSettings() {
                                 No, Keep Account
                             </button>
 
-
                             <button
                                 className="delete-btn"
                                 onClick={handleDeleteAccount}
                                 disabled={deleteLoading}
                             >
-
-                                {deleteLoading
-                                    ? "Deleting..."
-                                    : "Yes, Delete My Account"}
-
+                                {deleteLoading ? "Deleting..." : "Yes, Delete My Account"}
                             </button>
 
                         </div>

@@ -7,13 +7,25 @@ import EditTaskModal from "./EditTaskModal";
 
 import "./MyTasks.css";
 
-const MONTH_NAMES = [
-    "January", "February", "March", "April",
-    "May", "June", "July", "August",
-    "September", "October", "November", "December"
-];
+// ================= Date helpers =================
+// Normalizes a date to midnight so we can compare "day" only, ignoring time.
+const normalizeDate = (value) => {
+    const date = new Date(value);
+    date.setHours(0, 0, 0, 0);
+    return date;
+};
 
-const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const isCompletedTask = (task) => task.status?.toLowerCase() === "completed";
+
+const isOverdueTask = (task) => {
+    if (!task.due_date || isCompletedTask(task)) return false;
+    return normalizeDate(task.due_date) < normalizeDate(new Date());
+};
+
+const isDueTodayTask = (task) => {
+    if (!task.due_date) return false;
+    return normalizeDate(task.due_date).getTime() === normalizeDate(new Date()).getTime();
+};
 
 function MyTasks() {
     const [tasks, setTasks] = useState([]);
@@ -22,12 +34,6 @@ function MyTasks() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-
-    // Calendar month/year currently displayed - defaults to today's month/year
-    const today = new Date();
-    const [calendarMonth, setCalendarMonth] = useState(today.getMonth()); // 0-11
-    const [calendarYear, setCalendarYear] = useState(today.getFullYear());
 
     const token = localStorage.getItem("token");
 
@@ -52,14 +58,6 @@ function MyTasks() {
     useEffect(() => {
         fetchTasks();
     }, [fetchTasks]);
-
-    // Keep the calendar automatically on the current month/year
-    // whenever the component mounts / the real-world month changes.
-    useEffect(() => {
-        const now = new Date();
-        setCalendarMonth(now.getMonth());
-        setCalendarYear(now.getFullYear());
-    }, []);
 
     // ================= Delete Task =================
     const deleteTask = async (id) => {
@@ -98,76 +96,51 @@ function MyTasks() {
         }
     };
 
-    // ================= Search Filter =================
+    // ================= Dynamic Overview Counts =================
+    const overdueCount = useMemo(
+        () => tasks.filter(isOverdueTask).length,
+        [tasks]
+    );
+
+    const dueTodayCount = useMemo(
+        () => tasks.filter(isDueTodayTask).length,
+        [tasks]
+    );
+
+    const completedCount = useMemo(
+        () => tasks.filter(isCompletedTask).length,
+        [tasks]
+    );
+
+    const totalCount = tasks.length;
+
+    // Quick-filter cards shown in the side panel. Clicking a card toggles
+    // that filter on the table (clicking the active one resets to "all").
+    const overviewCards = [
+        { key: "all", label: "Total Tasks", count: totalCount, className: "total" },
+        { key: "overdue", label: "Overdue", count: overdueCount, className: "overdue" },
+        { key: "due-today", label: "Due Today", count: dueTodayCount, className: "due-today" },
+        { key: "completed", label: "Completed", count: completedCount, className: "completed" }
+    ];
+
+    const handleCardClick = (key) => {
+        setFilter(prev => (prev === key ? "all" : key));
+    };
+
+    // ================= Search + Filter =================
     const filteredTasks = tasks.filter(task => {
         const query = search.toLowerCase();
 
-        const searchMatch =
-            task.title?.toLowerCase().includes(query);
+        const searchMatch = task.title?.toLowerCase().includes(query);
 
         const filterMatch =
-            filter === "all" ||
+            filter === "all" ? true :
+            filter === "overdue" ? isOverdueTask(task) :
+            filter === "due-today" ? isDueTodayTask(task) :
             task.status?.toLowerCase() === filter;
 
         return searchMatch && filterMatch;
     });
-
-    // ================= Calendar =================
-    // Builds a proper month grid: leading blanks so day 1 lines up
-    // under the correct weekday, then every real day of the month.
-    const calendarCells = useMemo(() => {
-        const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay(); // 0 = Sunday ... 6 = Saturday
-        const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-
-        const cells = [];
-
-        // Leading blank cells so the 1st aligns under the right weekday
-        for (let i = 0; i < firstWeekday; i++) {
-            cells.push(null);
-        }
-
-        // Real days of the month
-        for (let day = 1; day <= daysInMonth; day++) {
-            cells.push(day);
-        }
-
-        return cells;
-    }, [calendarMonth, calendarYear]);
-
-    const getTasksForDay = (day) => {
-        return tasks.filter(task => {
-            if (!task.due_date) return false;
-
-            const date = new Date(task.due_date);
-
-            return (
-                date.getDate() === day &&
-                date.getMonth() === calendarMonth &&
-                date.getFullYear() === calendarYear
-            );
-        });
-    };
-
-    const isToday = (day) => {
-        return (
-            day === today.getDate() &&
-            calendarMonth === today.getMonth() &&
-            calendarYear === today.getFullYear()
-        );
-    };
-
-    // Year dropdown options: a few years back/forward from today
-    const yearOptions = useMemo(() => {
-        const currentYear = today.getFullYear();
-        const years = [];
-
-        for (let y = currentYear - 2; y <= currentYear + 2; y++) {
-            years.push(y);
-        }
-
-        return years;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <div className="mytasks-container">
@@ -182,173 +155,128 @@ function MyTasks() {
                 </button>
             </div>
 
-            {/* Search Filter - sticky toolbar */}
-            <div className="task-toolbar">
-                <input
-                    type="text"
-                    placeholder="Search by task name..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                />
+            {/* Two-column layout: task list on one side, overview on the other */}
+            <div className="mytasks-layout">
 
-                <select value={filter} onChange={e => setFilter(e.target.value)}>
-                    <option value="all">All</option>
-                    <option value="pending">Pending</option>
-                    <option value="in progress">In Progress</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>
+                {/* ================= Main: Search + Table ================= */}
+                <div className="mytasks-main">
 
-            {/* Task Table - wrapped for horizontal scroll on small screens */}
-            <div className="task-table-wrapper">
-                <table className="task-table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Priority</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+                    <div className="task-toolbar">
+                        <input
+                            type="text"
+                            placeholder="Search by task name..."
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
 
-                    <tbody>
-                        {filteredTasks.map(task => (
-                            <tr key={task.id}>
-                                <td data-label="Title">{task.title}</td>
-
-                                <td data-label="Priority">
-                                    <span className={task.priority.toLowerCase()}>
-                                        {task.priority}
-                                    </span>
-                                </td>
-
-                                <td data-label="Due Date">{task.due_date}</td>
-
-                                <td data-label="Status">{task.status}</td>
-
-                                <td data-label="Actions">
-                                    <button
-                                        className="action-btn edit"
-                                        onClick={() => {
-                                            setSelectedTask(task);
-                                            setEditOpen(true);
-                                        }}
-                                    >
-                                        <FaEdit />
-                                    </button>
-
-                                    <button
-                                        className="action-btn delete"
-                                        onClick={() => deleteTask(task.id)}
-                                    >
-                                        <FaTrash />
-                                    </button>
-
-                                    <button
-                                        className="action-btn complete"
-                                        onClick={() => completeTask(task.id)}
-                                    >
-                                        <FaCheck />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Calendar */}
-            <div className="task-calendar-wrapper">
-                <div className="calendar-header-row">
-                    <h2>Task Calendar</h2>
-
-                    <div className="calendar-controls">
-                        <select
-                            value={calendarMonth}
-                            onChange={e => setCalendarMonth(Number(e.target.value))}
-                        >
-                            {MONTH_NAMES.map((name, index) => (
-                                <option key={name} value={index}>{name}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={calendarYear}
-                            onChange={e => setCalendarYear(Number(e.target.value))}
-                        >
-                            {yearOptions.map(year => (
-                                <option key={year} value={year}>{year}</option>
-                            ))}
+                        <select value={filter} onChange={e => setFilter(e.target.value)}>
+                            <option value="all">All</option>
+                            <option value="pending">Pending</option>
+                            <option value="in progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="due-today">Due Today</option>
                         </select>
                     </div>
-                </div>
 
-                {/* Weekday header row */}
-                <div className="calendar-weekdays">
-                    {WEEKDAY_LABELS.map(label => (
-                        <div key={label} className="calendar-weekday-label">{label}</div>
-                    ))}
-                </div>
+                    <div className="task-table-wrapper">
+                        <table className="task-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Priority</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
 
-                <div className="task-calendar">
-                    {calendarCells.map((day, index) => {
-                        if (day === null) {
-                            return <div key={`blank-${index}`} className="calendar-day empty" />;
-                        }
+                            <tbody>
+                                {filteredTasks.map(task => (
+                                    <tr key={task.id}>
+                                        <td data-label="Title">{task.title}</td>
 
-                        const dayTasks = getTasksForDay(day);
+                                        <td data-label="Priority">
+                                            <span className={task.priority.toLowerCase()}>
+                                                {task.priority}
+                                            </span>
+                                        </td>
 
-                        return (
-                            <div
-                                key={day}
-                                className={
-                                    `calendar-day` +
-                                    (dayTasks.length ? " has-task" : "") +
-                                    (isToday(day) ? " today" : "")
-                                }
-                                onClick={() => setSelectedDate(day)}
-                            >
-                                <h3>{day}</h3>
+                                        <td data-label="Due Date">
+                                            {task.due_date}
+                                            {isOverdueTask(task) && (
+                                                <span className="badge-overdue">Overdue</span>
+                                            )}
+                                            {isDueTodayTask(task) && !isCompletedTask(task) && (
+                                                <span className="badge-due-today">Due Today</span>
+                                            )}
+                                        </td>
 
-                                {dayTasks.length > 0 && (
-                                    <span className="calendar-task-count">
-                                        {dayTasks.length} task{dayTasks.length > 1 ? "s" : ""}
-                                    </span>
+                                        <td data-label="Status">{task.status}</td>
+
+                                        <td data-label="Actions">
+                                            <button
+                                                className="action-btn edit"
+                                                onClick={() => {
+                                                    setSelectedTask(task);
+                                                    setEditOpen(true);
+                                                }}
+                                            >
+                                                <FaEdit />
+                                            </button>
+
+                                            <button
+                                                className="action-btn delete"
+                                                onClick={() => deleteTask(task.id)}
+                                            >
+                                                <FaTrash />
+                                            </button>
+
+                                            <button
+                                                className="action-btn complete"
+                                                onClick={() => completeTask(task.id)}
+                                            >
+                                                <FaCheck />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+
+                                {filteredTasks.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} className="no-tasks-row">
+                                            No tasks match this view.
+                                        </td>
+                                    </tr>
                                 )}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* Day Details Popup */}
-            {selectedDate && (
-                <div className="modal-overlay" onClick={() => setSelectedDate(null)}>
-                    <div className="task-modal" onClick={(e) => e.stopPropagation()}>
-                        <h2>
-                            Tasks on {MONTH_NAMES[calendarMonth]} {selectedDate}, {calendarYear}
-                        </h2>
-
-                        {getTasksForDay(selectedDate).length === 0 && (
-                            <p>No tasks due on this day.</p>
-                        )}
-
-                        {getTasksForDay(selectedDate).map(task => (
-                            <div key={task.id} className="calendar-modal-task">
-                                <p><strong>Title:</strong><br />{task.title}</p>
-                                <p><strong>Priority:</strong><br />{task.priority}</p>
-                                <p><strong>Status:</strong><br />{task.status}</p>
-                                <p><strong>Created By:</strong><br />{task.username}</p>
-                            </div>
-                        ))}
-
-                        <button className="close-btn" onClick={() => setSelectedDate(null)}>
-                            Close
-                        </button>
+                            </tbody>
+                        </table>
                     </div>
+
                 </div>
-            )}
+
+                {/* ================= Side: Overview Panel ================= */}
+                <aside className="mytasks-side">
+                    <h3>Overview</h3>
+
+                    <div className="status-cards">
+                        {overviewCards.map(card => (
+                            <button
+                                key={card.key}
+                                className={
+                                    `status-card ${card.className}` +
+                                    (filter === card.key ? " active" : "")
+                                }
+                                onClick={() => handleCardClick(card.key)}
+                            >
+                                <span className="status-count">{card.count}</span>
+                                <span className="status-label">{card.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </aside>
+
+            </div>
 
             {/* Create Modal */}
             {isModalOpen && (

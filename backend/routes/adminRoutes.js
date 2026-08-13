@@ -33,7 +33,10 @@ const {
     deleteUser,
 
     getSystemSettings,
-    updateSystemSettings
+    updateSystemSettings,
+
+    sendAdminChangePasswordOtp,
+    changeAdminPassword
 
 } = require("../controllers/adminController");
 
@@ -130,6 +133,23 @@ router.put(
     verifyToken,
     isAdmin,
     updateSystemSettings
+);
+
+
+// ================= Admin Change Password (OTP flow) =================
+
+router.post(
+    "/send-change-password-otp",
+    verifyToken,
+    isAdmin,
+    sendAdminChangePasswordOtp
+);
+
+router.put(
+    "/change-password",
+    verifyToken,
+    isAdmin,
+    changeAdminPassword
 );
 
 module.exports = router;

@@ -1,4 +1,7 @@
 const db = require("../config/db");
+const bcrypt = require("bcrypt");
+const otpGenerator = require("otp-generator");
+const sendEmail = require("../utils/sendEmail");
 
 // ================= Dashboard =================
 const getDashboardData = async (req, res) => {
@@ -929,6 +932,151 @@ const updateSystemSettings = async (req,res)=>{
     }
 
 };
+
+// ================= Send OTP For Admin Change Password =================
+// Uses req.user.id (from the JWT, verified by verifyToken + isAdmin) rather
+// than trusting an email in the body - an admin can only ever request an
+// OTP for their own account. The submitted email is just a UX confirmation.
+
+const sendAdminChangePasswordOtp = async (req, res) => {
+
+    try {
+
+        const adminId = req.user.id;
+
+        const { email } = req.body;
+
+        const result = await db.query(
+            "SELECT id, email FROM users WHERE id = $1",
+            [adminId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "Admin not found"
+            });
+        }
+
+        const admin = result.rows[0];
+
+        if (email && email.toLowerCase() !== admin.email.toLowerCase()) {
+            return res.status(400).json({
+                message: "Email does not match your account."
+            });
+        }
+
+        const otp = otpGenerator.generate(6, {
+            upperCaseAlphabets: false,
+            lowerCaseAlphabets: false,
+            specialChars: false,
+            digits: true,
+        });
+
+        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+        await db.query(
+            "UPDATE users SET otp=$1, otp_expiry=$2 WHERE id=$3",
+            [otp, otpExpiry, adminId]
+        );
+
+        await sendEmail(
+            admin.email,
+            "Task Manager - Change Password OTP",
+            `Your OTP is ${otp}. It is valid for 10 minutes.`
+        );
+
+        res.json({
+            message: "OTP sent successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+
+    }
+
+};
+
+// ================= Change Admin Password With OTP =================
+
+const changeAdminPassword = async (req, res) => {
+
+    try {
+
+        const adminId = req.user.id;
+
+        const { otp, newPassword } = req.body;
+
+        if (!otp || !newPassword) {
+            return res.status(400).json({
+                message: "OTP and new password are required."
+            });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({
+                message: "New password must be at least 6 characters."
+            });
+        }
+
+        const result = await db.query(
+            "SELECT otp, otp_expiry FROM users WHERE id = $1",
+            [adminId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "Admin not found"
+            });
+        }
+
+        const admin = result.rows[0];
+
+        if (!admin.otp || !admin.otp_expiry) {
+            return res.status(400).json({
+                message: "Please request a new OTP."
+            });
+        }
+
+        if (admin.otp !== otp) {
+            return res.status(400).json({
+                message: "Invalid OTP"
+            });
+        }
+
+        if (new Date() > new Date(admin.otp_expiry)) {
+            return res.status(400).json({
+                message: "OTP Expired"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await db.query(
+            "UPDATE users SET password=$1, otp=NULL, otp_expiry=NULL WHERE id=$2",
+            [hashedPassword, adminId]
+        );
+
+        res.json({
+            message: "Password changed successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+
+    }
+
+};
+
 module.exports = {
 
     getDashboardStats,
@@ -967,6 +1115,10 @@ module.exports = {
 
     getSystemSettings,
 
-    updateSystemSettings
+    updateSystemSettings,
+
+    sendAdminChangePasswordOtp,
+
+    changeAdminPassword
 
 };

@@ -23,6 +23,7 @@ import Profile from "./components/user/Profile";
 import UserSettings from "./components/user/UserSettings";
 import UserReports from "./components/user/UserReports";
 import UserNotifications from "./components/user/UserNotifications";
+import TaskCalendar from "./components/user/TaskCalendar";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -135,6 +136,11 @@ function App() {
                     <Route
                         path="tasks"
                         element={<MyTasks />}
+                    />
+
+                    <Route
+                        path="calendar"
+                        element={<TaskCalendar />}
                     />
 
                     <Route

@@ -13,6 +13,7 @@ const {
     markNotificationRead,
     markAllNotificationsRead,
     getUserProfile,
+    updateUserProfile,   // <-- add this
     changeUserPassword,
     deleteUserAccount,
     exportUserData
@@ -111,7 +112,11 @@ router.get(
     getUserProfile
 );
 
-
+router.put(
+    "/profile",
+    verifyToken,
+    updateUserProfile
+);
 
 
 // ======================================================

@@ -1,573 +1,274 @@
-/* =========================
-   Main Container
-========================= */
-
 .mytasks-container {
-    padding: 25px;
-    background: #f8fafc;
-    min-height: 100vh;
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
-
-/* =========================
-   Header
-========================= */
+/* ================= Header ================= */
 
 .mytasks-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .mytasks-header h2 {
-    font-size: 28px;
-    color: #1e293b;
+    margin: 0;
 }
-
-
-/* =========================
-   Create Button
-========================= */
 
 .create-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
+    background: #4c6fff;
+    color: #fff;
     border: none;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: background 0.15s ease;
-}
-
-.create-btn:hover {
-    background: #1d4ed8;
-}
-
-
-/* =========================
-   Search Filter (sticky)
-========================= */
-
-.task-toolbar {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 20;
-}
-
-.task-toolbar input,
-.task-toolbar select {
-    padding: 12px;
-    border: 1px solid #ddd;
     border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
     font-size: 14px;
 }
 
+.create-btn:hover {
+    background: #3d5be0;
+}
+
+/* ================= Two column layout ================= */
+
+.mytasks-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.mytasks-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.mytasks-side {
+    flex: 0 0 260px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 20px;
+}
+
+.mytasks-side h3 {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+}
+
+/* ================= Overview status cards ================= */
+
+.status-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: 1px solid #eee;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.status-card.active {
+    border-color: #4c6fff;
+    box-shadow: inset 0 0 0 1px #4c6fff;
+}
+
+.status-label {
+    font-size: 13px;
+    color: #555;
+}
+
+.status-count {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.status-card.total .status-count { color: #4c6fff; }
+.status-card.overdue .status-count { color: #e5484d; }
+.status-card.due-today .status-count { color: #d99a1b; }
+.status-card.completed .status-count { color: #2fa64f; }
+
+/* ================= Toolbar ================= */
+
+.task-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
 .task-toolbar input {
-    flex: 1 1 240px;
+    flex: 1 1 200px;
+    max-width: 320px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
 }
 
 .task-toolbar select {
     flex: 0 0 auto;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
 }
 
-.task-toolbar input:focus,
-.task-toolbar select:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-}
-
-
-/* =========================
-   Table Card
-========================= */
+/* ================= Table ================= */
 
 .task-table-wrapper {
-    background: white;
-    border-radius: 16px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .task-table {
     width: 100%;
-    min-width: 680px;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
+    border-collapse: collapse;
+    min-width: 600px;
 }
 
-/* Column widths: Title / Priority / Due Date / Status / Actions
-   (5 columns total — must sum to 100%) */
-.task-table th:nth-child(1),
-.task-table td:nth-child(1) {
-    width: 30%;
-}
-
-.task-table th:nth-child(2),
-.task-table td:nth-child(2) {
-    width: 14%;
-}
-
-.task-table th:nth-child(3),
-.task-table td:nth-child(3) {
-    width: 18%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.task-table th:nth-child(4),
-.task-table td:nth-child(4) {
-    width: 14%;
-}
-
-.task-table th:nth-child(5),
-.task-table td:nth-child(5) {
-    width: 24%;
-}
-
-.task-table thead th {
-    background: #f8fafc;
-    padding: 16px 20px;
+.task-table th,
+.task-table td {
+    padding: 12px 14px;
     text-align: left;
-    color: #64748b;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid #e2e8f0;
-    white-space: nowrap;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
 }
 
-.task-table tbody td {
-    padding: 16px 20px;
-    color: #334155;
-    font-size: 14px;
-    border-bottom: 1px solid #f1f5f9;
+.task-table th {
+    background: #f8f9fb;
+    font-weight: 600;
+}
+
+.no-tasks-row {
+    text-align: center !important;
+    color: #888;
+    padding: 24px 0 !important;
+}
+
+.badge-overdue,
+.badge-due-today {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    color: #fff;
     vertical-align: middle;
 }
 
-.task-table tbody tr:last-child td {
-    border-bottom: none;
-}
+.badge-overdue { background: #e5484d; }
+.badge-due-today { background: #d99a1b; }
 
-.task-table tbody tr:nth-child(even) {
-    background: #fafbfc;
-}
-
-.task-table tbody tr:hover {
-    background: #f1f5f9;
-}
-
-.task-table td:first-child {
-    font-weight: 600;
-    color: #1e293b;
-    word-break: break-word;
-    white-space: normal;
-}
-
-
-/* Priority badges */
-
-.high,
-.medium,
-.low {
-    display: inline-block;
-    width: fit-content;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: capitalize;
-    white-space: nowrap;
-}
-
-.high {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.medium {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.low {
-    background: #dcfce7;
-    color: #16a34a;
-}
-
-
-/* Status text */
-
-.task-table td:nth-child(4) {
-    font-weight: 600;
-    color: #475569;
-}
-
-
-/* =========================
-   Action Buttons
-========================= */
-
-.task-table td:last-child {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 6px;
-    align-items: center;
-}
+.high { color: #e5484d; font-weight: 600; }
+.medium { color: #d99a1b; font-weight: 600; }
+.low { color: #2fa64f; font-weight: 600; }
 
 .action-btn {
-    width: 30px;
-    height: 30px;
     border: none;
-    border-radius: 8px;
+    background: transparent;
     cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 13px;
-    transition: transform 0.1s ease, opacity 0.15s ease;
-    flex-shrink: 0;
+    padding: 6px;
+    margin-right: 4px;
+    border-radius: 6px;
+    font-size: 14px;
 }
+
+.action-btn.edit { color: #4c6fff; }
+.action-btn.delete { color: #e5484d; }
+.action-btn.complete { color: #2fa64f; }
 
 .action-btn:hover {
-    transform: translateY(-1px);
-    opacity: 0.85;
+    background: #f0f3ff;
 }
 
-.edit {
-    background: #dbeafe;
-    color: #2563eb;
-}
-
-.delete {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.complete {
-    background: #dcfce7;
-    color: #16a34a;
-}
-
-
-/* Empty state (no tasks) */
-
-.task-table-empty {
-    padding: 60px 20px;
-    text-align: center;
-    color: #94a3b8;
-    font-size: 14px;
-}
-
-
-/* =========================
-   Calendar Card
-========================= */
-
-.task-calendar-wrapper {
-    margin-top: 35px;
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    overflow-x: auto;
-}
-
-.task-calendar-wrapper h2 {
-    color: #1e293b;
-}
-
-
-/* Month/Year dropdown row */
-
-.calendar-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.calendar-controls {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.calendar-controls select {
-    padding: 8px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1e293b;
-    background: white;
-    cursor: pointer;
-}
-
-
-/* Weekday header row (Sun-Sat) */
-
-.calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    margin-bottom: 8px;
-    min-width: 420px;
-}
-
-.calendar-weekday-label {
-    text-align: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-
-/* Calendar grid - always 7 columns so weekdays stay aligned */
-
-.task-calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    min-width: 420px;
-}
-
-/* Fixed-size day cells regardless of how much content is inside */
-.calendar-day {
-    width: 100%;
-    height: 90px;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #ffffff;
-    cursor: pointer;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.calendar-day:hover {
-    background: #eef2ff;
-    transform: translateY(-2px);
-}
-
-.calendar-day.empty {
-    background: transparent;
-    border: none;
-    cursor: default;
-    pointer-events: none;
-}
-
-.calendar-day h3 {
-    margin: 0 0 6px 0;
-    font-size: 14px;
-    font-weight: 700;
-    color: #475569;
-}
-
-.calendar-day.today {
-    border: 2px solid #2563eb;
-}
-
-.calendar-day.today h3 {
-    color: #2563eb;
-}
-
-.calendar-day.has-task {
-    border: 2px solid #2563eb;
-    background: #eff6ff;
-}
-
-/* Fixed-size count badge instead of listing every task title
-   (keeps cell size constant no matter how many tasks a day has) */
-.calendar-task-count {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    color: #2563eb;
-    background: #dbeafe;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-}
-
-
-/* =========================
-   Modal (Day Details / Create / Edit)
-========================= */
-
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 50;
-}
-
-.task-modal {
-    background: white;
-    border-radius: 16px;
-    padding: 25px;
-    width: 90%;
-    max-width: 480px;
-    max-height: 85vh;
-    overflow-y: auto;
-    box-sizing: border-box;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-.close-btn {
-    margin-top: 15px;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 8px;
-    background: #e2e8f0;
-    color: #334155;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    background: #cbd5e1;
-}
-
-
-/* =========================
-   Day Details Popup task list
-========================= */
-
-.calendar-modal-task {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 12px;
-    margin-top: 12px;
-}
-
-.calendar-modal-task:first-of-type {
-    border-top: none;
-    padding-top: 0;
-    margin-top: 0;
-}
-
-.calendar-modal-task p {
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    color: #334155;
-}
-
-
-/* =========================
-   Responsive
-========================= */
-
-/* Note: calendar column count stays at 7 on all screen sizes so
-   weekday alignment stays correct - only cell size/font shrink down.
-   The table scrolls horizontally instead of squeezing columns. */
+/* ================= Mobile Responsive ================= */
 
 @media (max-width: 900px) {
-
-    .calendar-day {
-        height: 70px;
-        padding: 6px;
+    .mytasks-layout {
+        flex-direction: column;
     }
 
-    .calendar-day h3 {
-        font-size: 12px;
+    .mytasks-side {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 100%;
+        position: static;
+        order: -1; /* show overview above the table on mobile */
     }
 
-    .calendar-task-count {
-        font-size: 10px;
-        padding: 2px 6px;
+    .status-cards {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
+    .status-card {
+        flex: 1 1 calc(50% - 10px);
+    }
 }
 
-@media (max-width: 600px) {
-
-    .mytasks-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-
-    .create-btn {
-        width: 100%;
-        justify-content: center;
+@media (max-width: 768px) {
+    .mytasks-container {
+        padding: 12px;
     }
 
     .task-toolbar {
-        flex-direction: column;
+        gap: 8px;
     }
 
-    .task-toolbar input,
+    .task-toolbar input {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
     .task-toolbar select {
+        flex: 0 0 auto;
+    }
+
+    /* Table stays a real table and scrolls horizontally instead of
+       collapsing into stacked cards. */
+    .task-table {
+        min-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .status-card {
         flex: 1 1 100%;
     }
-
-    .task-table td:last-child {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .action-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 13px;
-    }
-
-    .calendar-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .calendar-day {
-        height: 55px;
-        padding: 4px;
-    }
-
-    .calendar-day h3 {
-        font-size: 11px;
-        margin-bottom: 2px;
-    }
-
-    .calendar-task-count {
-        font-size: 9px;
-        padding: 2px 5px;
-    }
-
-    .calendar-weekday-label {
-        font-size: 10px;
-    }
-
 }
