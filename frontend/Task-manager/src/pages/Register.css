@@ -196,6 +196,31 @@
     text-decoration:underline;
 }
 
+/* Google Button */
+
+.google-btn{
+    width:100%;
+    padding:16px;
+
+    background:white;
+    color:aliceblue;
+
+    border:none;
+    border-radius:10px;
+
+    font-size:17px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.google-btn:hover{
+    background:#7393e8;
+    transform:translateY(-2px);
+}
+
 /* ========================= */
 /* Responsive */
 /* ========================= */
@@ -208,7 +233,16 @@
 
 }
 
+.right-panel{
+
+    order:1;
+
+    padding:35px 20px;
+}
+
 .left-panel{
+
+    order:2;
 
     padding:50px 25px;
 
@@ -217,11 +251,6 @@
 .register-image{
 
     width:70%;
-}
-
-.right-panel{
-
-    padding:35px 20px;
 }
 
 .login-card{
@@ -254,29 +283,7 @@
 }
 
 }
+
 .left-panel * {
     color: #ffffff !important;
-}
-
-.google-btn{
-    width:100%;
-    padding:16px;
-
-    background :white;
-    color:aliceblue;
-
-    border:none;
-    border-radius:10px;
-
-    font-size:17px;
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.google-btn:hover{
-    background:#7393e8;
-    transform:translateY(-2px);
 }

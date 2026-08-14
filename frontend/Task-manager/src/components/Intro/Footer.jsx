@@ -26,7 +26,7 @@ function Footer() {
           </ul>
         </div>
 
-        <div className="footer-section">
+        <div className="footer-section contact-section">
           <h3>Contact</h3>
             <p>
               <FaEnvelope className="footer-icon" />
@@ -48,9 +48,17 @@ function Footer() {
 
       <hr />
 
-      <p className="copyright">
-        © 2026 TaskManager. All Rights Reserved.
-      </p>
+      <div className="footer-bottom">
+        <p className="copyright">
+          © 2026 TaskManager. All Rights Reserved.
+        </p>
+
+        <ul className="legal-links">
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+          <li><a href="/cookie-policy">Cookie Policy</a></li>
+        </ul>
+      </div>
 
     </footer>
   );

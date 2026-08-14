@@ -7,24 +7,34 @@ import EditTaskModal from "./EditTaskModal";
 
 import "./MyTasks.css";
 
-// ================= Date helpers =================
-// Normalizes a date to midnight so we can compare "day" only, ignoring time.
-const normalizeDate = (value) => {
-    const date = new Date(value);
-    date.setHours(0, 0, 0, 0);
-    return date;
+
+
+const getDateOnly = (value) => {
+    if (!value) return null;
+    const str = typeof value === "string" ? value : new Date(value).toISOString();
+    return str.split("T")[0]; // "YYYY-MM-DD"
+};
+
+const getTodayStr = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 };
 
 const isCompletedTask = (task) => task.status?.toLowerCase() === "completed";
 
 const isOverdueTask = (task) => {
     if (!task.due_date || isCompletedTask(task)) return false;
-    return normalizeDate(task.due_date) < normalizeDate(new Date());
+    const due = getDateOnly(task.due_date);
+    return due !== null && due < getTodayStr();
 };
 
 const isDueTodayTask = (task) => {
     if (!task.due_date) return false;
-    return normalizeDate(task.due_date).getTime() === normalizeDate(new Date()).getTime();
+    const due = getDateOnly(task.due_date);
+    return due === getTodayStr();
 };
 
 function MyTasks() {

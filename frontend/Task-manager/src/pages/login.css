@@ -110,6 +110,40 @@ body{
 }
 
 /* ======================
+   BACK TO HOME
+====================== */
+
+.back-home-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:#4b5563;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    margin-bottom:18px;
+
+    transition:color 0.2s ease, transform 0.1s ease;
+
+}
+
+.back-home-btn:hover{
+
+    color:#2563eb;
+
+    transform:translateX(-2px);
+
+}
+
+/* ======================
    INPUTS
 ====================== */
 
@@ -210,6 +244,56 @@ body{
 }
 
 /* ======================
+   GOOGLE BUTTON
+====================== */
+
+.google-btn{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-top:16px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:12px;
+
+    background:#ffffff;
+
+    color:#111827;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.google-btn:hover{
+
+    background:#f3f4f6;
+
+    transform:translateY(-2px);
+
+}
+
+.google-btn:disabled{
+
+    background:#f3f4f6;
+
+    color:#9ca3af;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+/* ======================
    LINKS
 ====================== */
 
@@ -247,22 +331,141 @@ body{
 
 }
 
-/* ======================
-   MOBILE
-====================== */
+/* ======================================================
+   RESPONSIVE
+   Right panel (form) always renders on top / full width
+   on smaller screens since the image panel is hidden.
+====================================================== */
 
+/* Large desktops */
+@media(min-width:1440px){
+
+    .login-right{
+        padding:60px;
+    }
+
+    .login-card{
+        max-width:460px;
+    }
+
+}
+
+/* Standard desktops / laptops */
+@media(max-width:1200px){
+
+    .login-left{
+        width:55%;
+    }
+
+    .login-right{
+        width:45%;
+        padding:30px;
+    }
+
+    .login-card h1{
+        font-size:36px;
+    }
+
+    .login-card h2{
+        font-size:28px;
+    }
+
+}
+
+/* Tablets — form takes over the full screen, image hidden */
 @media(max-width:992px){
 
-.login-left{
+    .login-page{
+        height:auto;
+        min-height:100vh;
+    }
 
-    display:none;
+    .login-left{
+        display:none;
+    }
+
+    .login-right{
+        width:100%;
+        padding:40px 24px;
+    }
+
+    .login-card{
+        max-width:420px;
+    }
 
 }
 
-.login-right{
+/* Large phones */
+@media(max-width:600px){
 
-    width:100%;
+    .login-right{
+        align-items:flex-start;
+        padding:32px 20px;
+    }
+
+    .login-card{
+        max-width:100%;
+        margin:0 auto;
+    }
+
+    .login-card h1{
+        font-size:30px;
+    }
+
+    .login-card h2{
+        font-size:24px;
+    }
+
+    .subtitle{
+        font-size:14px;
+        margin-bottom:26px;
+    }
+
+    .login-card input{
+        padding:13px;
+        font-size:14px;
+        margin-bottom:14px;
+    }
+
+    .login-btn{
+        padding:13px;
+        font-size:15px;
+        margin-top:18px;
+    }
+
+    .google-btn{
+        padding:12px;
+        font-size:14px;
+    }
 
 }
+
+/* Small phones */
+@media(max-width:380px){
+
+    .login-right{
+        padding:24px 16px;
+    }
+
+    .login-card h1{
+        font-size:26px;
+    }
+
+    .login-card h2{
+        font-size:21px;
+    }
+
+    .back-home-btn{
+        font-size:13px;
+        margin-bottom:14px;
+    }
+
+    .login-card input{
+        padding:12px;
+    }
+
+    .eye-icon{
+        right:14px;
+    }
 
 }

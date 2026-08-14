@@ -19,11 +19,6 @@ function Profile() {
     const [address, setAddress] = useState("");
 
 
-    const [profileImage, setProfileImage] = useState(
-        "https://images.unsplash.com/photo-1444464666168-49d633b86797"
-    );
-
-
     const [loading, setLoading] = useState(true);
 
 
@@ -57,29 +52,6 @@ function Profile() {
 
             setAddress(data.address || "");
 
-
-            // Keep profile image from localStorage
-
-            const storedUser =
-                localStorage.getItem("user");
-
-
-            if (storedUser) {
-
-                const localUser =
-                    JSON.parse(storedUser);
-
-
-                if (localUser.profile_image) {
-
-                    setProfileImage(
-                        localUser.profile_image
-                    );
-
-                }
-
-            }
-
         }
         catch (error) {
 
@@ -108,37 +80,6 @@ function Profile() {
         fetchProfile();
 
     }, []);
-
-
-
-    // ======================================================
-    // Image Upload
-    // ======================================================
-
-    const handleImageUpload = (e) => {
-
-        const file = e.target.files[0];
-
-
-        if (file) {
-
-            const reader = new FileReader();
-
-
-            reader.onload = () => {
-
-                setProfileImage(
-                    reader.result
-                );
-
-            };
-
-
-            reader.readAsDataURL(file);
-
-        }
-
-    };
 
 
 
@@ -202,9 +143,7 @@ function Profile() {
 
                 ...localUser,
 
-                ...updatedUser,
-
-                profile_image: profileImage
+                ...updatedUser
 
             };
 
@@ -301,13 +240,6 @@ function Profile() {
                 <div className="profile-header">
 
 
-                    <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="profile-image"
-                    />
-
-
                     <h2>
                         {name}
                     </h2>
@@ -394,23 +326,6 @@ function Profile() {
                                 setAddress(
                                     e.target.value
                                 )
-                        }
-                    />
-
-
-
-                    {/* Profile Picture */}
-
-                    <label>
-                        Upload Profile Picture
-                    </label>
-
-
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={
-                            handleImageUpload
                         }
                     />
 

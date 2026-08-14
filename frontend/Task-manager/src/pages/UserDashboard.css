@@ -336,12 +336,27 @@
         font-size:13px;
     }
 
+    /* Keep the 2x2 grid instead of collapsing to a single column */
     .stats-container{
-        grid-template-columns:1fr;
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .user-stat-card{
+        padding:14px;
+    }
+
+    .user-stat-card h3{
+        font-size:12px;
     }
 
     .user-stat-card h2{
-        font-size:24px;
+        font-size:20px;
+        margin:6px 0;
+    }
+
+    .user-stat-card p{
+        font-size:12px;
     }
 
     .section-header h2{

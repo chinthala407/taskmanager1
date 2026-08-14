@@ -3,12 +3,12 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
-const db = require("./config/db");
+const db = require("./src/config/db");
 
-const authRoutes = require("./routes/authRoutes");
-const adminRoutes = require("./routes/adminRoutes"); // Added
-const taskRoutes=require("./routes/taskRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const adminRoutes = require("./src/routes/adminRoutes"); // Added
+const taskRoutes=require("./src/routes/taskRoutes");
+const notificationRoutes = require("./src/routes/notificationRoutes");
 const app = express();
 
 
@@ -27,7 +27,7 @@ db.query("SELECT NOW()")
 
   .then((result) => {
 
-    console.log("✅ Database Connected");
+    console.log("Database Connected");
 
     console.log(result.rows[0]);
 
@@ -35,7 +35,7 @@ db.query("SELECT NOW()")
 
   .catch((err) => {
 
-    console.error("❌ Database Connection Error:", err);
+    console.error("Database Connection Error:", err);
 
   });
 
@@ -96,7 +96,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/notifications", notificationRoutes);
-const userRoutes=require("./routes/userRoutes");
+const userRoutes=require("./src/routes/userRoutes");
 
 
 app.use(

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import { useGoogleLogin } from "@react-oauth/google";
 import loginBackground from "../assets/login-background.png";
 
@@ -95,6 +95,11 @@ return (
     <div className="login-right">
 
       <div className="login-card">
+
+        <Link to="/" className="back-home-btn">
+          <FaArrowLeft />
+          Back to Home
+        </Link>
 
         <h1>Task Manager</h1>
         <h2>Welcome Back </h2>

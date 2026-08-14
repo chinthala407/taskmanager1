@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import CookiePolicy from "./pages/CookiePolicy";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 
-import ForgotPassword from "./pages/ForgotPassword";
-import VerifyOTP from "./pages/VerifyOTP";
-import ResetPassword from "./pages/ResetPassword";
-
+import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
 import Users from "./components/admin/Users";
 import Tasks from "./components/admin/Tasks";
 import Reports from "./components/admin/Reports";
@@ -45,6 +45,15 @@ function App() {
                     element={<LandingPage />}
                 />
 
+                <Route path="/privacy-policy" 
+                    element={<PrivacyPolicy />} 
+                />
+                <Route path="/terms-and-conditions"
+                     element={<TermsAndConditions />} 
+                />
+                <Route path="/cookie-policy" 
+                element={<CookiePolicy />}
+                />
                 <Route
                     path="/login"
                     element={<Login />}
@@ -56,19 +65,9 @@ function App() {
                 />
 
                 <Route
-                    path="/forgot-password"
-                    element={<ForgotPassword />}
-                />
-
-                <Route
-                    path="/verify-otp"
-                    element={<VerifyOTP />}
-                />
-
-                <Route
-                    path="/reset-password"
-                    element={<ResetPassword />}
-                />
+    path="/forgot-password"
+    element={<ForgotPasswordFlow />}
+/>
 
 
 
