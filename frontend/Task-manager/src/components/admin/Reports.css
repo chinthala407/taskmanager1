@@ -12,7 +12,7 @@
 }
 
 .reports-header p {
-  color: #666;
+  color: var(--text-muted);
   font-size: clamp(0.85rem, 2vw, 1rem);
   margin: 0 0 1.25rem 0;
 }
@@ -26,7 +26,7 @@
 }
 
 .report-card {
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 10px;
   padding: 1.1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -37,7 +37,7 @@
 
 .report-card h3 {
   font-size: clamp(0.75rem, 2vw, 0.9rem);
-  color: #666;
+  color: var(--text-muted);
   margin: 0 0 0.4rem 0;
   font-weight: 500;
   white-space: nowrap;
@@ -48,7 +48,7 @@
 .report-card h2 {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   margin: 0;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 /* ---------- Charts ----------
@@ -62,7 +62,7 @@
 }
 
 .chart-box {
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 10px;
   padding: 1.25rem 1.25rem 0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);

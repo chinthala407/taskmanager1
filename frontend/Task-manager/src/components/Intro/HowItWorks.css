@@ -7,11 +7,12 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .how-subtitle {
   margin-bottom: 2.5rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* Default (mobile/tablet): horizontally scrollable */
@@ -20,30 +21,31 @@
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: auto; /* we control smoothness manually via JS scrollTo options */
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0.5rem 1rem 1.5rem;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .steps-container::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .step-card {
   flex: 0 0 80%;
   scroll-snap-align: center;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 12px;
   padding: 2rem 1.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   text-align: left;
+  border: 1px solid var(--border-color);
 }
 
 .step-number {
   font-size: 2rem;
   font-weight: 700;
-  color: #6c5ce7;
+  color: var(--color-primary-light);
   margin-bottom: 0.5rem;
 }
 
@@ -51,10 +53,11 @@
   font-size: 1.15rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .step-card p {
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.5;
 }

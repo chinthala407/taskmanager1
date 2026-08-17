@@ -13,7 +13,7 @@
 
     font-size:32px;
 
-    color:#111827;
+    color:var(--text-primary);
 
 }
 
@@ -22,7 +22,7 @@
 
     margin-top:8px;
 
-    color:#64748b;
+    color:var(--text-muted);
 
 }
 
@@ -42,9 +42,9 @@
 
 .notification-card{
 
-    background:white;
+    background:var(--bg-surface);
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border-color);
 
     border-radius:16px;
 
@@ -66,7 +66,7 @@
 
     font-size:17px;
 
-    color:#111827;
+    color:var(--text-primary);
 
     margin-bottom:8px;
 
@@ -76,7 +76,7 @@
 
 .notification-card p{
 
-    color:#64748b;
+    color:var(--text-muted);
 
     font-size:14px;
 
@@ -86,7 +86,7 @@
 
 .notification-card span{
 
-    color:#94a3b8;
+    color:var(--scrollbar-thumb-hover);
 
     font-size:13px;
 
@@ -115,9 +115,9 @@
 
     align-items:center;
 
-    background:#ffffff;
+    background:var(--bg-surface);
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border-color);
 
     border-radius:10px;
 
@@ -133,7 +133,7 @@
 
 .notification-card:hover{
 
-    background:#f8fafc;
+    background:var(--bg-surface-hover);
 
 }
 
@@ -155,9 +155,9 @@
 
 .delete-btn{
 
-    background:#ef4444;
+    background:var(--color-danger);
 
-    color:white;
+    color:var(--text-on-color);
 
     border:none;
 
@@ -173,6 +173,6 @@
 
 .delete-btn:hover{
 
-    background:#dc2626;
+    background:var(--color-danger-hover);
 
 }

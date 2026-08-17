@@ -7,11 +7,12 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .features-subtitle {
   margin-bottom: 2.5rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* Default (mobile/tablet): horizontally scrollable, infinite duplicate set */
@@ -20,34 +21,36 @@
   gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: auto; /* we control smoothness manually via JS scrollBy options */
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0.5rem 1rem 1.5rem;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .features-grid::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .feature-card {
   flex: 0 0 80%;
   scroll-snap-align: center;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 12px;
   padding: 2rem 1.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   text-align: left;
+  border: 1px solid var(--border-color);
 }
 
 .feature-card h3 {
   font-size: 1.15rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .feature-card p {
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -59,7 +62,7 @@
   }
 }
 
-/* Desktop: fixed grid, no scrolling, no duplicates (they're not even in the DOM here) */
+/* Desktop: fixed grid, no scrolling, no duplicates */
 @media (min-width: 1025px) {
   .features-grid {
     display: grid;

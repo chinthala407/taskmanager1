@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./ForgotPasswordFlow.css"; // reuse your existing card/form styles
+import "./ForgotPasswordFlow.css";
+import { useTheme } from "../context/ThemeContext";
+import { FaArrowLeft } from "react-icons/fa";
 
 const AUTH_API_BASE = "http://localhost:5000/api/auth";
 
 function ForgotPasswordFlow() {
+
+    const { theme } = useTheme();
 
     // "email" -> "otp" -> "reset"
     const [step, setStep] = useState("email");
@@ -227,12 +231,43 @@ function ForgotPasswordFlow() {
 
     };
 
+    // Top-of-card back link: goes to the previous step if mid-flow,
+    // otherwise takes the user to the landing page.
+    const handleTopBack = (e) => {
+
+        if (step === "email") {
+            // let the Link's default navigation to "/" happen
+            return;
+        }
+
+        e.preventDefault();
+
+        setError("");
+        setSuccess("");
+
+        if (step === "otp") {
+            setStep("email");
+        } else if (step === "reset") {
+            setStep("otp");
+        }
+
+    };
+
 
     return (
 
-        <div className="container">
+        <div className="forgot-password-container" data-theme={theme}>
 
-            <div className="login-card">
+            <div className="forgot-password-card">
+
+                <Link
+                    to="/"
+                    className="forgot-password-back-home-btn"
+                    onClick={handleTopBack}
+                >
+                    <FaArrowLeft />
+                    {step === "email" ? "Back to Home" : "Back"}
+                </Link>
 
                 <h1>Task Manager</h1>
 
@@ -240,8 +275,8 @@ function ForgotPasswordFlow() {
                     <>
                         <h2>Forgot Password</h2>
 
-                        {error && <p className="error-text">{error}</p>}
-                        {success && <p className="success-text">{success}</p>}
+                        {error && <p className="forgot-password-error-text">{error}</p>}
+                        {success && <p className="forgot-password-success-text">{success}</p>}
 
                         <form onSubmit={handleSendOtp}>
 
@@ -269,12 +304,12 @@ function ForgotPasswordFlow() {
                     <>
                         <h2>Verify OTP</h2>
 
-                        <p className="modal-description">
+                        <p className="forgot-password-modal-description">
                             Enter the OTP sent to <strong>{email}</strong>.
                         </p>
 
-                        {error && <p className="error-text">{error}</p>}
-                        {success && <p className="success-text">{success}</p>}
+                        {error && <p className="forgot-password-error-text">{error}</p>}
+                        {success && <p className="forgot-password-success-text">{success}</p>}
 
                         <form onSubmit={handleVerifyOtp}>
 
@@ -287,7 +322,7 @@ function ForgotPasswordFlow() {
                             />
 
                             <span
-                                className={`modal-resend${resendLoading ? " disabled" : ""}`}
+                                className={`forgot-password-modal-resend${resendLoading ? " disabled" : ""}`}
                                 onClick={!resendLoading ? handleResendOtp : undefined}
                             >
                                 {resendLoading ? "Resending OTP..." : "Didn't get the code? Resend OTP"}
@@ -299,7 +334,7 @@ function ForgotPasswordFlow() {
 
                             <button
                                 type="button"
-                                className="back-btn"
+                                className="forgot-password-back-btn"
                                 onClick={handleBack}
                                 disabled={loading || resendLoading}
                             >
@@ -314,8 +349,8 @@ function ForgotPasswordFlow() {
                     <>
                         <h2>Reset Password</h2>
 
-                        {error && <p className="error-text">{error}</p>}
-                        {success && <p className="success-text">{success}</p>}
+                        {error && <p className="forgot-password-error-text">{error}</p>}
+                        {success && <p className="forgot-password-success-text">{success}</p>}
 
                         <form onSubmit={handleResetPassword}>
 
@@ -341,7 +376,7 @@ function ForgotPasswordFlow() {
 
                             <button
                                 type="button"
-                                className="back-btn"
+                                className="forgot-password-back-btn"
                                 onClick={handleBack}
                                 disabled={loading}
                             >

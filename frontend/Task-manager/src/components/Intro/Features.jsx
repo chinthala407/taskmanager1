@@ -75,7 +75,7 @@ function Features() {
   }, [isDesktop]);
 
   return (
-    <section className="features">
+    <section className="features" id="features">
       <h2>Features</h2>
       <p className="features-subtitle">
         Everything you need to stay productive.

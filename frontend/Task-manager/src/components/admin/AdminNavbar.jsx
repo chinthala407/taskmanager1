@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaBars } from "react-icons/fa";
 
 import taskIcon from "../../assets/task-check-icon.png";
+import ThemeToggle from "./ThemeToggle";
 import "./AdminNavbar.css";
 
 
@@ -140,7 +141,7 @@ function AdminNavbar({ onToggleSidebar, onLogout }){
 
             <div className="navbar-right">
 
-
+                <ThemeToggle />
 
 
 

@@ -65,9 +65,9 @@ function App() {
                 />
 
                 <Route
-    path="/forgot-password"
-    element={<ForgotPasswordFlow />}
-/>
+                    path="/forgot-password"
+                    element={<ForgotPasswordFlow />}
+                />
 
 
 

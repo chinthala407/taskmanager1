@@ -6,7 +6,7 @@
 }
 
 body{
-    background:#eef3fb;
+    background:var(--bg-body);
 }
 
 /* ======================
@@ -33,7 +33,7 @@ body{
 
     overflow:hidden;
 
-    background:#fff;
+    background:var(--bg-surface);
 
 }
 
@@ -61,7 +61,7 @@ body{
 
     align-items:center;
 
-    background:#ffffff;
+    background:var(--bg-surface);
 
     padding:40px;
 
@@ -81,7 +81,7 @@ body{
 
 .login-card h1{
 
-    color:#2563eb;
+    color:var(--color-primary);
 
     font-size:42px;
 
@@ -93,6 +93,8 @@ body{
 
 .login-card h2{
 
+    color:var(--text-primary);
+
     font-size:32px;
 
     margin-bottom:8px;
@@ -101,7 +103,7 @@ body{
 
 .subtitle{
 
-    color:#6b7280;
+    color:var(--text-muted);
 
     margin-bottom:35px;
 
@@ -121,7 +123,7 @@ body{
 
     gap:6px;
 
-    color:#4b5563;
+    color:var(--text-secondary);
 
     text-decoration:none;
 
@@ -137,7 +139,7 @@ body{
 
 .back-home-btn:hover{
 
-    color:#2563eb;
+    color:var(--color-primary);
 
     transform:translateX(-2px);
 
@@ -153,13 +155,17 @@ body{
 
     padding:15px;
 
-    border:1px solid #d1d5db;
+    border:1px solid var(--border-color-strong);
 
     border-radius:12px;
 
     margin-bottom:18px;
 
     font-size:15px;
+
+    background:var(--bg-surface);
+
+    color:var(--text-primary);
 
     transition:.3s;
 
@@ -169,9 +175,9 @@ body{
 
     outline:none;
 
-    border-color:#2563eb;
+    border-color:var(--color-primary);
 
-    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+    box-shadow:0 0 0 4px var(--color-primary-ring);
 
 }
 
@@ -201,7 +207,7 @@ body{
 
     cursor:pointer;
 
-    color:#666;
+    color:var(--text-muted);
 
 }
 
@@ -221,9 +227,9 @@ body{
 
     border-radius:12px;
 
-    background:#2563eb;
+    background:var(--color-primary);
 
-    color:white;
+    color:var(--text-on-color);
 
     font-size:16px;
 
@@ -237,7 +243,7 @@ body{
 
 .login-btn:hover{
 
-    background:#1d4ed8;
+    background:var(--color-primary-hover);
 
     transform:translateY(-2px);
 
@@ -255,13 +261,13 @@ body{
 
     margin-top:16px;
 
-    border:1px solid #d1d5db;
+    border:1px solid var(--border-color-strong);
 
     border-radius:12px;
 
-    background:#ffffff;
+    background:var(--bg-surface);
 
-    color:#111827;
+    color:var(--text-primary);
 
     font-size:15px;
 
@@ -275,7 +281,7 @@ body{
 
 .google-btn:hover{
 
-    background:#f3f4f6;
+    background:var(--bg-surface-hover);
 
     transform:translateY(-2px);
 
@@ -283,9 +289,9 @@ body{
 
 .google-btn:disabled{
 
-    background:#f3f4f6;
+    background:var(--bg-surface-alt);
 
-    color:#9ca3af;
+    color:var(--text-faint);
 
     cursor:not-allowed;
 
@@ -309,7 +315,7 @@ body{
 
     text-decoration:none;
 
-    color:#2563eb;
+    color:var(--color-primary);
 
 }
 
@@ -319,13 +325,15 @@ body{
 
     margin-top:28px;
 
+    color:var(--text-secondary);
+
 }
 
 .register-text a{
 
     text-decoration:none;
 
-    color:#2563eb;
+    color:var(--color-primary);
 
     font-weight:600;
 
@@ -333,11 +341,8 @@ body{
 
 /* ======================================================
    RESPONSIVE
-   Right panel (form) always renders on top / full width
-   on smaller screens since the image panel is hidden.
 ====================================================== */
 
-/* Large desktops */
 @media(min-width:1440px){
 
     .login-right{
@@ -350,7 +355,6 @@ body{
 
 }
 
-/* Standard desktops / laptops */
 @media(max-width:1200px){
 
     .login-left{
@@ -372,35 +376,45 @@ body{
 
 }
 
-/* Tablets — form takes over the full screen, image hidden */
 @media(max-width:992px){
 
+    /* Stack vertically: form first, image below */
+
     .login-page{
+        flex-direction:column;
         height:auto;
         min-height:100vh;
     }
 
-    .login-left{
-        display:none;
-    }
-
     .login-right{
+        order:1;
         width:100%;
         padding:40px 24px;
     }
 
+    .login-left{
+        order:2;
+        display:block;
+        width:100%;
+        height:280px;
+    }
+
     .login-card{
         max-width:420px;
+        margin:0 auto;
     }
 
 }
 
-/* Large phones */
 @media(max-width:600px){
 
     .login-right{
         align-items:flex-start;
-        padding:32px 20px;
+        padding:32px 20px 0;
+    }
+
+    .login-left{
+        height:220px;
     }
 
     .login-card{
@@ -440,11 +454,14 @@ body{
 
 }
 
-/* Small phones */
 @media(max-width:380px){
 
     .login-right{
-        padding:24px 16px;
+        padding:24px 16px 0;
+    }
+
+    .login-left{
+        height:180px;
     }
 
     .login-card h1{

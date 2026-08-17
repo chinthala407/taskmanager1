@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Register.css";
 import registerImage from "../assets/register-illustration.png";
+import { useTheme } from "../context/ThemeContext";
+import { FaCheckCircle,FaArrowLeft} from "react-icons/fa";
 
 function Register() {
+  const { theme } = useTheme();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -58,18 +63,12 @@ function Register() {
     onSuccess: async (tokenResponse) => {
       setGoogleLoading(true);
       try {
-        // tokenResponse.access_token is sent to the backend, which
-        // verifies it with Google and creates/logs in the user.
         const res = await axios.post(
           "http://localhost:5000/api/auth/google",
           { access_token: tokenResponse.access_token }
         );
 
         setMessage(res.data.message || "Registered with Google successfully");
-
-        // e.g. store token and redirect
-        // localStorage.setItem("token", res.data.token);
-        // navigate("/dashboard");
 
       } catch (err) {
         setMessage(
@@ -85,7 +84,7 @@ function Register() {
   });
 
   return (
-    <div className="register-container">
+    <div className="register-container" data-theme={theme}>
 
       {/* Left Side */}
 
@@ -104,9 +103,9 @@ function Register() {
         </p>
 
         <div className="register-features">
-            <div><span>✅</span> Manage Tasks Efficiently</div>
-            <div><span>✅</span> Collaborate with Your Team</div>
-            <div><span>✅</span> Stay Organized Every Day</div>
+            <div><FaCheckCircle className="feature-check-icon" /> Manage Tasks Efficiently</div>
+            <div><FaCheckCircle className="feature-check-icon" /> Collaborate with Your Team</div>
+            <div><FaCheckCircle className="feature-check-icon" /> Stay Organized Every Day</div>
         </div>
 
       </div>
@@ -115,11 +114,17 @@ function Register() {
 
       <div className="right-panel">
 
-        <div className="login-card">
-
+        <div className="register-card">
+         <button
+            type="button"
+            className="register-back-home-btn"
+            onClick={() => navigate("/")}
+          >
+          <FaArrowLeft className="back-home-icon" /> Back to Home
+          </button>
           <h1>Create Your Account </h1>
 
-          <p className="subtitle">
+          <p className="register-subtitle">
             Join thousands of professionals managing their work efficiently.
           </p>
 
@@ -166,24 +171,24 @@ function Register() {
 
           </form>
 
-          <p className="security">
+          <p className="register-security">
              Your information is securely encrypted.
           </p>
 
           {message && (
-            <p className="message">
+            <p className="register-message">
               {message}
             </p>
           )}
 
-          <p className="login-link">
+          <p className="register-login-link">
             Already have an account?
             <Link to="/login"> Login</Link>
           </p>
 
           <button
             type="button"
-            className="google-btn"
+            className="register-google-btn"
             onClick={() => googleLogin()}
             disabled={googleLoading}
           >

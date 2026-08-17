@@ -5,8 +5,11 @@ import "./login.css";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import { useGoogleLogin } from "@react-oauth/google";
 import loginBackground from "../assets/login-background.png";
+import { useTheme } from "../context/ThemeContext";
 
 function Login() {
+  const { theme } = useTheme();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,17 +41,17 @@ function Login() {
       }
     } catch (error) {
 
-  if (error.response) {
+      if (error.response) {
 
-    alert(error.response.data.message);
+        alert(error.response.data.message);
 
-  } else {
+      } else {
 
-    alert("Unable to connect to the server.");
+        alert("Unable to connect to the server.");
 
-  }
+      }
 
-}
+    }
   };
 
   const googleLogin = useGoogleLogin({
@@ -85,89 +88,89 @@ function Login() {
     },
   });
 
-return (
-  <div className="login-page">
+  return (
+    <div className="login-page" data-theme={theme}>
 
-    <div className="login-left">
-      <img src={loginBackground} alt="Task Manager" />
-    </div>
+      <div className="login-left">
+        <img src={loginBackground} alt="Task Manager" />
+      </div>
 
-    <div className="login-right">
+      <div className="login-right">
 
-      <div className="login-card">
+        <div className="login-card">
 
-        <Link to="/" className="back-home-btn">
-          <FaArrowLeft />
-          Back to Home
-        </Link>
+          <Link to="/" className="back-home-btn">
+            <FaArrowLeft />
+            Back to Home
+          </Link>
 
-        <h1>Task Manager</h1>
-        <h2>Welcome Back </h2>
-        <p className="subtitle">
-          Sign in to continue managing your tasks.
-        </p>
+          <h1>Task Manager</h1>
+          <h2>Welcome Back </h2>
+          <p className="subtitle">
+            Sign in to continue managing your tasks.
+          </p>
 
-        <form onSubmit={handleLogin}>
-
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <div className="password-field">
+          <form onSubmit={handleLogin}>
 
             <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
 
-            <div
-              className="eye-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            <div className="password-field">
+
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+              <div
+                className="eye-icon"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+
             </div>
 
-          </div>
+            <button type="submit" className="login-btn">
+              Login
+            </button>
 
-          <button type="submit" className="login-btn">
-            Login
+            <div className="forgot-password">
+              <Link to="/forgot-password">
+                Forgot Password?
+              </Link>
+            </div>
+
+          </form>
+
+          <button
+            type="button"
+            className="google-btn"
+            onClick={() => googleLogin()}
+            disabled={googleLoading}
+          >
+            {googleLoading ? "Signing in..." : "Continue With Google"}
           </button>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">
-              Forgot Password?
-            </Link>
-          </div>
+          <p className="register-text">
+            Don't have an account?
+            <Link to="/register"> Register</Link>
+          </p>
 
-        </form>
-
-        <button
-          type="button"
-          className="google-btn"
-          onClick={() => googleLogin()}
-          disabled={googleLoading}
-        >
-          {googleLoading ? "Signing in..." : "Continue With Google"}
-        </button>
-
-        <p className="register-text">
-          Don't have an account?
-          <Link to="/register"> Register</Link>
-        </p>
+        </div>
 
       </div>
 
     </div>
-
-  </div>
-);
+  );
 
 }
 

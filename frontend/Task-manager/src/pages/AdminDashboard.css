@@ -7,8 +7,8 @@
 
 /* Welcome banner */
 .welcome-card{
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
-    color:#ffffff;
+    background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));
+    color:var(--text-on-color);
     padding:30px;
     border-radius:18px;
     margin-bottom:30px;
@@ -43,8 +43,8 @@
 }
 
 .stat-card{
-    background:#ffffff;
-    border:1px solid #e5e7eb;
+    background:var(--bg-surface);
+    border:1px solid var(--border-color);
     border-radius:16px;
     padding:24px;
     display:flex;
@@ -73,14 +73,14 @@
     flex-shrink:0;
 }
 
-.blue .stat-icon{ background:#dbeafe; color:#2563eb; }
-.green .stat-icon{ background:#dcfce7; color:#16a34a; }
-.orange .stat-icon{ background:#fef3c7; color:#d97706; }
-.purple .stat-icon{ background:#ede9fe; color:#7c3aed; }
+.blue .stat-icon{ background:var(--icon-blue-bg); color:var(--icon-blue-color); }
+.green .stat-icon{ background:var(--icon-green-bg); color:var(--icon-green-color); }
+.orange .stat-icon{ background:var(--icon-orange-bg); color:var(--icon-orange-color); }
+.purple .stat-icon{ background:var(--icon-purple-bg); color:var(--icon-purple-color); }
 
 .stat-card h3{
     margin:0;
-    color:#64748b;
+    color:var(--text-muted);
     font-size:15px;
     font-weight:500;
 }
@@ -88,7 +88,7 @@
 .stat-card h2{
     margin-top:8px;
     margin-bottom:0;
-    color:#111827;
+    color:var(--text-primary);
     font-size:32px;
     font-weight:700;
 }
@@ -96,15 +96,15 @@
 /* Monthly user growth */
 .growth-card{
     margin-top:30px;
-    background:white;
+    background:var(--bg-surface);
     padding:28px;
     border-radius:18px;
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border-color);
 }
 
 .growth-card h2{
     margin-bottom:25px;
-    color:#111827;
+    color:var(--text-primary);
 }
 
 .growth-list{
@@ -122,27 +122,28 @@
 
 .growth-row span{
     width:100px;
-    color:#64748b;
+    color:var(--text-muted);
 }
 
 .growth-progress{
     flex:1;
     min-width:80px;
     height:10px;
-    background:#e5e7eb;
+    background:var(--border-color);
     border-radius:20px;
     overflow:hidden;
 }
 
 .growth-fill{
     height:100%;
-    background:#2563eb;
+    background:var(--color-primary);
     border-radius:20px;
     transition:width .3s ease;
 }
 
 .growth-row strong{
     width:40px;
+    color:var(--text-primary);
 }
 
 /* Bottom section: activity + quick actions */
@@ -155,8 +156,8 @@
 
 .activity-card,
 .quick-card{
-    background:#ffffff;
-    border:1px solid #e5e7eb;
+    background:var(--bg-surface);
+    border:1px solid var(--border-color);
     border-radius:18px;
     padding:25px;
     box-shadow:0 8px 20px rgba(0,0,0,.05);
@@ -166,7 +167,7 @@
 .quick-card h2{
     margin:0 0 20px;
     font-size:22px;
-    color:#111827;
+    color:var(--text-primary);
     font-weight:600;
 }
 
@@ -178,7 +179,7 @@
     align-items:center;
     padding:15px 18px;
     margin-bottom:12px;
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border-color);
     border-radius:12px;
     transition:.3s ease;
     flex-wrap:wrap;
@@ -186,7 +187,7 @@
 }
 
 .activity-row:hover{
-    background:#f8fafc;
+    background:var(--bg-surface-hover);
 }
 
 .activity-main{
@@ -199,20 +200,20 @@
     margin:0;
     font-size:16px;
     font-weight:600;
-    color:#1f2937;
+    color:var(--text-primary);
 }
 
 .activity-time{
     font-size:13px;
-    color:#94a3b8;
+    color:var(--text-faint);
 }
 
 .activity-delete-btn{
     display:flex;
     align-items:center;
     gap:4px;
-    background:#e74c3c;
-    color:white;
+    background:var(--color-danger);
+    color:var(--text-on-color);
     border:none;
     padding:4px 10px;
     border-radius:4px;
@@ -221,7 +222,7 @@
 }
 
 .activity-delete-btn:hover{
-    background:#c0392b;
+    background:var(--color-danger-hover);
 }
 
 /* Quick actions */
@@ -234,8 +235,8 @@
     margin-bottom:15px;
     border:none;
     border-radius:12px;
-    background:#2563eb;
-    color:#ffffff;
+    background:var(--color-primary);
+    color:var(--text-on-color);
     font-size:15px;
     font-weight:500;
     cursor:pointer;
@@ -247,7 +248,7 @@
 }
 
 .quick-card button:hover{
-    background:#1d4ed8;
+    background:var(--color-primary-hover);
     transform:translateY(-2px);
 }
 

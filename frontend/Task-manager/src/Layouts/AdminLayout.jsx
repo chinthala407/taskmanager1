@@ -3,12 +3,14 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import AdminNavbar from "../components/admin/AdminNavbar";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import { useTheme } from "../context/ThemeContext";
 
 import "./AdminLayout.css";
 
 function AdminLayout() {
 
     const navigate = useNavigate();
+    const { theme } = useTheme();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -27,7 +29,7 @@ function AdminLayout() {
 
     return (
 
-        <div className="admin-layout">
+        <div className="admin-layout" data-theme={theme}>
 
             <AdminNavbar
                 onToggleSidebar={() => setSidebarOpen((open) => !open)}

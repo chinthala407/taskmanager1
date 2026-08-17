@@ -240,9 +240,9 @@ function UserNotifications() {
 
         return (
 
-            <div className="notifications-page">
+            <div className="user-notifications-page">
 
-                <div className="notifications-card">
+                <div className="user-notifications-card">
 
                     <h2>
                         Notifications
@@ -268,10 +268,10 @@ function UserNotifications() {
 
     return (
 
-        <div className="notifications-page">
+        <div className="user-notifications-page">
 
 
-            <div className="notifications-card">
+            <div className="user-notifications-card">
 
 
                 <h2>
@@ -307,7 +307,7 @@ function UserNotifications() {
                                     key={notification.id}
 
                                     className={
-                                        `notification-item ${
+                                        `user-notification-item ${
                                             notification.is_read
                                                 ? ""
                                                 : "unread"

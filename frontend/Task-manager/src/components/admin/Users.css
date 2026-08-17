@@ -6,7 +6,7 @@
     width: 100%;
     max-width: 100%;
 
-    background: #ffffff;
+    background: var(--bg-surface);
 
     padding: 30px;
 
@@ -66,7 +66,7 @@
 
     margin-bottom: 20px;
 
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-color-strong);
 
     border-radius: 8px;
 
@@ -78,7 +78,7 @@
 }
 
 .search-box:focus {
-    border-color: #2563eb;
+    border-color: var(--color-primary);
 }
 
 
@@ -106,7 +106,7 @@
 
     table-layout: fixed !important;
 
-    background: #ffffff;
+    background: var(--bg-surface);
 
     display: table !important;
 }
@@ -139,9 +139,9 @@
 ================================= */
 
 .users-table th {
-    background: #2563eb;
+    background: var(--color-primary);
 
-    color: #ffffff;
+    color: var(--text-on-color);
 
     padding: 14px;
 
@@ -166,7 +166,7 @@
 .users-table td {
     padding: 14px;
 
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
 
     vertical-align: middle;
 
@@ -183,7 +183,7 @@
 ================================= */
 
 .users-table tbody tr:hover {
-    background: #f8fafc;
+    background: var(--bg-surface-hover);
 }
 
 
@@ -305,9 +305,9 @@
 
     border-radius: 20px;
 
-    background: #dcfce7;
+    background: var(--color-success-bg);
 
-    color: #15803d;
+    color: var(--color-success);
 
     font-size: 13px;
 
@@ -328,9 +328,9 @@
 
     border-radius: 20px;
 
-    background: #fee2e2;
+    background: var(--color-danger-bg);
 
-    color: #dc2626;
+    color: var(--color-danger-hover);
 
     font-size: 13px;
 
@@ -376,15 +376,15 @@
 
     font-weight: 600;
 
-    background: #2563eb;
+    background: var(--color-primary);
 
-    color: #ffffff;
+    color: var(--text-on-color);
 
     transition: 0.25s;
 }
 
 .status-btn:hover {
-    background: #1d4ed8;
+    background: var(--color-primary-hover);
 }
 
 
@@ -409,15 +409,15 @@
 
     font-weight: 600;
 
-    background: #ef4444;
+    background: var(--color-danger);
 
-    color: #ffffff;
+    color: var(--text-on-color);
 
     transition: 0.25s;
 }
 
 .delete-user-btn:hover {
-    background: #dc2626;
+    background: var(--color-danger-hover);
 }
 
 
@@ -430,7 +430,7 @@
 
     padding: 30px !important;
 
-    color: #777;
+    color: var(--text-muted);
 
     font-size: 14px;
 }
@@ -608,7 +608,7 @@
 
     margin-bottom: 20px;
 
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-color-strong);
 
     border-radius: 8px;
 
@@ -618,11 +618,11 @@
 
     box-sizing: border-box;
 
-    background: #ffffff;
+    background: var(--bg-surface);
 }
 
 .search-box:focus {
-    border-color: #2563eb;
+    border-color: var(--color-primary);
 }
 
 

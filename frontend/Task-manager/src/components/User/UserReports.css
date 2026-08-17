@@ -4,13 +4,13 @@
 
 .user-reports-page {
     padding: 25px;
-    background: #f8fafc;
+    background: var(--bg-body);
     min-height: 100vh;
 }
 
 .user-reports-page h2 {
     font-size: 28px;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 25px;
 }
 
@@ -26,27 +26,27 @@
     margin-bottom: 30px;
 }
 
-.report-card {
-    background: white;
+.user-report-card {
+    background: var(--bg-surface);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     text-align: center;
 }
 
-.report-card h3 {
+.user-report-card h3 {
     margin: 0 0 8px 0;
     font-size: 13px;
     font-weight: 700;
-    color: #64748b;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
-.report-card h1 {
+.user-report-card h1 {
     margin: 0;
     font-size: 32px;
-    color: #1e293b;
+    color: var(--text-primary);
     font-weight: 800;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .chart-card {
-    background: white;
+    background: var(--bg-surface);
     border-radius: 18px;
     padding: 20px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
@@ -74,7 +74,7 @@
 .chart-card h3 {
     margin: 0 0 15px 0;
     font-size: 16px;
-    color: #1e293b;
+    color: var(--text-primary);
 }
 
 .large-chart {
@@ -130,11 +130,11 @@
         gap: 12px;
     }
 
-    .report-card {
+    .user-report-card {
         padding: 16px;
     }
 
-    .report-card h1 {
+    .user-report-card h1 {
         font-size: 24px;
     }
 

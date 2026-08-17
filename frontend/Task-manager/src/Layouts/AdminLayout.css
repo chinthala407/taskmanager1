@@ -15,7 +15,7 @@ body,
     width:100%;
     min-height:100vh;
 
-    background:#f5f7fb;
+    background:var(--bg-body);
 
     font-family:Inter,sans-serif;
 
@@ -34,7 +34,7 @@ body,
 
     min-height:100vh;
 
-    background:#f5f7fb;
+    background:var(--bg-body);
 
 }
 
@@ -53,7 +53,7 @@ body,
 
     min-height:calc(100vh - 72px);
 
-    background:#f5f7fb;
+    background:var(--bg-body);
 
     overflow-y:auto;
 
@@ -77,11 +77,11 @@ body,
 
 .card{
 
-    background:white;
+    background:var(--bg-surface);
 
     border-radius:18px;
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border-color);
 
     box-shadow:0 8px 20px rgba(15,23,42,.05);
 
@@ -101,14 +101,14 @@ body,
 
 .admin-main::-webkit-scrollbar-track{
 
-    background:#f1f5f9;
+    background:var(--bg-surface-hover);
 
 }
 
 
 .admin-main::-webkit-scrollbar-thumb{
 
-    background:#cbd5e1;
+    background:var(--scrollbar-thumb);
 
     border-radius:20px;
 

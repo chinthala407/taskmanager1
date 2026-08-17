@@ -4,7 +4,7 @@ import heroImage from "../../assets/task-hero.png";
 
 function Hero() {
   return (
-    <section className="hero" id="hero">
+    <section className="hero" id="home">
       <div className="hero-content">
         <h1>Organize Your Work, Achieve More</h1>
 

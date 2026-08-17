@@ -1,8 +1,8 @@
-.notifications-page {
+.user-notifications-page {
 
     height: calc(100vh - 70px);
 
-    background: #f8fafc;
+    background: var(--bg-body);
 
     padding: 0px 30px 30px;
 
@@ -14,11 +14,11 @@
 
 
 
-.notifications-card {
+.user-notifications-card {
 
     width: 100%;
 
-    background: white;
+    background: var(--bg-surface);
 
     padding: 30px;
 
@@ -32,23 +32,28 @@
 
 
 
-.notifications-card h2 {
+.user-notifications-card h2 {
 
     margin-top: 0;
 
     margin-bottom: 25px;
 
-    color: #1e293b;
+    color: var(--text-primary);
 
     font-size: 26px;
 
 }
 
 
+.user-notifications-card .no-notifications {
+
+    color: var(--text-muted);
+
+}
 
 
 
-.notification-item {
+.user-notification-item {
 
     display: flex;
 
@@ -60,9 +65,9 @@
 
     margin-bottom: 12px;
 
-    background: #f8fafc;
+    background: var(--bg-surface-hover);
 
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
 
     border-radius: 12px;
 
@@ -74,7 +79,7 @@
 
 
 
-.notification-item:hover {
+.user-notification-item:hover {
 
     transform: translateY(-2px);
 
@@ -84,11 +89,11 @@
 
 
 
-.notification-item p {
+.user-notification-item p {
 
     margin: 0;
 
-    color: #334155;
+    color: var(--text-secondary);
 
     font-size: 16px;
 
@@ -98,9 +103,9 @@
 
 
 
-.notification-item span {
+.user-notification-item span {
 
-    color: #64748b;
+    color: var(--text-muted);
 
     font-size: 14px;
 
@@ -112,11 +117,11 @@
 
 /* Unread notification style */
 
-.notification-item.unread {
+.user-notification-item.unread {
 
-    background: #eff6ff;
+    background: var(--color-primary-bg);
 
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid var(--color-primary);
 
 }
 
@@ -126,7 +131,7 @@
 
 /* Read notification style */
 
-.notification-item.read {
+.user-notification-item.read {
 
     opacity: 0.75;
 
@@ -141,7 +146,7 @@
 @media(max-width:768px){
 
 
-    .notifications-page {
+    .user-notifications-page {
 
         padding: 20px;
 
@@ -149,7 +154,7 @@
 
 
 
-    .notifications-card {
+    .user-notifications-card {
 
         padding:20px;
 
@@ -157,7 +162,7 @@
 
 
 
-    .notification-item {
+    .user-notification-item {
 
         flex-direction: column;
 

@@ -12,7 +12,7 @@
 
     padding:0 35px;
 
-    background:white;
+    background:var(--bg-surface);
     box-shadow:0 4px 15px rgba(0,0,0,0.08);
 
     z-index:1100;
@@ -31,7 +31,7 @@
     border:none;
     cursor:pointer;
     padding:8px;
-    color:#2563eb;
+    color:var(--color-primary);
     font-size:22px;
     line-height:1;
 }
@@ -55,8 +55,8 @@
     font-weight:700;
 }
 
-.task-text{ color:#111827; }
-.manager-text{ color:#2563eb; }
+.task-text{ color:var(--text-primary); }
+.manager-text{ color:var(--color-primary); }
 
 /* Right side: admin details + logout, side by side */
 .navbar-right{
@@ -72,18 +72,18 @@
 .profile h4{
     margin:0;
     font-size:15px;
-    color:#111827;
+    color:var(--text-primary);
 }
 
 .profile p{
     margin:2px 0 0;
     font-size:13px;
-    color:#64748b;
+    color:var(--text-muted);
 }
 
 .logout-btn{
-    background:#2563eb;
-    color:#fff;
+    background:var(--color-primary);
+    color:var(--text-on-color);
     border:none;
     padding:10px 22px;
     border-radius:8px;
@@ -94,7 +94,7 @@
 }
 
 .logout-btn:hover{
-    background:#1d4ed8;
+    background:var(--color-primary-hover);
 }
 
 /* Mobile / small tablet, <=768px */
@@ -152,7 +152,7 @@
     border:none;
     cursor:pointer;
     padding:8px;
-    color:#2563eb;
+    color:var(--color-primary);
     font-size:18px;
     line-height:1;
 }
@@ -182,8 +182,8 @@
         left:0;
         right:0;
         padding:12px 15px;
-        background:white;
-        border-bottom:1px solid #e5e7eb;
+        background:var(--bg-surface);
+        border-bottom:1px solid var(--border-color);
         box-shadow:0 4px 10px rgba(0,0,0,0.06);
         z-index:1050;
     }
@@ -191,14 +191,14 @@
     .mobile-search-bar input{
         width:100%;
         padding:10px 14px;
-        border:1px solid #e5e7eb;
+        border:1px solid var(--border-color);
         border-radius:8px;
         font-size:14px;
         outline:none;
     }
 
     .mobile-search-bar input:focus{
-        border-color:#2563eb;
+        border-color:var(--color-primary);
     }
 
 }

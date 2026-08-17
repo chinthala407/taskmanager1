@@ -13,7 +13,38 @@
 .register-container{
     display:flex;
     min-height:100vh;
-    background:#f8fafc;
+    background:var(--bg-body);
+}
+
+/* ========================= */
+/* Back to Home Button */
+.register-back-home-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:24px;
+
+    background:none;
+    border:none;
+
+    padding:0;
+
+    font-size:14px;
+    font-weight:500;
+    color:var(--text-secondary);
+
+    cursor:pointer;
+
+    transition:color .2s ease;
+}
+
+.register-back-home-btn:hover{
+    color:var(--color-primary);
+    text-decoration:underline;
+}
+
+.register-back-home-btn:active{
+    opacity:.7;
 }
 
 /* ========================= */
@@ -23,12 +54,12 @@
 .left-panel h2,
 .left-panel p,
 .left-panel div{
-    color:#ffffff !important;
+    color:var(--text-on-color) !important;
 }
 .left-panel{
     flex:1;
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-    color:white;
+    background:linear-gradient(135deg,var(--color-primary),var(--color-primary-hover));
+    color:var(--text-on-color);
 
     display:flex;
     flex-direction:column;
@@ -61,7 +92,7 @@
 }
 .register-features {
     margin-top: 20px;
-    background-color: #1d4ed8;
+    background-color: var(--color-primary-hover);
 }
 
 .register-features div {
@@ -70,10 +101,13 @@
     gap: 10px;
 }
 
-.register-features div span {
+.register-features div .feature-check-icon {
     margin-right: 10px;
-    font-size: 20px;
+    font-size: 18px;
+    color: var(--text-on-color);
+    flex-shrink: 0;
 }
+
 /*======================== */
 /* Right Side */
 /* ========================= */
@@ -88,11 +122,11 @@
 
 /* Card */
 
-.login-card{
+.register-card{
     width:100%;
     max-width:470px;
 
-    background:white;
+    background:var(--bg-surface);
 
     padding:45px;
 
@@ -101,37 +135,40 @@
     box-shadow:0 20px 50px rgba(0,0,0,.12);
 }
 
-.login-card h1{
-    color:#111827;
+.register-card h1{
+    color:var(--text-primary);
     margin-bottom:10px;
     font-size:34px;
 }
 
-.subtitle{
-    color:#6b7280;
+.register-subtitle{
+    color:var(--text-muted);
     margin-bottom:30px;
     line-height:1.6;
 }
 
 /* Inputs */
 
-.login-card input{
+.register-card input{
     width:100%;
     padding:16px;
     margin-bottom:18px;
 
-    border:1px solid #d1d5db;
+    border:1px solid var(--border-color-strong);
     border-radius:10px;
 
     font-size:16px;
 
+    background:var(--bg-surface);
+    color:var(--text-primary);
+
     transition:.3s;
 }
 
-.login-card input:focus{
+.register-card input:focus{
     outline:none;
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+    border-color:var(--color-primary);
+    box-shadow:0 0 0 3px var(--color-primary-ring);
 }
 
 /* Button */
@@ -140,8 +177,8 @@
     width:100%;
     padding:16px;
 
-    background:#2563eb;
-    color:white;
+    background:var(--color-primary);
+    color:var(--text-on-color);
 
     border:none;
     border-radius:10px;
@@ -155,57 +192,57 @@
 }
 
 .register-btn:hover{
-    background:#1d4ed8;
+    background:var(--color-primary-hover);
     transform:translateY(-2px);
 }
 
 /* Security */
 
-.security{
+.register-security{
     text-align:center;
     margin-top:18px;
-    color:#6b7280;
+    color:var(--text-muted);
     font-size:14px;
 }
 
 /* Success/Error Message */
 
-.message{
+.register-message{
     text-align:center;
     margin-top:18px;
-    color:#16a34a;
+    color:var(--color-success);
     font-weight:600;
 }
 
 /* Login Link */
 
-.login-link{
+.register-login-link{
     text-align:center;
     margin-top:25px;
-    color:#4b5563;
+    color:var(--text-secondary);
 }
 
-.login-link a{
-    color:#2563eb;
+.register-login-link a{
+    color:var(--color-primary);
     text-decoration:none;
     font-weight:600;
     margin-left:5px;
 }
 
-.login-link a:hover{
+.register-login-link a:hover{
     text-decoration:underline;
 }
 
 /* Google Button */
 
-.google-btn{
+.register-google-btn{
     width:100%;
     padding:16px;
 
-    background:white;
-    color:aliceblue;
+    background:var(--bg-surface);
+    color:var(--text-primary);
 
-    border:none;
+    border:1px solid var(--border-color-strong);
     border-radius:10px;
 
     font-size:17px;
@@ -216,8 +253,8 @@
     transition:.3s;
 }
 
-.google-btn:hover{
-    background:#7393e8;
+.register-google-btn:hover{
+    background:var(--bg-surface-hover);
     transform:translateY(-2px);
 }
 
@@ -253,7 +290,7 @@
     width:70%;
 }
 
-.login-card{
+.register-card{
 
     max-width:100%;
 }
@@ -272,18 +309,19 @@
     font-size:16px;
 }
 
-.login-card{
+.register-card{
 
     padding:30px;
 }
 
-.login-card h1{
+.register-card h1{
 
     font-size:28px;
 }
 
+.register-back-home-btn{
+    margin-bottom:18px;
+    font-size:13px;
 }
 
-.left-panel * {
-    color: #ffffff !important;
 }

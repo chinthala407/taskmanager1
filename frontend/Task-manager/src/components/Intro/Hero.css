@@ -8,7 +8,7 @@
   gap: 30px;
   padding: 40px 8%;
   min-height: 70vh;
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
 }
 
 .hero-content {
@@ -18,14 +18,14 @@
 
 .hero-content h1 {
   font-size: 55px;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 20px;
   line-height: 1.2;
 }
 
 .hero-content p {
   font-size: 20px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.8;
   max-width: 600px;
   margin-bottom: 35px;
@@ -47,8 +47,8 @@
 }
 
 .get-started-btn {
-  background: #2563eb;
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-on-color);
 }
 
 .get-started-btn:hover {
@@ -58,8 +58,8 @@
 }
 
 .hero-login-btn {
-  background: #16a34a;
-  color: white;
+  background: var(--color-success);
+  color: var(--text-on-color);
 }
 
 .hero-login-btn:hover {

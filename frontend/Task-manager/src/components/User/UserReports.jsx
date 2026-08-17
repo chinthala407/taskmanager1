@@ -145,22 +145,22 @@ function UserReports() {
 
             {/* Statistics */}
             <div className="report-stats">
-                <div className="report-card">
+                <div className="user-report-card">
                     <h3>Total Tasks</h3>
                     <h1>{totalTasks}</h1>
                 </div>
 
-                <div className="report-card">
+                <div className="user-report-card">
                     <h3>Completed</h3>
                     <h1>{completed}</h1>
                 </div>
 
-                <div className="report-card">
+                <div className="user-report-card">
                     <h3>Pending</h3>
                     <h1>{pending}</h1>
                 </div>
 
-                <div className="report-card">
+                <div className="user-report-card">
                     <h3>Progress</h3>
                     <h1>{progress}</h1>
                 </div>

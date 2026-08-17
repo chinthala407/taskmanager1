@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 import taskLogo from "../../assets/task-check-icon.png";
+import { useTheme } from "../../context/ThemeContext";
+import { FaSun, FaMoon } from "react-icons/fa";
 function Navbar() {
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const { theme, toggleTheme } = useTheme();
 
     const closeMenu = () => {
         setMenuOpen(false);
@@ -30,18 +33,32 @@ function Navbar() {
             </div>
 
 
-            {/* Hamburger */}
-            <button
-                className="hamburger"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle navigation menu"
-            >
+            {/* Mobile-only controls: theme toggle + hamburger, always visible on mobile */}
+            <div className="mobile-controls">
 
-                <span></span>
-                <span></span>
-                <span></span>
+                <button
+                    className="theme-toggle-btn theme-toggle-btn--mobile"
+                    onClick={toggleTheme}
+                    aria-label="Toggle dark mode"
+                    title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                >
+                    {theme === "dark" ? <FaSun /> : <FaMoon />}
+                </button>
 
-            </button>
+                {/* Hamburger */}
+                <button
+                    className="hamburger"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle navigation menu"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+            </div>
 
 
             {/* Navigation */}
@@ -81,6 +98,15 @@ function Navbar() {
 
 
                 <div className="nav-buttons">
+
+                    <button
+                        className="theme-toggle-btn theme-toggle-btn--desktop"
+                        onClick={toggleTheme}
+                        aria-label="Toggle dark mode"
+                        title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                    >
+                        {theme === "dark" ? <FaSun /> : <FaMoon />}
+                    </button>
 
                     <Link
                         to="/login"

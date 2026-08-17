@@ -2,12 +2,12 @@
   width: 100%;
   box-sizing: border-box;
   padding: 4rem 1.5rem;
-  background: linear-gradient(135deg, #6c5ce7, #8e6ff7);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  overflow: hidden; /* prevents any child from causing horizontal scroll/clipping */
+  overflow: hidden;
 }
 
 .cta-content {
@@ -18,7 +18,7 @@
 }
 
 .cta-content h2 {
-  color: #fff;
+  color: var(--text-on-color);
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -34,8 +34,8 @@
 
 .cta-btn {
   display: inline-block;
-  background: #fff;
-  color: #6c5ce7;
+  background: var(--bg-surface);
+  color: var(--color-primary);
   font-size: 1rem;
   font-weight: 600;
   padding: 0.9rem 2.2rem;

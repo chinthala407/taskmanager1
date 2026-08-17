@@ -1,5 +1,4 @@
-/* Sidebar container — stays full width on all desktop/tablet sizes,
-   only becomes an off-canvas drawer on real mobile widths */
+
 .admin-sidebar{
     position:fixed;
     top:72px;
@@ -8,8 +7,8 @@
     width:260px;
     height:calc(100vh - 72px);
 
-    background:#ADD8E6;
-    border-right:1px solid #e5e7eb;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--border-color);
 
     display:flex;
     flex-direction:column;
@@ -42,7 +41,7 @@
     padding:0 16px;
     border-radius:12px;
     text-decoration:none;
-    color:#475569;
+    color:var(--text-secondary);
     font-size:15px;
     font-weight:500;
     transition:all .25s ease;
@@ -50,14 +49,14 @@
 }
 
 .menu-item:hover{
-    background:#f1f5f9;
-    color:#2563eb;
+    background:var(--bg-surface-hover);
+    color:var(--color-primary);
 }
 
 /* react-router-dom NavLink adds this class automatically on the active route */
 .menu-item.active{
-    background:#eff6ff;
-    color:#2563eb;
+    background:var(--color-primary-bg);
+    color:var(--color-primary);
     font-weight:600;
 }
 
@@ -72,8 +71,8 @@
     min-width:20px;
     height:20px;
     padding:0 6px;
-    background:#ef4444;
-    color:#fff;
+    background:var(--color-danger);
+    color:var(--text-on-color);
     border-radius:50px;
     display:flex;
     align-items:center;
@@ -82,7 +81,7 @@
     font-weight:700;
     line-height:1;
     box-sizing:border-box;
-    border:2px solid white;
+    border:2px solid var(--bg-surface);
 }
 
 /* Sidebar scrollbar styling */
@@ -91,12 +90,12 @@
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb{
-    background:#cbd5e1;
+    background:var(--scrollbar-thumb);
     border-radius:10px;
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb:hover{
-    background:#94a3b8;
+    background:var(--scrollbar-thumb-hover);
 }
 
 /* Logout button inside the sidebar — desktop keeps logout in the navbar instead */
@@ -123,8 +122,8 @@
         padding:12px 16px;
         border:none;
         border-radius:12px;
-        background:#e74c3c;
-        color:#fff;
+        background:var(--color-danger);
+        color:var(--text-on-color);
         font-size:15px;
         font-weight:600;
         cursor:pointer;
@@ -132,7 +131,7 @@
     }
 
     .sidebar-logout-btn:hover{
-        background:#c0392b;
+        background:var(--color-danger-hover);
     }
 }
 
