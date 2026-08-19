@@ -19,14 +19,15 @@
 
 .mytasks-header h2 {
     margin: 0;
+    color: var(--text-primary);
 }
 
 .create-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #4c6fff;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--text-on-color);
     border: none;
     border-radius: 8px;
     padding: 10px 16px;
@@ -35,7 +36,7 @@
 }
 
 .create-btn:hover {
-    background: #3d5be0;
+    background: var(--color-primary-hover);
 }
 
 /* ================= Two column layout ================= */
@@ -57,7 +58,7 @@
 
 .mytasks-side {
     flex: 0 0 260px;
-    background: #fff;
+    background: var(--bg-surface);
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
@@ -68,6 +69,7 @@
 .mytasks-side h3 {
     margin: 0 0 12px 0;
     font-size: 15px;
+    color: var(--text-primary);
 }
 
 /* ================= Overview status cards ================= */
@@ -83,8 +85,8 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    border: 1px solid #eee;
-    background: #fafafa;
+    border: 1px solid var(--border-color-light);
+    background: var(--bg-surface-alt);
     border-radius: 10px;
     padding: 12px 14px;
     cursor: pointer;
@@ -98,13 +100,13 @@
 }
 
 .status-card.active {
-    border-color: #4c6fff;
-    box-shadow: inset 0 0 0 1px #4c6fff;
+    border-color: var(--color-primary);
+    box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 
 .status-label {
     font-size: 13px;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .status-count {
@@ -112,10 +114,10 @@
     font-weight: 700;
 }
 
-.status-card.total .status-count { color: #4c6fff; }
-.status-card.overdue .status-count { color: #e5484d; }
-.status-card.due-today .status-count { color: #d99a1b; }
-.status-card.completed .status-count { color: #2fa64f; }
+.status-card.total .status-count { color: var(--color-primary); }
+.status-card.overdue .status-count { color: var(--color-danger); }
+.status-card.due-today .status-count { color: var(--color-warning); }
+.status-card.completed .status-count { color: var(--color-success); }
 
 /* ================= Toolbar ================= */
 
@@ -132,16 +134,20 @@
     max-width: 320px;
     padding: 9px 12px;
     border-radius: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color-strong);
     font-size: 14px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
 }
 
 .task-toolbar select {
     flex: 0 0 auto;
     padding: 9px 12px;
     border-radius: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color-strong);
     font-size: 14px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
 }
 
 /* ================= Table ================= */
@@ -151,7 +157,7 @@
     -webkit-overflow-scrolling: touch;
     width: 100%;
     max-width: 100%;
-    background: #fff;
+    background: var(--bg-surface);
     border-radius: 12px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
@@ -166,18 +172,19 @@
 .task-table td {
     padding: 12px 14px;
     text-align: left;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--border-color-light);
     font-size: 14px;
+    color: var(--text-primary);
 }
 
 .task-table th {
-    background: #f8f9fb;
+    background: var(--bg-surface-alt);
     font-weight: 600;
 }
 
 .no-tasks-row {
     text-align: center !important;
-    color: #888;
+    color: var(--text-muted);
     padding: 24px 0 !important;
 }
 
@@ -188,16 +195,16 @@
     font-size: 10px;
     padding: 2px 6px;
     border-radius: 10px;
-    color: #fff;
+    color: var(--text-on-color);
     vertical-align: middle;
 }
 
-.badge-overdue { background: #e5484d; }
-.badge-due-today { background: #d99a1b; }
+.badge-overdue { background: var(--color-danger); }
+.badge-due-today { background: var(--color-warning); }
 
-.high { color: #e5484d; font-weight: 600; }
-.medium { color: #d99a1b; font-weight: 600; }
-.low { color: #2fa64f; font-weight: 600; }
+.high { color: var(--color-danger); font-weight: 600; }
+.medium { color: var(--color-warning); font-weight: 600; }
+.low { color: var(--color-success); font-weight: 600; }
 
 .action-btn {
     border: none;
@@ -209,12 +216,12 @@
     font-size: 14px;
 }
 
-.action-btn.edit { color: #4c6fff; }
-.action-btn.delete { color: #e5484d; }
-.action-btn.complete { color: #2fa64f; }
+.action-btn.edit { color: var(--color-primary); }
+.action-btn.delete { color: var(--color-danger); }
+.action-btn.complete { color: var(--color-success); }
 
 .action-btn:hover {
-    background: #f0f3ff;
+    background: var(--color-primary-bg);
 }
 
 /* ================= Mobile Responsive ================= */

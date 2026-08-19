@@ -63,7 +63,7 @@ function EditTaskModal({
 
     return (
 
-        <div className="modal-overlay">
+        <div className="edittask-modal-overlay">
 
             <div className="edit-modal">
 
@@ -110,7 +110,7 @@ function EditTaskModal({
                     onChange={(e) => setDueDate(e.target.value)}
                 />
 
-                <div className="modal-buttons">
+                <div className="edittask-modal-buttons">
 
                     <button
                         className="update-btn"
@@ -120,7 +120,7 @@ function EditTaskModal({
                     </button>
 
                     <button
-                        className="cancel-btn"
+                        className="edittask-cancel-btn"
                         onClick={onClose}
                     >
                         Cancel

@@ -7,11 +7,6 @@
     max-width: 100%;
     padding: 25px;
     box-sizing: border-box;
-
-    /*
-       Prevent the whole page from becoming
-       horizontally scrollable.
-    */
     overflow-x: hidden;
 }
 
@@ -33,15 +28,10 @@
 .task-box {
     flex: 1;
     min-width: 0;
-
     padding: 20px;
-
     border-radius: 10px;
-
     background: var(--bg-surface);
-
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
     box-sizing: border-box;
 }
 
@@ -69,19 +59,13 @@
 .task-search {
     width: 100%;
     max-width: 400px;
-
     padding: 10px 14px;
-
     margin-bottom: 15px;
-
     border: 1px solid var(--border-color-light);
     border-radius: 6px;
-
     background: var(--bg-surface);
     color: var(--text-primary);
-
     box-sizing: border-box;
-
     outline: none;
 }
 
@@ -97,23 +81,17 @@
 .filter-buttons {
     display: flex;
     gap: 10px;
-
     margin-bottom: 20px;
-
     flex-wrap: wrap;
 }
 
 .filter-buttons button {
     padding: 8px 16px;
-
     border: 1px solid var(--border-color-light);
     border-radius: 6px;
-
     background: var(--bg-surface);
     color: var(--text-secondary);
-
     cursor: pointer;
-
     white-space: nowrap;
 }
 
@@ -122,13 +100,9 @@
     color: var(--text-primary);
 }
 
-
-/* Active Filter */
-
 .filter-buttons button.active-filter {
     background: var(--color-primary-light);
     color: var(--text-on-color);
-
     border-color: var(--color-primary-light);
 }
 
@@ -137,35 +111,13 @@
    TABLE SCROLL CONTAINER
 ================================= */
 
-/*
-   THIS is the responsive part.
-
-   The screen can become 430px wide,
-   but this container can hold the
-   1000px table.
-
-   Therefore ONLY this container
-   scrolls horizontally.
-*/
-
 .tasks-table {
     width: 100%;
     max-width: 100%;
-
     overflow-x: auto;
     overflow-y: hidden;
-
     box-sizing: border-box;
-
-    /*
-       Smooth horizontal scrolling
-       on phones.
-    */
     -webkit-overflow-scrolling: touch;
-
-    /*
-       Makes the scrollbar easier to use.
-    */
     scrollbar-width: thin;
 }
 
@@ -174,29 +126,13 @@
    TABLE
 ================================= */
 
-/*
-   IMPORTANT:
-
-   The table DOES NOT shrink on mobile.
-
-   It stays 1000px wide.
-*/
-
 .tasks-table table {
     width: 1000px !important;
     min-width: 1000px !important;
     max-width: none !important;
-
     table-layout: fixed !important;
-
     border-collapse: collapse;
-
     background: var(--bg-surface);
-
-    /*
-       Make sure another CSS file
-       cannot turn this into a block.
-    */
     display: table !important;
 }
 
@@ -229,19 +165,13 @@
 
 .tasks-table th {
     padding: 14px 12px;
-
     background: var(--color-primary-light) !important;
     color: var(--text-primary) !important;
-
     font-weight: 600;
-
     text-align: left;
     vertical-align: middle;
-
     border-bottom: 1px solid var(--border-color-light);
-
     white-space: nowrap;
-
     box-sizing: border-box;
 }
 
@@ -252,11 +182,8 @@
 
 .tasks-table td {
     padding: 14px 12px;
-
     border-bottom: 1px solid var(--border-color-light);
-
     vertical-align: middle;
-
     box-sizing: border-box;
 }
 
@@ -265,83 +192,44 @@
    FIXED COLUMN WIDTHS
 ================================= */
 
-/*
-   Total:
-
-   ID          60px
-   Title       170px
-   Description 300px
-   Status      120px
-   Created By  200px
-   Actions     150px
-
-   TOTAL = 1000px
-*/
-
-
-/* ID */
-
 .tasks-table th:nth-child(1),
 .tasks-table td:nth-child(1) {
     width: 60px !important;
     min-width: 60px !important;
 }
 
-
-/* TITLE */
-
 .tasks-table th:nth-child(2),
 .tasks-table td:nth-child(2) {
     width: 170px !important;
     min-width: 170px !important;
-
     word-break: break-word;
     overflow-wrap: anywhere;
 }
-
-
-/* DESCRIPTION */
 
 .tasks-table th:nth-child(3),
 .tasks-table td:nth-child(3) {
     width: 300px !important;
     min-width: 300px !important;
-
     white-space: normal;
-
     word-break: normal;
-
     overflow-wrap: break-word;
-
     line-height: 1.4;
 }
-
-
-/* STATUS */
 
 .tasks-table th:nth-child(4),
 .tasks-table td:nth-child(4) {
     width: 120px !important;
     min-width: 120px !important;
-
     white-space: nowrap;
 }
-
-
-/* CREATED BY */
 
 .tasks-table th:nth-child(5),
 .tasks-table td:nth-child(5) {
     width: 200px !important;
     min-width: 200px !important;
-
     word-break: break-word;
-
     overflow-wrap: anywhere;
 }
-
-
-/* ACTIONS */
 
 .tasks-table th:nth-child(6),
 .tasks-table td:nth-child(6) {
@@ -356,15 +244,10 @@
 
 .status {
     display: inline-block;
-
     padding: 6px 10px;
-
     border-radius: 6px;
-
     white-space: nowrap;
-
     text-align: center;
-
     font-size: 13px;
 }
 
@@ -385,17 +268,13 @@
 
 .tasks-table td:nth-child(5) strong {
     display: inline-block;
-
     margin-bottom: 3px;
 }
 
 .tasks-table td:nth-child(5) small {
     display: inline-block;
-
     max-width: 100%;
-
     word-break: break-word;
-
     overflow-wrap: anywhere;
 }
 
@@ -406,36 +285,23 @@
 
 .action-btns {
     display: flex;
-
     align-items: center;
-
     gap: 14px;
-
     white-space: nowrap;
 }
 
 .view-btn,
 .delete-btn {
     background: transparent;
-
     border: none;
-
     padding: 0;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     cursor: pointer;
-
     font-size: 18px;
-
     flex-shrink: 0;
 }
-
-
-/* View */
 
 .view-btn {
     color: var(--color-primary-light);
@@ -444,9 +310,6 @@
 .view-btn:hover {
     color: var(--color-primary-hover);
 }
-
-
-/* Delete */
 
 .delete-btn {
     color: var(--color-danger);
@@ -463,29 +326,27 @@
 
 .tasks-table td[colspan="6"] {
     text-align: center;
-
     padding: 30px;
-
     color: var(--text-muted);
 }
 
 
 /* =================================
    MODAL OVERLAY
+   Renamed to .admintasks-modal-overlay (instead of relying on
+   ".tasks-page .modal-overlay" specificity scoping) so this
+   can never collide with modal-overlay/task-modal/close-btn
+   defined in other components, regardless of load order or
+   any !important rules elsewhere.
 ================================= */
 
-.modal-overlay {
+.admintasks-modal-overlay {
     position: fixed;
-
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     background: rgba(0, 0, 0, 0.45);
-
     z-index: 999;
-
     box-sizing: border-box;
 }
 
@@ -494,46 +355,31 @@
    TASK MODAL
 ================================= */
 
-.task-modal {
+.admintasks-task-modal {
     position: fixed;
-
     top: 50%;
     left: 50%;
-
     transform: translate(-50%, -50%);
-
     width: 90%;
-
     max-width: 500px;
-
     max-height: 80vh;
-
     overflow-y: auto;
-
     padding: 25px;
-
     background: var(--bg-surface);
-
     border-radius: 10px;
-
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-
     z-index: 1000;
-
     box-sizing: border-box;
 }
 
-.task-modal h2 {
+.admintasks-task-modal h2 {
     margin-top: 0;
-
     margin-bottom: 20px;
 }
 
-.task-modal p {
+.admintasks-task-modal p {
     margin-bottom: 15px;
-
     line-height: 1.5;
-
     word-break: break-word;
 }
 
@@ -542,22 +388,17 @@
    CLOSE BUTTON
 ================================= */
 
-.close-btn {
+.admintasks-close-btn {
     padding: 9px 18px;
-
     border: none;
-
     border-radius: 6px;
-
     background: var(--text-primary);
-
     color: var(--text-on-color);
-
     cursor: pointer;
 }
 
-.close-btn:hover {
-    background: var(--text-primary);
+.admintasks-close-btn:hover {
+    background: var(--text-secondary);
 }
 
 
@@ -569,90 +410,53 @@
 
     .tasks-page {
         width: 100%;
-
         padding: 15px;
-
         box-sizing: border-box;
-
         overflow-x: hidden;
     }
 
-
     .tasks-page h1 {
         font-size: 24px;
-
         margin-bottom: 20px;
     }
 
-
-    /* Statistics */
-
     .task-stats {
         flex-direction: column;
-
         gap: 12px;
     }
-
 
     .task-box {
         width: 100%;
     }
 
-
-    /* Search */
-
     .task-search {
         width: 100%;
-
         max-width: 100%;
     }
-
-
-    /* Filters */
 
     .filter-buttons {
         display: flex;
-
         flex-wrap: wrap;
-
         gap: 8px;
     }
 
-
-    /*
-       TABLE REMAINS 1000PX.
-       DO NOT CHANGE THIS TO 100%.
-    */
-
     .tasks-table {
         width: 100%;
-
         max-width: 100%;
-
         overflow-x: auto;
-
         overflow-y: hidden;
-
         -webkit-overflow-scrolling: touch;
     }
 
-
     .tasks-table table {
         width: 1000px !important;
-
         min-width: 1000px !important;
-
         max-width: none !important;
     }
 
-
-    /* Modal */
-
-    .task-modal {
+    .admintasks-task-modal {
         width: calc(100% - 30px);
-
         max-height: 85vh;
-
         padding: 20px;
     }
 }
@@ -666,21 +470,14 @@
 
     .tasks-page {
         width: 100%;
-
         padding: 12px;
-
         overflow-x: hidden;
     }
 
-
     .tasks-page h1 {
         font-size: 21px;
-
         margin-bottom: 18px;
     }
-
-
-    /* Statistics */
 
     .task-box {
         padding: 16px;
@@ -694,51 +491,30 @@
         font-size: 22px;
     }
 
-
-    /* Filter buttons */
-
     .filter-buttons button {
         padding: 7px 13px;
-
         font-size: 13px;
     }
 
-
-    /*
-       KEEP TABLE AT 1000PX.
-       MOBILE SCREEN WILL SCROLL.
-    */
-
     .tasks-table {
         width: 100%;
-
         max-width: 100%;
-
         overflow-x: auto;
-
         overflow-y: hidden;
     }
 
-
     .tasks-table table {
         width: 1000px !important;
-
         min-width: 1000px !important;
-
         max-width: none !important;
     }
 
-
-    /* Modal */
-
-    .task-modal {
+    .admintasks-task-modal {
         width: calc(100% - 24px);
-
         padding: 18px;
     }
 
-
-    .task-modal h2 {
+    .admintasks-task-modal h2 {
         font-size: 20px;
     }
 }
@@ -760,7 +536,6 @@
 
     .filter-buttons button {
         padding: 6px 11px;
-
         font-size: 12px;
     }
 }

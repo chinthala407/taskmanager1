@@ -15,14 +15,11 @@ export function ThemeProvider({ children }) {
     return prefersDark ? "dark" : "light";
   });
 
-  // Just persist the choice. We deliberately do NOT touch
-  // document.documentElement here — the theme is applied by
-  // putting data-theme={theme} on individual layout wrappers
-  // (AdminLayout, UserLayout), so public pages like the landing
-  // page are never affected by this toggle.
-  useEffect(() => {
+ useEffect(() => {
     localStorage.setItem("admin-theme", theme);
-  }, [theme]);
+    document.documentElement.setAttribute("data-theme", theme);
+    console.log("Theme effect ran →", theme, "| html now has:", document.documentElement.getAttribute("data-theme"));
+}, [theme]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));

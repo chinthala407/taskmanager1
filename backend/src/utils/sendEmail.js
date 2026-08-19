@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require ("nodemailer");
 
 const sendEmail = async (to, subject, text) => {
   try {

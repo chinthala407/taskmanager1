@@ -1,34 +1,36 @@
 /* ==========================================================
    Design tokens (prefixed too, so they can't leak/collide)
+   — now mapped onto the global theme tokens so this page
+   matches the rest of the app and supports dark mode
    ========================================================== */
 
 .user-settings-page {
-    --us-ink: #1c2430;
-    --us-ink-soft: #5b6472;
-    --us-ink-faint: #99a1ac;
-    --us-line: #e4e7ec;
-    --us-line-strong: #d3d8e0;
+    --us-ink: var(--text-primary);
+    --us-ink-soft: var(--text-secondary);
+    --us-ink-faint: var(--text-faint);
+    --us-line: var(--border-color);
+    --us-line-strong: var(--border-color-strong);
 
-    --us-surface: #f5f6f8;
-    --us-card: #ffffff;
+    --us-surface: var(--bg-body);
+    --us-card: var(--bg-surface);
 
-    --us-accent: #2f6f5e;
-    --us-accent-hover: #255a4c;
-    --us-accent-soft: #e7f0ed;
+    --us-accent: var(--color-primary);
+    --us-accent-hover: var(--color-primary-hover);
+    --us-accent-soft: var(--color-primary-bg);
 
-    --us-danger: #b3492f;
-    --us-danger-hover: #973b25;
-    --us-danger-soft: #fbece6;
-    --us-danger-line: #f0c4b3;
+    --us-danger: var(--color-danger);
+    --us-danger-hover: var(--color-danger-hover);
+    --us-danger-soft: var(--color-danger-bg);
+    --us-danger-line: var(--color-danger-bg);
 
-    --us-success: #2f6f5e;
-    --us-success-soft: #e7f0ed;
+    --us-success: var(--color-success);
+    --us-success-soft: var(--color-success-bg);
 
     --us-radius-lg: 14px;
     --us-radius-sm: 7px;
 
-    --us-shadow-card: 0 1px 2px rgba(28, 36, 48, 0.05), 0 10px 28px rgba(28, 36, 48, 0.06);
-    --us-shadow-modal: 0 24px 70px rgba(18, 24, 32, 0.32);
+    --us-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 28px rgba(0, 0, 0, 0.10);
+    --us-shadow-modal: 0 24px 70px rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================
@@ -40,7 +42,7 @@
     width: 100%;
     background: var(--us-surface);
     background-image:
-        radial-gradient(circle at 1px 1px, rgba(28, 36, 48, 0.06) 1px, transparent 0);
+        radial-gradient(circle at 1px 1px, rgba(128, 128, 128, 0.12) 1px, transparent 0);
     background-size: 22px 22px;
     display: flex;
     justify-content: center;
@@ -188,19 +190,19 @@
 }
 
 .user-settings-page .secondary-btn:hover:not(:disabled) {
-    border-color: #b9c0cb;
-    background: #fafbfc;
+    border-color: var(--border-color-strong);
+    background: var(--bg-surface-hover);
 }
 
 .user-settings-page .save-settings-btn {
     background: var(--us-accent);
     color: #ffffff;
-    box-shadow: 0 1px 2px rgba(47, 111, 94, 0.2), 0 6px 16px rgba(47, 111, 94, 0.22);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 6px 16px rgba(0, 0, 0, 0.22);
 }
 
 .user-settings-page .save-settings-btn:hover:not(:disabled) {
     background: var(--us-accent-hover);
-    box-shadow: 0 1px 2px rgba(47, 111, 94, 0.24), 0 8px 20px rgba(47, 111, 94, 0.28);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24), 0 8px 20px rgba(0, 0, 0, 0.28);
     transform: translateY(-1px);
 }
 
@@ -254,7 +256,7 @@
 }
 
 .user-settings-page .danger-section .delete-btn:hover:not(:disabled) {
-    background: #f6ded5;
+    background: var(--color-danger-bg);
     border-color: var(--us-danger-line);
 }
 
@@ -262,12 +264,12 @@
 .user-settings-page .modal-actions .delete-btn {
     background: var(--us-danger);
     color: #ffffff;
-    box-shadow: 0 1px 2px rgba(179, 73, 47, 0.25), 0 6px 16px rgba(179, 73, 47, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .user-settings-page .modal-actions .delete-btn:hover:not(:disabled) {
     background: var(--us-danger-hover);
-    box-shadow: 0 1px 2px rgba(179, 73, 47, 0.3), 0 8px 22px rgba(179, 73, 47, 0.36);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.36);
     transform: translateY(-1px);
 }
 
@@ -290,7 +292,7 @@
 .user-settings-page .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(18, 24, 32, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     display: flex;
@@ -305,6 +307,7 @@
     width: 100%;
     max-width: 440px;
     background: var(--us-card);
+    border: 1px solid var(--us-line);
     border-radius: var(--us-radius-lg);
     box-shadow: var(--us-shadow-modal);
     padding: 30px 30px 26px;
@@ -390,7 +393,7 @@
 }
 
 .user-settings-page .settings-input input:hover {
-    border-color: #b9c0cb;
+    border-color: var(--border-color-strong);
 }
 
 .user-settings-page .settings-input input:focus {
@@ -441,7 +444,7 @@
 .user-settings-page .success-text {
     color: var(--us-success);
     background: var(--us-success-soft);
-    border: 1px solid #c3ddd5;
+    border: 1px solid var(--color-success-bg);
 }
 
 .user-settings-page .success-text::before {

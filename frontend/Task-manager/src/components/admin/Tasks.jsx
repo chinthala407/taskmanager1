@@ -369,12 +369,12 @@ function Tasks() {
             {selectedTask && (
 
                 <div
-                    className="modal-overlay"
+                    className="admintasks-modal-overlay"
                     onClick={() => setSelectedTask(null)}
                 >
 
                     <div
-                        className="task-modal"
+                        className="admintasks-task-modal"
                         onClick={(e) => e.stopPropagation()}
                     >
 
@@ -425,7 +425,7 @@ function Tasks() {
 
 
                         <button
-                            className="close-btn"
+                            className="admintasks-close-btn"
                             onClick={() => setSelectedTask(null)}
                         >
                             Close

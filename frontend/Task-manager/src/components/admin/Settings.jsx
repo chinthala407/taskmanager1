@@ -467,7 +467,7 @@ function Settings() {
             </div>
 
             <button
-                className="save-btn"
+                className="settings-save-btn"
                 onClick={saveSettings}
                 disabled={saving}
             >
@@ -487,7 +487,7 @@ function Settings() {
 
             {showPasswordModal && (
 
-                <div className="modal-overlay" onClick={closePasswordModal}>
+                <div className="settings-modal-overlay" onClick={closePasswordModal}>
 
                     <div className="modal-card" onClick={(e) => e.stopPropagation()}>
 
@@ -587,7 +587,7 @@ function Settings() {
                                 <button
                                     onClick={handleSendOtp}
                                     disabled={passwordLoading}
-                                    className="save-btn"
+                                    className="settings-save-btn"
                                 >
                                     {passwordLoading ? "Sending..." : "Send OTP"}
                                 </button>
@@ -597,7 +597,7 @@ function Settings() {
                                 <button
                                     onClick={handleVerifyAndChangePassword}
                                     disabled={passwordLoading}
-                                    className="save-btn"
+                                    className="settings-save-btn"
                                 >
                                     {passwordLoading ? "Changing..." : "Confirm"}
                                 </button>

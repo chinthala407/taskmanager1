@@ -125,8 +125,8 @@ function CompletedTasks() {
 
             {/* ================= Task Details Modal ================= */}
             {selectedTask && (
-                <div className="task-modal-overlay" onClick={() => setSelectedTask(null)}>
-                    <div className="task-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="completedtasks-modal-overlay" onClick={() => setSelectedTask(null)}>
+                    <div className="completedtasks-task-modal" onClick={(e) => e.stopPropagation()}>
 
                         <h2>Task Details</h2>
 
@@ -150,7 +150,7 @@ function CompletedTasks() {
                             <b>Completed Date:</b> {formatCompletedDate(selectedTask.updated_at)}
                         </p>
 
-                        <button className="close-btn" onClick={() => setSelectedTask(null)}>
+                        <button className="completedtasks-close-btn" onClick={() => setSelectedTask(null)}>
                             Close
                         </button>
 

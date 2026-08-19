@@ -235,8 +235,8 @@ function TaskCalendar() {
 
             {/* Day Details Popup */}
             {selectedDate && (
-                <div className="modal-overlay" onClick={() => setSelectedDate(null)}>
-                    <div className="task-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="calendar-modal-overlay" onClick={() => setSelectedDate(null)}>
+                    <div className="calendar-task-modal" onClick={(e) => e.stopPropagation()}>
                         <h2>
                             Tasks on {MONTH_NAMES[calendarMonth]} {selectedDate}, {calendarYear}
                         </h2>
@@ -253,7 +253,7 @@ function TaskCalendar() {
                             </div>
                         ))}
 
-                        <button className="close-btn" onClick={() => setSelectedDate(null)}>
+                        <button className="calendar-close-btn" onClick={() => setSelectedDate(null)}>
                             Close
                         </button>
                     </div>

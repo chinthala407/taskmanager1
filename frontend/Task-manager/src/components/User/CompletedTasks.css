@@ -4,13 +4,13 @@
 
 .completed-container {
     padding: 25px;
-    background: #f8fafc;
+    background: var(--bg-body);
     min-height: 100vh;
 }
 
 .completed-container h2 {
     font-size: 26px;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 20px;
 }
 
@@ -23,11 +23,12 @@
     width: 100%;
     box-sizing: border-box;
     padding: 14px 16px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color-strong);
     border-radius: 10px;
     font-size: 14px;
     margin-bottom: 25px;
-    background: white;
+    background: var(--bg-surface);
+    color: var(--text-primary);
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
@@ -36,8 +37,8 @@
 
 .search-input:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-ring);
 }
 
 
@@ -47,10 +48,10 @@
 
 .empty-state {
     text-align: center;
-    color: #94a3b8;
+    color: var(--text-faint);
     font-size: 14px;
     padding: 60px 20px;
-    background: white;
+    background: var(--bg-surface);
     border-radius: 16px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
@@ -67,7 +68,7 @@
 }
 
 .completed-card {
-    background: white;
+    background: var(--bg-surface);
     border-radius: 16px;
     padding: 20px 25px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
@@ -91,7 +92,7 @@
 .task-info h3 {
     margin: 0 0 6px 0;
     font-size: 17px;
-    color: #1e293b;
+    color: var(--text-primary);
     word-break: break-word;
     line-height: 1.3;
 }
@@ -99,14 +100,14 @@
 .task-info p {
     margin: 0 0 10px 0;
     font-size: 14px;
-    color: #334155;
+    color: var(--text-secondary);
     word-break: break-word;
     line-height: 1.4;
 }
 
 .completed-date {
     font-size: 13px;
-    color: #64748b;
+    color: var(--text-muted);
     font-weight: 600;
 }
 
@@ -126,18 +127,18 @@
 }
 
 .priority.high {
-    background: #fee2e2;
-    color: #dc2626;
+    background: var(--color-danger-bg);
+    color: var(--color-danger-hover);
 }
 
 .priority.medium {
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
 }
 
 .priority.low {
-    background: #dcfce7;
-    color: #16a34a;
+    background: var(--color-success-bg);
+    color: var(--color-success);
 }
 
 
@@ -156,7 +157,7 @@
    Task Details Modal
 ========================= */
 
-.task-modal-overlay {
+.completedtasks-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.5);
@@ -167,8 +168,10 @@
     z-index: 50;
 }
 
-.task-modal {
-    background: white;
+.completedtasks-task-modal {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 25px;
     width: 90%;
@@ -176,41 +179,41 @@
     max-height: 85vh;
     overflow-y: auto;
     box-sizing: border-box;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
-.task-modal h2 {
-    color: #1e293b;
+.completedtasks-task-modal h2 {
+    color: var(--text-primary);
     margin-bottom: 10px;
 }
 
-.task-modal h3 {
-    color: #1e293b;
+.completedtasks-task-modal h3 {
+    color: var(--text-primary);
     margin-bottom: 15px;
     word-break: break-word;
 }
 
-.task-modal p {
+.completedtasks-task-modal p {
     margin: 0 0 12px 0;
     font-size: 14px;
-    color: #334155;
+    color: var(--text-secondary);
     word-break: break-word;
 }
 
-.close-btn {
+.completedtasks-close-btn {
     margin-top: 10px;
     padding: 10px 18px;
     border: none;
     border-radius: 8px;
-    background: #e2e8f0;
-    color: #334155;
+    background: var(--bg-surface-alt);
+    color: var(--text-primary);
     font-weight: 600;
     cursor: pointer;
     width: 100%;
 }
 
-.close-btn:hover {
-    background: #cbd5e1;
+.completedtasks-close-btn:hover {
+    background: var(--bg-surface-hover);
 }
 
 
@@ -314,28 +317,28 @@
         border-radius: 12px;
     }
 
-    .task-modal {
+    .completedtasks-task-modal {
         padding: 18px;
         max-height: 80vh;
         border-radius: 12px;
     }
 
-    .task-modal h2 {
+    .completedtasks-task-modal h2 {
         font-size: 18px;
         margin-bottom: 6px;
     }
 
-    .task-modal h3 {
+    .completedtasks-task-modal h3 {
         font-size: 15px;
         margin-bottom: 10px;
     }
 
-    .task-modal p {
+    .completedtasks-task-modal p {
         font-size: 13px;
         margin-bottom: 8px;
     }
 
-    .close-btn {
+    .completedtasks-close-btn {
         padding: 9px 16px;
         font-size: 13px;
     }
@@ -356,7 +359,7 @@
         padding: 10px 12px;
     }
 
-    .task-modal {
+    .completedtasks-task-modal {
         padding: 14px;
     }
 }

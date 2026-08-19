@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import axios from "axios";
+import { FaTimes } from "react-icons/fa";
 import "./CreateTaskModal.css";
 
 function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
@@ -118,7 +118,7 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
     return (
 
         <div
-            className="modal-overlay"
+            className="createtask-modal-overlay"
             onClick={onClose}
         >
 
@@ -141,8 +141,9 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
                         type="button"
                         className="close-btn"
                         onClick={onClose}
+                        aria-label="Close"
                     >
-                        ✕
+                        <FaTimes />
                     </button>
 
                 </div>
@@ -252,11 +253,11 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
                     {/* Buttons */}
 
-                    <div className="modal-buttons">
+                    <div className="createtask-modal-buttons">
 
                         <button
                             type="button"
-                            className="cancel-btn"
+                            className="createtask-cancel-btn"
                             onClick={onClose}
                         >
                             Cancel
@@ -265,7 +266,7 @@ function CreateTaskModal({ isOpen, onClose, onTaskCreated }) {
 
                         <button
                             type="submit"
-                            className="save-btn"
+                            className="createtask-save-btn"
                         >
                             Create Task
                         </button>
