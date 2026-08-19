@@ -1,6 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
+
 const {
     deleteNotification
 } = require("../controllers/adminController");
@@ -36,7 +37,11 @@ const {
     updateSystemSettings,
 
     sendAdminChangePasswordOtp,
-    changeAdminPassword
+    changeAdminPassword,
+
+    getAllSupportTickets,
+    updateSupportTicket,
+    replySupportTicketAsAdmin
 
 } = require("../controllers/adminController");
 
@@ -71,10 +76,7 @@ router.delete("/users/:id", deleteUser);
 
 router.get("/tasks", getAllTasks);
 
-// NOTE: this must come BEFORE "/tasks/:id" routes.
-// Express matches routes top-to-bottom, and "/tasks/:id" would
-// otherwise treat "seen" as an :id value and swallow this request,
-// routing it into updateTask instead of markTasksSeen.
+
 router.put("/tasks/seen", markTasksSeen);
 
 router.delete("/tasks/:id", deleteTask);
@@ -151,5 +153,30 @@ router.put(
     isAdmin,
     changeAdminPassword
 );
+
+
+// ================= Support Tickets =================
+
+router.get(
+    "/support/tickets",
+    verifyToken,
+    isAdmin,
+    getAllSupportTickets
+);
+
+router.patch(
+    "/support/tickets/:id",
+    verifyToken,
+    isAdmin,
+    updateSupportTicket
+);
+
+router.post(
+    "/support/tickets/:id/reply",
+    verifyToken,
+    isAdmin,
+    replySupportTicketAsAdmin
+);
+
 
 module.exports = router;

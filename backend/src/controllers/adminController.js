@@ -3,6 +3,17 @@ const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
 const sendEmail = require("../utils/sendEmail");
 
+// ADDED: reuse the same thread-building helper and notification
+// helper the user-side support flow already uses, so admin ticket
+// replies/threads come out in the exact same shape.
+const {
+    attachThread
+} = require("./supportController");
+
+const {
+    createUserNotification
+} = require("./userController");
+
 // ================= Dashboard =================
 const getDashboardData = async (req, res) => {
 
@@ -549,13 +560,28 @@ const getNotificationCounts = async (req, res) => {
             WHERE is_read = false
         `);
 
+        // ADDED: badge count for the Support nav link.
+        // Support tickets don't have an is_seen_by_admin column like
+        // users/tasks do, so this counts still-open tickets instead
+        // (status = 'submitted', i.e. not yet picked up). If you'd
+        // rather match the is_seen_by_admin pattern exactly, that
+        // needs a migration adding that column to support_tickets -
+        // let me know and I'll switch this over.
+        const support = await db.query(`
+            SELECT COUNT(*)
+            FROM support_tickets
+            WHERE LOWER(status) = 'submitted'
+        `);
+
         res.json({
 
             users: Number(users.rows[0].count),
 
             tasks: Number(tasks.rows[0].count),
 
-            notifications: Number(notifications.rows[0].count)
+            notifications: Number(notifications.rows[0].count),
+
+            support: Number(support.rows[0].count)
 
         });
 
@@ -1077,6 +1103,257 @@ const changeAdminPassword = async (req, res) => {
 
 };
 
+
+// ================= Support Tickets (Admin) =================
+
+const getAllSupportTickets = async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+
+            SELECT
+
+                support_tickets.id,
+                support_tickets.title,
+                support_tickets.description,
+                support_tickets.category,
+                support_tickets.priority,
+                support_tickets.status,
+                support_tickets.created_at,
+                support_tickets.updated_at,
+
+                users.id AS user_id,
+                users.name AS user_name,
+                users.email AS user_email
+
+            FROM support_tickets
+
+            JOIN users
+            ON support_tickets.user_id = users.id
+
+            ORDER BY support_tickets.created_at DESC
+
+        `);
+
+        const ticketsWithThread = await Promise.all(
+
+            result.rows.map(
+                (ticket) => attachThread(ticket)
+            )
+
+        );
+
+        res.json(ticketsWithThread);
+
+    }
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message: "Server Error"
+
+        });
+
+    }
+
+};
+
+
+
+
+const updateSupportTicket = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const { status, priority } = req.body;
+
+        const existing = await db.query(
+            "SELECT * FROM support_tickets WHERE id=$1",
+            [id]
+        );
+
+        if (existing.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message: "Ticket not found"
+
+            });
+
+        }
+
+        const current = existing.rows[0];
+
+        const result = await db.query(
+
+            `
+            UPDATE support_tickets
+
+            SET
+                status=$1,
+                priority=$2,
+                updated_at=NOW()
+
+            WHERE id=$3
+
+            RETURNING *
+            `,
+
+            [
+                status || current.status,
+                priority || current.priority,
+                id
+            ]
+
+        );
+
+        res.json({
+
+            message: "Ticket updated successfully",
+
+            ticket: result.rows[0]
+
+        });
+
+    }
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message: "Server Error"
+
+        });
+
+    }
+
+};
+
+
+// ----- Reply To Ticket (admin side) -----
+
+const replySupportTicketAsAdmin = async (req, res) => {
+
+    try {
+
+        const ticketId = req.params.id;
+
+        const { message } = req.body;
+
+        if (!message || message.trim() === "") {
+
+            return res.status(400).json({
+
+                message: "Reply message cannot be empty."
+
+            });
+
+        }
+
+        const ticketResult = await db.query(
+            "SELECT * FROM support_tickets WHERE id=$1",
+            [ticketId]
+        );
+
+        if (ticketResult.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message: "Ticket not found"
+
+            });
+
+        }
+
+        const ticket = ticketResult.rows[0];
+
+        // Insert reply, tagged as coming from the admin
+        await db.query(
+
+            `
+            INSERT INTO support_ticket_messages
+            (
+                ticket_id,
+                sender_role,
+                message,
+                created_at
+            )
+
+            VALUES
+            (
+                $1,
+                'admin',
+                $2,
+                NOW()
+            )
+            `,
+
+            [
+                ticketId,
+                message
+            ]
+
+        );
+
+        const updatedTicketResult = await db.query(
+
+            `
+            UPDATE support_tickets
+
+            SET updated_at = NOW()
+
+            WHERE id = $1
+
+            RETURNING *
+            `,
+
+            [ticketId]
+
+        );
+
+        const ticketWithThread = await attachThread(
+            updatedTicketResult.rows[0]
+        );
+
+        // Let the user know support replied
+        await createUserNotification(
+
+            ticket.user_id,
+
+            `Support replied to your ticket "${ticket.title}"`
+
+        );
+
+        res.status(200).json({
+
+            message: "Reply sent",
+
+            ticket: ticketWithThread
+
+        });
+
+    }
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message: "Server Error"
+
+        });
+
+    }
+
+};
+
+
 module.exports = {
 
     getDashboardStats,
@@ -1119,6 +1396,12 @@ module.exports = {
 
     sendAdminChangePasswordOtp,
 
-    changeAdminPassword
+    changeAdminPassword,
+
+    getAllSupportTickets,
+
+    updateSupportTicket,
+
+    replySupportTicketAsAdmin
 
 };

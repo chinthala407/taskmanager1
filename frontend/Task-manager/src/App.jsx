@@ -16,6 +16,7 @@ import Tasks from "./components/admin/Tasks";
 import Reports from "./components/admin/Reports";
 import Settings from "./components/admin/Settings";
 import Notifications from "./components/admin/Notifications";
+import AdminSupport from "./components/admin/AdminSupport";
 
 import MyTasks from "./components/user/MyTasks";
 import CompletedTasks from "./components/user/CompletedTasks";
@@ -24,6 +25,7 @@ import UserSettings from "./components/user/UserSettings";
 import UserReports from "./components/user/UserReports";
 import UserNotifications from "./components/user/UserNotifications";
 import TaskCalendar from "./components/user/TaskCalendar";
+import Support from "./components/user/Support";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -112,6 +114,11 @@ function App() {
                         element={<Settings />}
                     />
 
+                    <Route
+                        path="support"
+                        element={<AdminSupport />}
+                    />
+
                 </Route>
 
 
@@ -155,6 +162,11 @@ function App() {
                     <Route
                         path="notifications"
                         element={<UserNotifications />}
+                    />
+
+                    <Route
+                        path="support"
+                        element={<Support />}
                     />
 
                     <Route

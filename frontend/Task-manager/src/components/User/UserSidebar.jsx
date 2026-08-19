@@ -216,6 +216,18 @@ function UserSidebar({ isOpen, onClose }) {
                 </NavLink>
 
 
+
+                {/* ================= Support ================= */}
+
+                <NavLink
+                    to="/user/support"
+                    className="menu-item"
+                    onClick={handleLinkClick}
+                >
+                    Support
+                </NavLink>
+
+
             </nav>
 
 

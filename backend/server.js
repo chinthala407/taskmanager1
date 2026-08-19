@@ -104,6 +104,16 @@ app.use(
     userRoutes
 );
 
+
+// Support Routes  (Added)
+const supportRoutes = require("./src/routes/supportRoutes");
+
+app.use(
+    "/api/user/support",
+    supportRoutes
+);
+
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 

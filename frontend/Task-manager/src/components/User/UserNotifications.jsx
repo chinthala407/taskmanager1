@@ -87,6 +87,15 @@ function UserNotifications() {
 
             );
 
+
+            // Tell the rest of the app (e.g. the sidebar badge)
+            // that notifications were just cleared, so it can
+            // refetch its count right away instead of waiting
+            // for its next polling interval.
+            window.dispatchEvent(
+                new Event("notifications-read")
+            );
+
         }
         catch (error) {
 

@@ -8,7 +8,8 @@ function AdminSidebar({ isOpen, onLinkClick, onLogout }) {
   const [counts, setCounts] = useState({
     users: 0,
     tasks: 0,
-    notifications: 0
+    notifications: 0,
+    support: 0
   });
 
   useEffect(() => {
@@ -24,7 +25,8 @@ function AdminSidebar({ isOpen, onLinkClick, onLogout }) {
         setCounts({
           users: res.data.users || 0,
           tasks: res.data.tasks || 0,
-          notifications: res.data.notifications || 0
+          notifications: res.data.notifications || 0,
+          support: res.data.support || 0
         });
 
       } catch (error) {
@@ -89,6 +91,16 @@ function AdminSidebar({ isOpen, onLinkClick, onLogout }) {
 
         <NavLink to="/admin/settings" className="menu-item" onClick={onLinkClick}>
           Settings
+        </NavLink>
+
+        <NavLink to="/admin/support" className="menu-item" onClick={onLinkClick}>
+          <span>Support</span>
+
+          {counts.support > 0 && (
+            <span className="sidebar-badge">
+              {counts.support}
+            </span>
+          )}
         </NavLink>
 
       </div>
