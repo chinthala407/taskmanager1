@@ -136,8 +136,26 @@
     opacity: 0.75;
 
 }
+.user-notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+}
 
+.notification-delete-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 6px;
+    flex-shrink: 0;
+}
 
+.notification-delete-btn:hover {
+    color: #b91c1c;
+}
 
 
 

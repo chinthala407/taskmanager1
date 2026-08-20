@@ -129,6 +129,22 @@ function Support() {
 
     const faqs = [
         {
+            q: "How do I create a task?",
+            a: "You can create a task from either the Dashboard or the Tasks page — both have a \"Create Task\" button. Click it, fill in the title, description, priority, and due date, then save. Your new task will appear with a status of Pending."
+        },
+        {
+            q: "How do I update my profile?",
+            a: "Go to the Profile page. There you can view and edit your details such as name, phone number, and address, then save your changes."
+        },
+        {
+            q: "How do I export my data?",
+            a: "Go to the Settings page and use the \"Export Data\" option in the Your Data section. This downloads a PDF with your profile details, all your tasks, notifications, and a report with charts summarizing your task activity."
+        },
+        {
+            q: "How do I raise a complaint?",
+            a: "Go to the Support page and click the \"Raise a Complaint\" button. Fill in a title, description, category, and priority for your issue, then submit. You can track its status here and reply if the support team responds."
+        },
+        {
             q: "Why aren't my tasks syncing across devices?",
             a: "Sync runs automatically every 30 seconds while you're online. Try pulling down on the task list to force a refresh. If tasks still don't match across devices, raise a Sync Issue ticket below and mention which devices are affected."
         },

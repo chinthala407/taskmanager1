@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaTrash } from "react-icons/fa";
 
 import "./UserNotifications.css";
 
@@ -9,6 +10,10 @@ function UserNotifications() {
     const [notifications, setNotifications] = useState([]);
 
     const [loading, setLoading] = useState(true);
+
+    const [deletingId, setDeletingId] = useState(null);
+
+    const [activeId, setActiveId] = useState(null);
 
 
     const token = localStorage.getItem("token");
@@ -105,6 +110,76 @@ function UserNotifications() {
             );
 
         }
+
+    };
+
+
+
+    // ======================================================
+    // Delete Notification
+    // ======================================================
+
+    const deleteNotification = async (notificationId) => {
+
+        try {
+
+            setDeletingId(notificationId);
+
+            await axios.delete(
+                `http://localhost:5000/api/user/notifications/${notificationId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+
+            // Remove it from the UI immediately
+
+            setNotifications(prev =>
+
+                prev.filter(
+                    notification => notification.id !== notificationId
+                )
+
+            );
+
+
+            setActiveId(null);
+
+        }
+        catch (error) {
+
+            console.log(
+                "Delete notification error:",
+                error
+            );
+
+        }
+        finally {
+
+            setDeletingId(null);
+
+        }
+
+    };
+
+
+
+    // ======================================================
+    // Toggle Active (Show/Hide Delete Option)
+    // ======================================================
+
+    const toggleActive = (notificationId) => {
+
+        setActiveId(prev =>
+
+            prev === notificationId
+                ? null
+                : notificationId
+
+        );
 
     };
 
@@ -323,24 +398,66 @@ function UserNotifications() {
                                         }`
                                     }
 
+                                    onClick={
+                                        () => toggleActive(notification.id)
+                                    }
+
                                 >
 
-                                    <p>
-                                        {
-                                            notification.message
-                                        }
-                                    </p>
+                                    <div className="notification-content">
+
+                                        <p>
+                                            {
+                                                notification.message
+                                            }
+                                        </p>
 
 
-                                    <span>
+                                        <span>
 
-                                        {
-                                            formatTime(
-                                                notification.created_at
-                                            )
-                                        }
+                                            {
+                                                formatTime(
+                                                    notification.created_at
+                                                )
+                                            }
 
-                                    </span>
+                                        </span>
+
+                                    </div>
+
+
+                                    {
+                                        activeId === notification.id && (
+
+                                            <button
+
+                                                className="notification-delete-btn"
+
+                                                onClick={
+                                                    (e) => {
+
+                                                        // Prevent the click from
+                                                        // re-triggering toggleActive
+                                                        // on the parent div.
+                                                        e.stopPropagation();
+
+                                                        deleteNotification(notification.id);
+
+                                                    }
+                                                }
+
+                                                disabled={deletingId === notification.id}
+
+                                                title="Delete notification"
+
+                                            >
+
+                                                <FaTrash />
+
+                                            </button>
+
+                                        )
+                                    }
 
 
                                 </div>

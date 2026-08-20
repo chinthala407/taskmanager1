@@ -66,6 +66,14 @@ function UserSettings() {
 
 
     // =========================
+    // Export Data
+    // =========================
+
+    const [exportLoading, setExportLoading] = useState(false);
+    const [exportError, setExportError] = useState("");
+
+
+    // =========================
     // Open Password Modal
     // =========================
 
@@ -321,6 +329,55 @@ function UserSettings() {
     };
 
 
+    // =========================
+    // Export Data
+    // =========================
+
+    const handleExportData = async () => {
+
+        setExportError("");
+
+        try {
+
+            setExportLoading(true);
+
+            const response = await authFetch("/export", {
+                method: "GET",
+            });
+
+            if (!response.ok) {
+
+                // Error responses are still JSON, success responses are a PDF blob.
+                const data = await response.json();
+                setExportError(data.message || "Unable to export data.");
+                return;
+            }
+
+            // Trigger a PDF file download in the browser
+            const blob = await response.blob();
+
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "my-data-export.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error("Export Data Error:", error);
+            setExportError("Something went wrong while exporting your data.");
+
+        } finally {
+            setExportLoading(false);
+        }
+    };
+
+
     return (
 
         <div className="user-settings-page">
@@ -338,6 +395,27 @@ function UserSettings() {
 
                     <button className="secondary-btn" onClick={openPasswordModal}>
                         Change Password
+                    </button>
+
+                </div>
+
+                {/* DATA */}
+                <div className="settings-section">
+
+                    <h3>Your Data</h3>
+
+                    <p>Download a copy of your profile, tasks, and notifications.</p>
+
+                    {exportError && (
+                        <p className="error-text">{exportError}</p>
+                    )}
+
+                    <button
+                        className="secondary-btn"
+                        onClick={handleExportData}
+                        disabled={exportLoading}
+                    >
+                        {exportLoading ? "Exporting..." : "Export Data"}
                     </button>
 
                 </div>
