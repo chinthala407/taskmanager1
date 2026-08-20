@@ -1,5 +1,13 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
+const PDFDocument = require("pdfkit");
+const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
+
+const chartCanvas = new ChartJSNodeCanvas({
+    width: 500,
+    height: 300,
+    backgroundColour: "white"
+});
 
 
 // ======================================================
@@ -549,6 +557,77 @@ const createTask = async (req, res) => {
 
 
 // ======================================================
+// Delete Notification
+// ======================================================
+
+const deleteNotification = async (req, res) => {
+
+    try {
+
+        const userId = req.user.id;
+
+        const notificationId =
+            req.params.id;
+
+
+        const result = await db.query(
+            `
+            DELETE FROM user_notifications
+
+            WHERE id = $1
+
+            AND user_id = $2
+
+            RETURNING id
+            `,
+            [
+                notificationId,
+                userId
+            ]
+        );
+
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message:
+                    "Notification not found"
+
+            });
+
+        }
+
+
+        res.status(200).json({
+
+            message:
+                "Notification deleted successfully"
+
+        });
+
+    }
+    catch (error) {
+
+        console.log(
+            "Delete Notification Error:",
+            error
+        );
+
+
+        res.status(500).json({
+
+            message:
+                "Internal Server Error"
+
+        });
+
+    }
+
+};
+
+
+// ======================================================
 // Mark All Notifications As Read
 // ======================================================
 
@@ -1028,7 +1107,483 @@ const deleteUserAccount = async (req, res) => {
 // Export User Data
 // ======================================================
 
+const exportUserData = async (req, res) => {
 
+    try {
+
+        const userId = req.user.id;
+
+
+        // ================= User Details =================
+
+        const userResult = await db.query(
+            `
+            SELECT
+                id,
+                name,
+                email,
+                role,
+                phone,
+                address
+
+            FROM users
+
+            WHERE id = $1
+            `,
+            [userId]
+        );
+
+
+        if (userResult.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message:
+                    "User not found"
+
+            });
+
+        }
+
+        const user = userResult.rows[0];
+
+
+        // ================= All Tasks =================
+
+        const tasksResult = await db.query(
+            `
+            SELECT
+                id,
+                title,
+                description,
+                priority,
+                status,
+                due_date,
+                created_at
+
+            FROM tasks
+
+            WHERE user_id = $1
+
+            ORDER BY created_at DESC
+            `,
+            [userId]
+        );
+
+
+        // ================= All Notifications =================
+
+        const notificationsResult = await db.query(
+            `
+            SELECT
+                id,
+                message,
+                is_read,
+                created_at
+
+            FROM user_notifications
+
+            WHERE user_id = $1
+
+            ORDER BY created_at DESC
+            `,
+            [userId]
+        );
+
+
+        const tasks = tasksResult.rows;
+        const notifications = notificationsResult.rows;
+
+
+        // ================= Statistics (matches UserReports.jsx) =================
+
+        const totalTasks = tasks.length;
+
+        const completed = tasks.filter(
+            (task) => task.status?.toLowerCase() === "completed"
+        ).length;
+
+        const pending = tasks.filter(
+            (task) => task.status?.toLowerCase() === "pending"
+        ).length;
+
+        const progress = tasks.filter(
+            (task) => task.status?.toLowerCase() === "in progress"
+        ).length;
+
+        const high = tasks.filter(
+            (task) => task.priority?.toLowerCase() === "high"
+        ).length;
+
+        const medium = tasks.filter(
+            (task) => task.priority?.toLowerCase() === "medium"
+        ).length;
+
+        const low = tasks.filter(
+            (task) => task.priority?.toLowerCase() === "low"
+        ).length;
+
+
+        // ================= Monthly Tasks =================
+
+        const monthCount = {};
+
+        tasks.forEach((task) => {
+
+            const month = new Date(task.created_at).toLocaleString(
+                "en-US",
+                { month: "short" }
+            );
+
+            monthCount[month] = (monthCount[month] || 0) + 1;
+
+        });
+
+
+        // ==================================================
+        // Generate Chart Images (same 4 charts as UserReports.jsx)
+        // ==================================================
+
+        const chartPlugins = {
+            legend: {
+                position: "bottom"
+            }
+        };
+
+        let statusChartImage = null;
+        let priorityChartImage = null;
+        let completionChartImage = null;
+        let monthlyChartImage = null;
+
+        try {
+
+            statusChartImage = await chartCanvas.renderToBuffer({
+                type: "doughnut",
+                data: {
+                    labels: ["Pending", "In Progress", "Completed"],
+                    datasets: [{
+                        data: [pending, progress, completed],
+                        backgroundColor: ["#f59e0b", "#3b82f6", "#22c55e"],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        ...chartPlugins,
+                        title: { display: true, text: "Task Status" }
+                    }
+                }
+            });
+
+        }
+        catch (chartError) {
+            console.log("Status Chart Error:", chartError);
+        }
+
+        try {
+
+            priorityChartImage = await chartCanvas.renderToBuffer({
+                type: "doughnut",
+                data: {
+                    labels: ["Low", "Medium", "High"],
+                    datasets: [{
+                        data: [low, medium, high],
+                        backgroundColor: ["#22c55e", "#f59e0b", "#ef4444"],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        ...chartPlugins,
+                        title: { display: true, text: "Task Priority" }
+                    }
+                }
+            });
+
+        }
+        catch (chartError) {
+            console.log("Priority Chart Error:", chartError);
+        }
+
+        try {
+
+            completionChartImage = await chartCanvas.renderToBuffer({
+                type: "pie",
+                data: {
+                    labels: ["Completed", "Remaining"],
+                    datasets: [{
+                        data: [completed, totalTasks - completed],
+                        backgroundColor: ["#22c55e", "#94a3b8"],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        ...chartPlugins,
+                        title: { display: true, text: "Completion Rate" }
+                    }
+                }
+            });
+
+        }
+        catch (chartError) {
+            console.log("Completion Chart Error:", chartError);
+        }
+
+        try {
+
+            if (Object.keys(monthCount).length > 0) {
+
+                monthlyChartImage = await chartCanvas.renderToBuffer({
+                    type: "bar",
+                    data: {
+                        labels: Object.keys(monthCount),
+                        datasets: [{
+                            label: "Tasks Created",
+                            data: Object.values(monthCount),
+                            backgroundColor: "#3b82f6",
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            ...chartPlugins,
+                            title: { display: true, text: "Monthly Task Creation" }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+
+            }
+
+        }
+        catch (chartError) {
+            console.log("Monthly Chart Error:", chartError);
+        }
+
+
+        // ==================================================
+        // Build PDF
+        // ==================================================
+
+        const doc = new PDFDocument({
+            margin: 50
+        });
+
+
+        // Stream the PDF straight to the response.
+        res.setHeader(
+            "Content-Type",
+            "application/pdf"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="user-data-export-${userId}.pdf"`
+        );
+
+        doc.pipe(res);
+
+
+        // ---------------- Title ----------------
+
+        doc
+            .fontSize(20)
+            .text("My Data Export", { align: "center" });
+
+        doc.moveDown();
+
+        doc
+            .fontSize(9)
+            .fillColor("gray")
+            .text(
+                `Generated on ${new Date().toLocaleString()}`,
+                { align: "center" }
+            );
+
+        doc.fillColor("black");
+        doc.moveDown(1.5);
+
+
+        // ---------------- Profile Section ----------------
+
+        doc.fontSize(14).text("Profile", { underline: true });
+        doc.moveDown(0.5);
+
+        doc.fontSize(11);
+        doc.text(`Name: ${user.name || "-"}`);
+        doc.text(`Email: ${user.email || "-"}`);
+        doc.text(`Role: ${user.role || "-"}`);
+        doc.text(`Phone: ${user.phone || "-"}`);
+        doc.text(`Address: ${user.address || "-"}`);
+
+        doc.moveDown(1.5);
+
+
+        // ---------------- Report / Charts Section ----------------
+
+        doc.fontSize(14).text("Report", { underline: true });
+        doc.moveDown(0.5);
+
+        const chartWidth = 240;
+        const chartHeight = 180;
+        const leftX = doc.page.margins.left;
+        const rightX = leftX + chartWidth + 20;
+
+        const drawChartPair = (imgA, imgB) => {
+
+            if (!imgA && !imgB) return;
+
+            // Add a new page if there isn't enough room for this row.
+            if (doc.y + chartHeight + 10 > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+            }
+
+            const rowY = doc.y;
+
+            if (imgA) {
+                doc.image(imgA, leftX, rowY, { fit: [chartWidth, chartHeight] });
+            }
+
+            if (imgB) {
+                doc.image(imgB, rightX, rowY, { fit: [chartWidth, chartHeight] });
+            }
+
+            doc.y = rowY + chartHeight + 15;
+
+        };
+
+        if (statusChartImage || priorityChartImage || completionChartImage || monthlyChartImage) {
+
+            drawChartPair(statusChartImage, priorityChartImage);
+            drawChartPair(completionChartImage, monthlyChartImage);
+
+        }
+        else {
+
+            doc.fontSize(11).text("No chart data available.");
+            doc.moveDown(1);
+
+        }
+
+        doc.moveDown(0.5);
+
+
+        // ---------------- Tasks Section ----------------
+
+        doc.fontSize(14).text("Tasks", { underline: true });
+        doc.moveDown(0.5);
+        doc.fontSize(11);
+
+        if (tasks.length === 0) {
+
+            doc.text("No tasks found.");
+
+        }
+        else {
+
+            tasks.forEach((task, index) => {
+
+                doc.font("Helvetica-Bold").text(
+                    `${index + 1}. ${task.title}`
+                );
+
+                doc.font("Helvetica");
+
+                if (task.description) {
+                    doc.text(`   Description: ${task.description}`);
+                }
+
+                doc.text(`   Priority: ${task.priority || "-"}`);
+                doc.text(`   Status: ${task.status || "-"}`);
+
+                doc.text(
+                    `   Due Date: ${task.due_date ? new Date(task.due_date).toLocaleDateString() : "-"}`
+                );
+
+                doc.text(
+                    `   Created: ${new Date(task.created_at).toLocaleString()}`
+                );
+
+                doc.moveDown(0.5);
+
+            });
+
+        }
+
+        doc.moveDown(1);
+
+
+        // ---------------- Notifications Section ----------------
+
+        doc.fontSize(14).text("Notifications", { underline: true });
+        doc.moveDown(0.5);
+        doc.fontSize(11);
+
+        if (notifications.length === 0) {
+
+            doc.text("No notifications found.");
+
+        }
+        else {
+
+            notifications.forEach((notification, index) => {
+
+                doc.font("Helvetica-Bold").text(
+                    `${index + 1}. ${notification.is_read ? "[Read]" : "[Unread]"}`
+                );
+
+                doc.font("Helvetica");
+
+                doc.text(`   ${notification.message}`);
+
+                doc.text(
+                    `   Created: ${new Date(notification.created_at).toLocaleString()}`
+                );
+
+                doc.moveDown(0.5);
+
+            });
+
+        }
+
+
+        doc.end();
+
+    }
+    catch (error) {
+
+        console.log(
+            "Export User Data Error:",
+            error
+        );
+
+        // Only send a JSON error if headers haven't already
+        // been sent (i.e. PDF streaming hasn't started yet).
+        if (!res.headersSent) {
+
+            res.status(500).json({
+
+                message:
+                    "Internal Server Error"
+
+            });
+
+        }
+        else {
+
+            res.end();
+
+        }
+
+    }
+
+};
 
 
 // ======================================================
@@ -1049,6 +1604,8 @@ module.exports = {
 
     markNotificationRead,
 
+    deleteNotification,
+
     markAllNotificationsRead,
 
     getUserProfile,
@@ -1057,6 +1614,8 @@ module.exports = {
 
     changeUserPassword,
 
-    deleteUserAccount
+    deleteUserAccount,
+
+    exportUserData
 
 };

@@ -1,4 +1,3 @@
-
 const express = require("express");
 
 const router = express.Router();
@@ -11,9 +10,10 @@ const {
     getUserTasks,
     getUserNotifications,
     markNotificationRead,
+    deleteNotification,
     markAllNotificationsRead,
     getUserProfile,
-    updateUserProfile,   // <-- add this
+    updateUserProfile,
     changeUserPassword,
     deleteUserAccount,
     exportUserData
@@ -72,6 +72,17 @@ router.patch(
     "/notifications/:id/read",
     verifyToken,
     markNotificationRead
+);
+
+
+// ======================================================
+// Delete Notification
+// ======================================================
+
+router.delete(
+    "/notifications/:id",
+    verifyToken,
+    deleteNotification
 );
 
 
@@ -151,10 +162,20 @@ router.get(
 );
 
 
-module.exports = router;
+// ======================================================
+// Route Test
+// ======================================================
 
-router.get("/route-test", (req, res) => {
-    res.json({
-        message: "USER ROUTES ARE LOADED"
-    });
-});
+router.get(
+    "/route-test",
+    (req, res) => {
+
+        res.json({
+            message: "USER ROUTES ARE LOADED"
+        });
+
+    }
+);
+
+
+module.exports = router;
